@@ -1,5 +1,5 @@
 {
-  "name": "app-platform-demo-frontend",
+  "name": "polls-for-pi-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,10 +10,13 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "antd": "^5.1.7",
     "axios": "^0.27.2",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router": "^6.8.0",
+    "react-router-dom": "^6.8.0",
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"

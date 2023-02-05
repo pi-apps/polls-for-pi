@@ -1,5 +1,5 @@
-import React, { CSSProperties } from "react";
-import { User } from "../";
+import { CSSProperties } from "react";
+import { User } from "..";
 
 interface Props {
   onSignIn: () => void;
@@ -20,7 +20,7 @@ const headerStyle: CSSProperties = {
 export default function Header(props: Props) {
   return (
     <header style={headerStyle}>
-      <div style={{ fontWeight: "bold" }}>Pi Bakery</div>
+      <div style={{ fontWeight: "bold" }}>Polls for Pi</div>
 
       <div>
         {props.user === null ? (
