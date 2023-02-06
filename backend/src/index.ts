@@ -1,14 +1,15 @@
-import fs from 'fs';
-import path from 'path';
+import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import logger from 'morgan';
-import MongoStore from 'connect-mongo';
+import fs from 'fs';
 import { MongoClient } from 'mongodb';
+import logger from 'morgan';
+import path from 'path';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
+import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
@@ -81,6 +82,10 @@ const userRouter = express.Router();
 mountUserEndpoints(userRouter);
 app.use('/user', userRouter);
 
+const productsRouter = express.Router();
+mountProductsEndpoints(productsRouter)
+app.use('/v1/products', productsRouter);
+
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
   res.status(200).send({ message: "Hello, World!" });
@@ -95,6 +100,11 @@ app.listen(8000, async () => {
     const db = client.db(dbName);
     app.locals.orderCollection = db.collection('orders');
     app.locals.userCollection = db.collection('users');
+
+    const Product = db.collection('products');
+    const collections = { Product };
+    app.locals.collections = collections;
+
     console.log('Connected to MongoDB on: ', mongoUri)
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)

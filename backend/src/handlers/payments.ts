@@ -11,7 +11,7 @@ export default function mountPaymentsEndpoints(router: Router) {
     const txid = payment.transaction && payment.transaction.txid;
     const txURL = payment.transaction && payment.transaction._link;
 
-    /* 
+    /*
       implement your logic here
       e.g. verifying the payment, delivering the item to the user, etc...
 
@@ -23,7 +23,7 @@ export default function mountPaymentsEndpoints(router: Router) {
     const orderCollection = app.locals.orderCollection;
     const order = await orderCollection.findOne({ pi_payment_id: paymentId });
 
-    // order doesn't exist 
+    // order doesn't exist
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
@@ -47,9 +47,9 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // approve the current payment
   router.post('/approve', async (req, res) => {
-    if (!req.session.currentUser) {
-      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
-    }
+    // if (!req.session.currentUser) {
+    //   return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    // }
 
     const app = req.app;
 
@@ -57,15 +57,15 @@ export default function mountPaymentsEndpoints(router: Router) {
     const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
     const orderCollection = app.locals.orderCollection;
 
-    /* 
-      implement your logic here 
+    /*
+      implement your logic here
       e.g. creating an order record, reserve an item if the quantity is limited, etc...
     */
 
     await orderCollection.insertOne({
       pi_payment_id: paymentId,
       product_id: currentPayment.data.metadata.productId,
-      user: req.session.currentUser.uid,
+      user: req.session.currentUser ? req.session.currentUser.uid : null,
       txid: null,
       paid: false,
       cancelled: false,
@@ -85,7 +85,7 @@ export default function mountPaymentsEndpoints(router: Router) {
     const txid = req.body.txid;
     const orderCollection = app.locals.orderCollection;
 
-    /* 
+    /*
       implement your logic here
       e.g. verify the transaction, deliver the item to the user, etc...
     */
