@@ -6,27 +6,14 @@ import './MainHeader.css';
 import {
   HomeOutlined
 } from '@ant-design/icons';
-
-type AuthResult = {
-  accessToken: string,
-  user: {
-    uid: string,
-    username: string
-  }
-};
-type User = AuthResult['user'];
+import HeaderProps from '../../types/HeaderProps';
 
 const {
   Header,
 } = Layout;
 
-interface Props {
-  onSignIn: () => void;
-  onSignOut: () => void;
-  user: User | null
-}
 
-export default function MainHeader(props: Props) {
+export default function MainHeader(props: HeaderProps) {
   const navigate = useNavigate()
 
   const toRoot = () => {
