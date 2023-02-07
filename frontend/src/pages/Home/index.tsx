@@ -20,7 +20,7 @@ const Home = (props: HeaderProps) => {
     <>
       <Layout style={{ minHeight: '100vh' }}>
         <Layout>
-          <MainHeader user={props.user} onSignIn={props.onSignIn} onSignOut={props.onSignOut} />
+          <MainHeader {...props} />
           <Content style={{ padding: '0 50px', marginTop: 75 }}>
             <Row justify="center">
               <Col xs={24} sm={24} md={24} lg={24}>
@@ -31,7 +31,7 @@ const Home = (props: HeaderProps) => {
               <Col xs={24} sm={24} md={24} lg={24}>
                 <div style={{ padding: 24, background: '#fff', minHeight: 320 }}>
                   <div className="wrap">
-                    <div className="extraContent">+
+                    <div className="extraContent">
                       <Row gutter={16} style={{ margin: "10px" }}>
                         <Col xs={24} sm={24} md={24} lg={8}>
                           <Card style={{ display: "flex", justifyContent: "center" }}>
@@ -57,7 +57,7 @@ const Home = (props: HeaderProps) => {
         </Layout>
       </Layout>
 
-      {showModal && <SignIn onSignIn={signIn} onModalClose={onModalClose} />}
+      {props.showModal && <SignIn onSignIn={props.onSignIn} onModalClose={props.onModalClose} />}
     </>
   );
 }

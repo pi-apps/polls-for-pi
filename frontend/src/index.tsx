@@ -34,7 +34,8 @@ const backendURL = _window.__ENV && _window.__ENV.backendURL;
 
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
-const [user, setUser] = useState<User | null>(null);
+function App() {
+  const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const signIn = async () => {
@@ -67,15 +68,16 @@ const [user, setUser] = useState<User | null>(null);
     return axiosClient.post('/payments/incomplete', { payment });
   }
 
-const routing = (
-  <Router>
-    <Routes>
-      <Route path="/" element={<Home signIn={signIn} signOut={signOut} />} />
-      <Route path="/products" element={<Browse />} />
-      <Route path="/shop" element={<Shop />} />
-      <Route element={Notfound} />
-    </Routes>
-  </Router>
-);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+        <Route path="/products" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route element={Notfound} />
+      </Routes>
+    </Router>
+  );
+}
 
-ReactDOM.render(routing, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
