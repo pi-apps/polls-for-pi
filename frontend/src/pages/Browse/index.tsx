@@ -1,9 +1,9 @@
 import { Col, Layout, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import axios from 'axios';
-import { useState } from 'react';
 import MainHeader from '../../components/MainHeader';
 import SignIn from '../../components/SignIn';
+import HeaderProps from '../../types/HeaderProps';
 import ProductCard from './components/ProductCard';
 
 type MyPaymentMetadata = {};
@@ -55,38 +55,10 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
 
 
-export default function Shop() {
-  const [user, setUser] = useState<User | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const signIn = async () => {
-    const scopes = ['username', 'payments'];
-    const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
-    signInUser(authResult);
-    setUser(authResult.user);
-  }
-
-  const signOut = () => {
-    setUser(null);
-    signOutUser();
-  }
-
-  const signInUser = (authResult: AuthResult) => {
-    axiosClient.post('/user/signin', {authResult});
-    return setShowModal(false);
-  }
-
-  const signOutUser = () => {
-    return axiosClient.get('/user/signout');
-  }
-
-  const onModalClose = () => {
-    setShowModal(false);
-  }
-
+export default function Shop(props: HeaderProps) {
   const orderProduct = async (memo: string, amount: number, paymentMetadata: MyPaymentMetadata) => {
-    if(user === null) {
-      return setShowModal(true);
+    if(props.user === null) {
+      return props.setShowModal(true);
     }
     const paymentData = { amount, memo, metadata: paymentMetadata };
     const callbacks = {
@@ -97,11 +69,6 @@ export default function Shop() {
     };
     const payment = await window.Pi.createPayment(paymentData, callbacks);
     console.log(payment);
-  }
-
-  const onIncompletePaymentFound = (payment: PaymentDTO) => {
-    console.log("onIncompletePaymentFound", payment);
-    return axiosClient.post('/payments/incomplete', {payment});
   }
 
   const onReadyForServerApproval = (paymentId: string) => {
@@ -131,7 +98,7 @@ export default function Shop() {
     <>
       <Layout style={{ minHeight: '100vh' }}>
         <Layout>
-          <MainHeader user={user} onSignIn={signIn} onSignOut={signOut} />
+          <MainHeader {...props} />
           <Content style={{ padding: '0 50px', marginTop: 75 }}>
             <Row justify="center">
               <Col xs={24} sm={24} md={24} lg={24}>
@@ -169,7 +136,7 @@ export default function Shop() {
         </Layout>
       </Layout>
 
-      {showModal && <SignIn onSignIn={signIn} onModalClose={onModalClose} />}
+      {props.showModal && <SignIn onSignIn={props.onSignIn} onModalClose={props.onModalClose} />}
     </>
 
 
