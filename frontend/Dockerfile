@@ -18,6 +18,9 @@ RUN yarn install
 COPY ./src /app/src
 COPY ./public /app/public
 COPY ./tsconfig.json /app/tsconfig.json
+COPY ./index.html /app/index.html
+COPY ./postcss.config.js /app/postcss.config.js
+COPY ./vite.config.js /app/vite.config.js
 
 RUN NODE_PATH=./src yarn build
 
