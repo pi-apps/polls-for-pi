@@ -1,5 +1,4 @@
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
-import 'antd/dist/reset.css';
 import { useNavigate } from 'react-router-dom';
 import './MainHeader.css';
 
