@@ -40,7 +40,7 @@ RUN chmod +x /var/entrypoint.sh
 
 RUN mkdir -p /var/www/webapp
 
-COPY --from=builder /app/build /var/www/webapp
+COPY --from=builder /app/dist /var/www/webapp
 
 # Default nginx configuration has only one worker process running. "Auto" is a better setting.
 # Commenting out any existing setting, and adding the desired one is more robust against new docker image versions.
