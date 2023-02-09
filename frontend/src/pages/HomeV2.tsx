@@ -1,13 +1,9 @@
 
 import Banner from '../partials/Banner';
 import FeaturesBlocks from '../partials/FeaturesBlocks';
-import FeaturesZigZag from '../partials/FeaturesZigzag';
-import Footer from '../partials/Footer';
 import Header from '../partials/Header';
 import HeroHome from '../partials/HeroHome';
-import Newsletter from '../partials/Newsletter';
 import PageIllustration from '../partials/PageIllustration';
-import Testimonials from '../partials/Testimonials';
 
 function HomeV2() {
   return (
@@ -25,15 +21,15 @@ function HomeV2() {
         {/*  Page sections */}
         <HeroHome />
         <FeaturesBlocks />
-        <FeaturesZigZag />
+        {/* <FeaturesZigZag />
         <Testimonials />
-        <Newsletter />
+        <Newsletter /> */}
       </main>
 
       <Banner />
 
       {/*  Site footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Dropdown from '../utils/Dropdown';
 
 function Header() {
 
@@ -51,22 +50,20 @@ function Header() {
             {/* Desktop menu links */}
             <ul className="flex grow justify-end flex-wrap items-center">
               <li>
-                <Link to="/features" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                  Features
+                <Link to="/polls" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                  Polls
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Pricing</Link>
+                <Link to="/products" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Products</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/blog" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Blog</Link>
               </li>
               <li>
                 <Link to="/about" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">About us</Link>
-              </li>
-              {/* 1st level: hover */}
-              <Dropdown title="Support">
-                {/* 2nd level: hover */}
+              </li> */}
+              {/* <Dropdown title="Support">
                 <li>
                   <Link to="/contact" className="font-medium text-sm text-gray-400 hover:text-purple-600 flex py-2 px-4 leading-tight">Contact us</Link>
                 </li>
@@ -76,7 +73,7 @@ function Header() {
                 <li>
                   <Link to="/404" className="font-medium text-sm text-gray-400 hover:text-purple-600 flex py-2 px-4 leading-tight">404</Link>
                 </li>
-              </Dropdown>
+              </Dropdown> */}
             </ul>
 
             {/* Desktop sign in links */}
@@ -84,9 +81,9 @@ function Header() {
               <li>
                 <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/signup" className="btn-sm text-white bg-purple-600 hover:bg-purple-700 ml-3">Sign up</Link>
-              </li>
+              </li> */}
             </ul>
 
           </nav>
@@ -113,13 +110,13 @@ function Header() {
                 <li>
                   <Link to="/pricing" className="flex text-gray-300 hover:text-gray-200 py-2">Pricing</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/blog" className="flex text-gray-300 hover:text-gray-200 py-2">Blog</Link>
                 </li>
                 <li>
                   <Link to="/about" className="flex text-gray-300 hover:text-gray-200 py-2">About us</Link>
-                </li>
-                <li className="py-2 my-2 border-t border-b border-gray-700">
+                </li> */}
+                {/* <li className="py-2 my-2 border-t border-b border-gray-700">
                   <span className="flex text-gray-300 py-2">Support</span>
                   <ul className="pl-4">
                     <li>
@@ -132,13 +129,13 @@ function Header() {
                       <Link to="/404" className="text-sm flex font-medium text-gray-400 hover:text-gray-200 py-2">404</Link>
                     </li>
                   </ul>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/signin" className="flex font-medium w-full text-purple-600 hover:text-gray-200 py-2 justify-center">Sign in</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/signup" className="font-medium w-full inline-flex items-center justify-center border border-transparent px-4 py-2 my-2 rounded-sm text-white bg-purple-600 hover:bg-purple-700 transition duration-150 ease-in-out">Sign up</Link>
-                </li>
+                </li> */}
               </ul>
             </nav>
 
