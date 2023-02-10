@@ -41,7 +41,7 @@ function HeroHome() {
               Polls for Pi
             </h1>
             <p className="text-xl text-gray-400 mb-8" data-aos="fade-up" data-aos-delay="200">
-              Web3.0 incentivized polls for your for your business, for your users.
+              Web3.0 incentivized polls for your business, for your users.
             </p>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
               <div data-aos="fade-up" data-aos-delay="400">
