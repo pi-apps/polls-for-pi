@@ -7,7 +7,7 @@ import './css/style.css';
 
 import axios from 'axios';
 import Notfound from './notfound';
-import { Browse, Home, Shop } from './pages';
+import { Browse, Home } from './pages';
 import HomeV2 from './pages/HomeV2';
 import PaymentDTO from './types/PaymentDTO';
 
@@ -73,9 +73,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomeV2  />} />
-      <Route path="/home_v1" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
-      <Route path="/products" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
-      <Route path="/shop" element={<Shop />} />
+      <Route path="/get_started" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+      <Route path="/demo" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+      <Route path="/pricing" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route element={Notfound} />
     </Routes>
   );

@@ -50,12 +50,17 @@ function Header() {
             {/* Desktop menu links */}
             <ul className="flex grow justify-end flex-wrap items-center">
               <li>
-                <Link to="/polls" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                  Polls
+                <Link to="/get_started" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                  Get Started
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Products</Link>
+                <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                  Demo
+                </Link>
+              </li>
+              <li>
+                <Link to="/pricing" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Pricing</Link>
               </li>
               {/* <li>
                 <Link to="/blog" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Blog</Link>
@@ -105,7 +110,10 @@ function Header() {
             <nav id="mobile-nav" ref={mobileNav} className="absolute top-full z-20 left-0 w-full px-4 sm:px-6 overflow-hidden transition-all duration-300 ease-in-out" style={mobileNavOpen ? { maxHeight: mobileNav.current.scrollHeight, opacity: 1 } : { maxHeight: 0, opacity: .8 } }>
               <ul className="bg-gray-800 px-4 py-2">
                 <li>
-                  <Link to="/features" className="flex text-gray-300 hover:text-gray-200 py-2">Features</Link>
+                  <Link to="/get_started" className="flex text-gray-300 hover:text-gray-200 py-2">Get Started</Link>
+                </li>
+                <li>
+                  <Link to="/demo" className="flex text-gray-300 hover:text-gray-200 py-2">Demo</Link>
                 </li>
                 <li>
                   <Link to="/pricing" className="flex text-gray-300 hover:text-gray-200 py-2">Pricing</Link>

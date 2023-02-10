@@ -1,6 +1,7 @@
 
 import Banner from '../partials/Banner';
 import FeaturesBlocks from '../partials/FeaturesBlocks';
+import Footer from '../partials/Footer';
 import Header from '../partials/Header';
 import HeroHome from '../partials/HeroHome';
 import PageIllustration from '../partials/PageIllustration';
@@ -29,7 +30,7 @@ function HomeV2() {
       <Banner />
 
       {/*  Site footer */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
