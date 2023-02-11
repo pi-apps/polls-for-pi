@@ -10,7 +10,7 @@ import AOS from 'aos';
 
 import axios from 'axios';
 import Notfound from './notfound';
-import { Browse, Home } from './pages';
+import { Browse, Home, Shop } from './pages';
 import HomeV2 from './pages/HomeV2';
 import PaymentDTO from './types/PaymentDTO';
 
@@ -94,6 +94,7 @@ function App() {
       <Route path="/get_started" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route path="/demo" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route path="/pricing" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+      <Route path="/shop" element={<Shop onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route element={Notfound} />
     </Routes>
   );
