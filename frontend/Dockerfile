@@ -18,6 +18,9 @@ RUN yarn install
 COPY ./src /app/src
 COPY ./public /app/public
 COPY ./tsconfig.json /app/tsconfig.json
+COPY ./index.html /app/index.html
+COPY ./postcss.config.js /app/postcss.config.js
+COPY ./vite.config.js /app/vite.config.js
 
 RUN NODE_PATH=./src yarn build
 
@@ -37,7 +40,7 @@ RUN chmod +x /var/entrypoint.sh
 
 RUN mkdir -p /var/www/webapp
 
-COPY --from=builder /app/build /var/www/webapp
+COPY --from=builder /app/dist /var/www/webapp
 
 # Default nginx configuration has only one worker process running. "Auto" is a better setting.
 # Commenting out any existing setting, and adding the desired one is more robust against new docker image versions.

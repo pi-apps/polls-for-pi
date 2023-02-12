@@ -2,19 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="/src/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="Polls for Pi"
+      content="Web3.0 Incentivized Polls"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="/src/images/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="/src/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -42,31 +42,22 @@
 
     <!-- Import the Pi Network App Platform SDK: -->
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    
+
     <!-- TODO make sandbox conditional to env (dev / prod) -->
     <script>
       // Make the decision whether Pi SDK should run in "Sandbox" mode or "Pi Browser" mode based on the
       // dedicated environment variable:
       var runSDKInSandboxMode = window.__ENV.sandbox === "true"; // treat env vars as strings, not booleans
-      
+
       // Init Pi SDK:
       Pi.init({ version: "2.0", sandbox: runSDKInSandboxMode });
     </script>
-    
-    <title>React App</title>
+
+    <title>Polls for Pi</title>
   </head>
-  <body>
+  <body class="font-inter antialiased bg-gray-900 text-gray-200 tracking-tight">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

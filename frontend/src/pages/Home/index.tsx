@@ -35,7 +35,7 @@ const Home = (props: HeaderProps) => {
                       <Row gutter={16} style={{ margin: "10px" }}>
                         <Col xs={24} sm={24} md={24} lg={8}>
                           <Card style={{ display: "flex", justifyContent: "center" }}>
-                            <NavLink to="/products">
+                            <NavLink to="/pricing">
                               <ShopOutlined style={{ fontSize: '4em', color: '#08c' }} />
                             </NavLink>
                           </Card>

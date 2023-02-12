@@ -55,7 +55,7 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
 
 
-export default function Shop(props: HeaderProps) {
+export default function Browse(props: HeaderProps) {
   const orderProduct = async (memo: string, amount: number, paymentMetadata: MyPaymentMetadata) => {
     if(props.user === null) {
       return props.setShowModal(true);
