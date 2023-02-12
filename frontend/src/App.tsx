@@ -11,6 +11,7 @@ import AOS from 'aos';
 import axios from 'axios';
 import Notfound from './notfound';
 import { Browse, Home, Shop } from './pages';
+import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
 import PaymentDTO from './types/PaymentDTO';
 
@@ -40,6 +41,7 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>('');
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -64,6 +66,11 @@ function App() {
 
   const onModalClose = () => {
     setShowModal(false);
+  }
+
+  const onSetTitle = (title: string) => {
+    console.log('title', title)
+    setTitle(title);
   }
 
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -91,7 +98,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomeV2  />} />
-      <Route path="/get_started" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+      <Route path="/get_started" element={<GetStarted title={title} setTitle={onSetTitle} />} />
       <Route path="/demo" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route path="/pricing" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
       <Route path="/shop" element={<Shop onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
