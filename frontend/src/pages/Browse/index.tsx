@@ -3,7 +3,7 @@ import { Content } from 'antd/es/layout/layout';
 import axios from 'axios';
 import MainHeader from '../../components/MainHeader';
 import SignIn from '../../components/SignIn';
-import HeaderProps from '../../types/HeaderProps';
+import HOCProps from '../../types/HOCProps';
 import ProductCard from './components/ProductCard';
 
 type MyPaymentMetadata = {};
@@ -55,7 +55,7 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
 
 
-export default function Browse(props: HeaderProps) {
+export default function Browse(props: HOCProps) {
   const orderProduct = async (memo: string, amount: number, paymentMetadata: MyPaymentMetadata) => {
     if(props.user === null) {
       return props.setShowModal(true);

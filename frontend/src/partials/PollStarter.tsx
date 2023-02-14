@@ -21,7 +21,7 @@ const PollStarter = (hocProps: HOCProps) => {
               <Search
                 placeholder="Your poll title"
                 enterButton={
-                  <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                  <Link to="/wizard" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
                     Proceed
                   </Link>
                 }

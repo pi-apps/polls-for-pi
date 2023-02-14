@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import SignIn from '../../components/SignIn';
-import HeaderProps from '../../types/HeaderProps';
+import HOCProps from '../../types/HOCProps';
 import Header from './components/Header';
 import ProductCard from './components/ProductCard';
 
@@ -54,7 +54,7 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
 
 
-export default function Shop(props: HeaderProps) {
+export default function Shop(props: HOCProps) {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
 

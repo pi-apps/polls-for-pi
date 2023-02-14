@@ -61,7 +61,7 @@ function FeaturesBlocks() {
                 />
               </svg>
               <h4 className="h4 mb-2">Automated</h4>
-              <p className="text-lg text-gray-400 text-center">Automated rewards distribution.</p>
+              <p className="text-lg text-gray-400 text-center">Choose when to distribute your rewards.</p>
             </div>
 
             {/* 4th item */}
