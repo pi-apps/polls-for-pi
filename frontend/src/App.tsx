@@ -15,16 +15,7 @@ import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
-
-type AuthResult = {
-  accessToken: string,
-  user: {
-    uid: string,
-    username: string
-  }
-};
-
-export type User = AuthResult['user'];
+import { User } from './types/UserType';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
 interface WindowWithEnv extends Window {

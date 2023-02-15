@@ -1,12 +1,5 @@
-type AuthResult = {
-  accessToken: string,
-  user: {
-    uid: string,
-    username: string
-  }
-};
+import { User } from "./UserType"
 
-export type User = AuthResult['user'];
 export default interface HOCProps {
   title?: string
   mode?: string

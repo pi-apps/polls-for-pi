@@ -1,12 +1,4 @@
-type AuthResult = {
-  accessToken: string,
-  user: {
-    uid: string,
-    username: string
-  }
-};
-
-export type User = AuthResult['user'];
+import { User } from "./UserType";
 
 export default interface HeaderProps {
   onSignIn: () => void;
