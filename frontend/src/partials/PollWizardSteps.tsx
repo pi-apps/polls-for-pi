@@ -61,13 +61,18 @@ const PollWizardSteps = (hocProps: HOCProps) => {
             />
               <div style={{ marginTop: 24 }} className='dark:text-white'>
                 {current < steps.length - 1 && (
-                  <Button className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white' onClick={() => next()}>
+                  <Button
+                    className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white'
+                    //type='primary'
+                    onClick={() => next()}
+                  >
                     Next
                   </Button>
                 )}
                 {current === steps.length - 1 && (
                   <Button
                     className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white'
+                    //type='primary'
                     onClick={() => message.success('Processing complete!')}>
                     Done
                   </Button>
