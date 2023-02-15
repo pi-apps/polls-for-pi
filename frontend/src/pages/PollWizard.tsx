@@ -1,21 +1,21 @@
 
 import Header from '../partials/Header';
-import PollStarter from '../partials/PollStarter';
+import PollWizardSteps from '../partials/PollWizardSteps';
 import HOCProps from '../types/HOCProps';
 
-const GetStarted = (props: HOCProps) => {
+const PollWizard = (hocProps: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
-      <Header pathname={props.pathname} setMode={props.setMode} mode={props.mode} />
+      <Header pathname={hocProps.pathname} setMode={hocProps.setMode} mode={hocProps.mode} />
 
       {/*  Page content */}
       <main className="grow">
-        <PollStarter setTitle={props.setTitle} />
+        <PollWizardSteps setTitle={hocProps.setTitle} />
       </main>
 
     </div>
   );
 }
 
-export default GetStarted;
+export default PollWizard;

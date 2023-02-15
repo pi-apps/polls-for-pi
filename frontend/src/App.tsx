@@ -13,17 +13,9 @@ import Notfound from './notfound';
 import { Browse, Home, Shop } from './pages';
 import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
+import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
-
-type AuthResult = {
-  accessToken: string,
-  user: {
-    uid: string,
-    username: string
-  }
-};
-
-export type User = AuthResult['user'];
+import { User } from './types/UserType';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
 interface WindowWithEnv extends Window {
@@ -38,10 +30,16 @@ const backendURL = _window.__ENV && _window.__ENV.backendURL;
 
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
+const getPathname = () => {
+  const location = useLocation();
+  return location.pathname;
+}
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
+  const [mode, setMode] = useState<string>('light');
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -78,7 +76,21 @@ function App() {
     return axiosClient.post('/payments/incomplete', { payment });
   }
 
+  const onChangeMode = (mode: string) => {
+    console.log('mode', mode);
+    setMode(mode);
+    localStorage.theme = mode;
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (mode === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
   const location = useLocation();
+  const pathname = getPathname();
+  console.log('pathname', pathname)
 
   useEffect(() => {
     AOS.init({
@@ -95,13 +107,66 @@ function App() {
     document.querySelector('html').style.scrollBehavior = ''
   }, [location.pathname]); // triggered on route change
 
+  // useEffect(() => {
+  //   console.log('localStorage.theme', localStorage.theme);
+  //   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+  //   if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  //     document.documentElement.classList.add('dark')
+  //   } else {
+  //     document.documentElement.classList.remove('dark')
+  //   }
+  // }, [mode]); // triggered on mode change
+
   return (
     <Routes>
-      <Route path="/" element={<HomeV2  />} />
-      <Route path="/get_started" element={<GetStarted title={title} setTitle={onSetTitle} />} />
-      <Route path="/demo" element={<Home onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
-      <Route path="/pricing" element={<Browse onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
-      <Route path="/shop" element={<Shop onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose} />} />
+      <Route
+        path="/"
+        element={
+          <HomeV2 setMode={onChangeMode} mode={mode} />
+        }
+      />
+      <Route
+        path="/get_started"
+        element={
+          <GetStarted title={title} setTitle={onSetTitle} pathname={pathname} setMode={onChangeMode} mode={mode}  />
+        }
+      />
+      <Route
+        path="/demo"
+        element={
+          <Home
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
+      <Route
+        path="/pricing"
+        element={
+          <Browse
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
+      <Route
+        path="/shop"
+        element={
+          <Shop
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
+      <Route
+        path="/wizard"
+        element={
+          <PollWizard
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
       <Route element={Notfound} />
     </Routes>
   );

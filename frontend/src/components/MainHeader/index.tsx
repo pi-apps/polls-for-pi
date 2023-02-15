@@ -5,14 +5,14 @@ import './MainHeader.css';
 import {
   HomeOutlined
 } from '@ant-design/icons';
-import HeaderProps from '../../types/HeaderProps';
+import HOCProps from '../../types/HOCProps';
 
 const {
   Header,
 } = Layout;
 
 
-export default function MainHeader(props: HeaderProps) {
+export default function MainHeader(props: HOCProps) {
   const navigate = useNavigate()
 
   const toRoot = () => {

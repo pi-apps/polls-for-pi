@@ -7,14 +7,14 @@ import { NavLink } from 'react-router-dom';
 import MainHeader from '../../components/MainHeader';
 
 import SignIn from '../../components/SignIn';
-import HeaderProps from '../../types/HeaderProps';
+import HOCProps from '../../types/HOCProps';
 import './Home.css';
 
 const {
   Content,
 } = Layout;
 
-const Home = (props: HeaderProps) => {
+const Home = (props: HOCProps) => {
 
   return (
     <>

@@ -17,15 +17,19 @@ const PollStarter = (hocProps: HOCProps) => {
             <h2 className="h2 mb-4" data-aos="fade-up">
               What should we title your poll?
             </h2>
-            <p className="text-xl text-gray-400 mb-8" data-aos="fade-up" data-aos-delay="200">
+            <p className="text-xl mb-8" data-aos="fade-up" data-aos-delay="200">
               <Search
                 placeholder="Your poll title"
                 enterButton={
-                  <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                  <Link
+                    to="/wizard"
+                    className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out"
+                  >
                     Proceed
                   </Link>
                 }
                 size="large"
+                className='title-box'
                 style={{backgroundColor: "#1677ff"}}
                 onSearch={hocProps.setTitle}
               />

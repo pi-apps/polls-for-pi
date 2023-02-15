@@ -5,12 +5,13 @@ import Footer from '../partials/Footer';
 import Header from '../partials/Header';
 import HeroHome from '../partials/HeroHome';
 import PageIllustration from '../partials/PageIllustration';
+import HOCProps from '../types/HOCProps';
 
-function HomeV2() {
+const HomeV2 = (hocProps: HOCProps) => {
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
+    <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
-      <Header />
+      <Header setMode={hocProps.setMode} mode={hocProps.mode} />
 
       {/*  Page content */}
       <main className="grow">
