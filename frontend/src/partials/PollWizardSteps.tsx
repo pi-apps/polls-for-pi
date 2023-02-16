@@ -1,11 +1,13 @@
 
 import { Button, Input, message, Steps, theme } from 'antd';
+import { Button as MobileButton, Steps as MobileSteps } from 'antd-mobile';
 import React, { useState } from 'react';
 import HOCProps from '../types/HOCProps';
 
 import './PollStarter.css';
 
 const { Search } = Input;
+const { Step } = MobileSteps;
 
 const steps = [
   {
@@ -51,14 +53,16 @@ const PollWizardSteps = (hocProps: HOCProps) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative bg-white dark:bg-black">
         {/* Hero content */}
         <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
-          {/* Section header */}
-          <div className="max-w-3xl mx-auto pb-12 md:pb-16">
-            <div className='mb-10' style={contentStyle}>{steps[current].content}</div>
+          <div className='mb-10' style={contentStyle}>{steps[current].content}</div>
+          {/* Desktop */}
+          <div className="hidden md:flex max-w-3xl mx-auto pb-12 md:pb-16">
             <Steps
               current={current} items={items}
               className='text-white dark:text-white'
               style={{color: 'white' }}
             />
+          </div>
+          <div className="hidden md:flex max-w-3xl mx-auto pb-12 md:pb-16">
               <div style={{ marginTop: 24 }} className='dark:text-white'>
                 {current < steps.length - 1 && (
                   <Button
@@ -86,6 +90,54 @@ const PollWizardSteps = (hocProps: HOCProps) => {
                   </Button>
                 )}
               </div>
+          </div>
+          {/* Mobile menu */}
+          <div className="md:hidden">
+            <MobileSteps current={current}>
+              <Step title='标题1' description='描述' />
+              <Step title='标题2' description='描述' />
+              <Step title='标题3' description='描述' />
+            </MobileSteps>
+          </div>
+          <div className="md:hidden">
+            <div className='dark:text-white' style={{ justifyItems: "center"}}>
+              <div>
+                {current > 0 && (
+                  <MobileButton
+                    block
+                    fill='outline'
+                    className='mb-4'
+                    size='large'
+                    onClick={() => prev()}
+                  >
+                    Previous
+                  </MobileButton>
+                )}
+              </div>
+              <div>
+                {current < steps.length - 1 && (
+                  <MobileButton
+                    block
+                    className='mb-4'
+                    color='primary' size='large'
+                    onClick={() => next()}
+                  >
+                    Next
+                  </MobileButton>
+                )}
+              </div>
+              <div>
+                {current === steps.length - 1 && (
+                  <MobileButton
+                    block
+                    color='primary' size='large'
+                    className='mb-4'
+                    onClick={() => message.success('Processing complete!')}>
+                    Done
+                  </MobileButton>
+                )}
+                </div>
+            </div>
           </div>
         </div>
       </div>

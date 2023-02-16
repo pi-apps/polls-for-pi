@@ -15,7 +15,7 @@ import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
-import { User } from './types/UserType';
+import { AuthResult, User } from './types/UserType';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
 interface WindowWithEnv extends Window {
@@ -86,6 +86,11 @@ function App() {
     } else {
       document.documentElement.classList.remove('dark')
     }
+
+    document.documentElement.setAttribute(
+      'data-prefers-color-scheme',
+      mode === 'dark' ? 'dark' : 'light'
+    )
   }
 
   const location = useLocation();
@@ -107,6 +112,11 @@ function App() {
     document.querySelector('html').style.scrollBehavior = ''
   }, [location.pathname]); // triggered on route change
 
+  document.documentElement.setAttribute(
+    'data-prefers-color-scheme',
+    mode === 'dark' ? 'dark' : 'light'
+  )
+
   // useEffect(() => {
   //   console.log('localStorage.theme', localStorage.theme);
   //   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -122,7 +132,7 @@ function App() {
       <Route
         path="/"
         element={
-          <HomeV2 setMode={onChangeMode} mode={mode} />
+          <HomeV2 pathname={pathname} setMode={onChangeMode} mode={mode} />
         }
       />
       <Route
