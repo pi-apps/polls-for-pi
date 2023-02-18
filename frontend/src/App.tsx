@@ -13,6 +13,8 @@ import Notfound from './notfound';
 import { Browse, Home, Shop } from './pages';
 import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
+import PollConfig from './pages/PollConfig';
+import PollConfigMobile from './pages/PollConfigMobile';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
 import { AuthResult, User } from './types/UserType';
@@ -39,7 +41,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
-  const [mode, setMode] = useState<string>('light');
+  const [mode, setMode] = useState<string>('dark');
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -172,6 +174,24 @@ function App() {
         path="/wizard"
         element={
           <PollWizard
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
+      <Route
+        path="/poll_config"
+        element={
+          <PollConfigMobile
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+          />
+        }
+      />
+      <Route
+        path="/poll_config_desktop"
+        element={
+          <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
           />

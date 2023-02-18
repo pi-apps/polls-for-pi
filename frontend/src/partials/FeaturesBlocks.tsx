@@ -44,7 +44,7 @@ function FeaturesBlocks() {
                 />
               </svg>
               <h4 className="h4 mb-2">Built on Pi</h4>
-              <p className="text-lg text-gray-400 text-center">Polls built on the Pi blockchain.</p>
+              <p className="text-lg text-gray-400 text-center">Get feedback from 35+ million Engaged Pioneers*.</p>
             </div>
 
             {/* 3rd item */}

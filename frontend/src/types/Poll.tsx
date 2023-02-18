@@ -1,5 +1,4 @@
 export type Poll = {
-  setTitle: () => void;
   title?: string,
   type?: string,
   distribute?: string,
@@ -7,8 +6,10 @@ export type Poll = {
   distribution?: string,
   distributionType?: string,
   chartType?: string,
-  owner: {
+  options?: string[],
+  owner?: {
     uid: string,
     username: string
-  }
+  },
+  setTitle?: (title: string) => void;
 };

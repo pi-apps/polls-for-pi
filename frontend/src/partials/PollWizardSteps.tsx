@@ -1,32 +1,55 @@
 
-import { Button, Input, message, Steps, theme } from 'antd';
+import { DeploymentUnitOutlined, DollarOutlined, HourglassOutlined } from '@ant-design/icons';
+import { Button, Steps, theme } from 'antd';
 import { Button as MobileButton, Steps as MobileSteps } from 'antd-mobile';
+import { FillinOutline, SetOutline } from 'antd-mobile-icons';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
+import { Poll } from '../types/Poll';
 
 import './PollStarter.css';
 
-const { Search } = Input;
 const { Step } = MobileSteps;
 
 const steps = [
   {
+    key: 1,
     title: 'Options',
     content: 'How many options will your poll have?',
+    icon: <SetOutline />,
   },
   {
-    title: 'Chart',
-    content: 'How would you like to see the results?',
+    key: 2,
+    title: 'Duration',
+    content: 'How long will it gather responses?',
+    icon: <HourglassOutlined />,
   },
   {
+    key: 3,
+    title: 'Responses',
+    content: 'How many respones does it need?',
+    icon: <FillinOutline />,
+  },
+  {
+    key: 4,
+    title: 'Budget',
+    content: 'How much budget does the poll have??',
+    icon: <DollarOutlined />,
+  },
+  {
+    key: 5,
     title: 'Distribution',
     content: 'When will you distribute the rewards?',
+    icon: <DeploymentUnitOutlined />,
   },
 ];
 
 const PollWizardSteps = (hocProps: HOCProps) => {
+  const navigate = useNavigate();
   const { token } = theme.useToken();
-  const [current, setCurrent] = useState(0);
+  const [ current, setCurrent ] = useState(0);
+  const [ poll, setPoll ] = useState<Poll | null>(null);
 
   const next = () => {
     setCurrent(current + 1);
@@ -35,8 +58,6 @@ const PollWizardSteps = (hocProps: HOCProps) => {
   const prev = () => {
     setCurrent(current - 1);
   };
-
-  const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',
@@ -57,7 +78,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
           {/* Desktop */}
           <div className="hidden md:flex max-w-3xl mx-auto pb-12 md:pb-16">
             <Steps
-              current={current} items={items}
+              current={current} items={steps}
               className='text-white dark:text-white'
               style={{color: 'white' }}
             />
@@ -77,7 +98,8 @@ const PollWizardSteps = (hocProps: HOCProps) => {
                   <Button
                     className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white'
                     //type='primary'
-                    onClick={() => message.success('Processing complete!')}>
+                    onClick={() => navigate("/poll_config")}
+                  >
                     Done
                   </Button>
                 )}
@@ -94,14 +116,14 @@ const PollWizardSteps = (hocProps: HOCProps) => {
           {/* Mobile menu */}
           <div className="md:hidden">
             <MobileSteps current={current}>
-              <Step title='标题1' description='描述' />
-              <Step title='标题2' description='描述' />
-              <Step title='标题3' description='描述' />
+              {steps.map((item) =>
+                <Step title={item.title} icon={item.icon} />
+              )}
             </MobileSteps>
           </div>
           <div className="md:hidden">
             <div className='dark:text-white' style={{ justifyItems: "center"}}>
-              <div>
+              {/* <div>
                 {current > 0 && (
                   <MobileButton
                     block
@@ -113,7 +135,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
                     Previous
                   </MobileButton>
                 )}
-              </div>
+              </div> */}
               <div>
                 {current < steps.length - 1 && (
                   <MobileButton
@@ -132,7 +154,8 @@ const PollWizardSteps = (hocProps: HOCProps) => {
                     block
                     color='primary' size='large'
                     className='mb-4'
-                    onClick={() => message.success('Processing complete!')}>
+                    onClick={() => navigate("/poll_config")}
+                    >
                     Done
                   </MobileButton>
                 )}
