@@ -1,55 +1,135 @@
 
 import { DeploymentUnitOutlined, DollarOutlined, HourglassOutlined } from '@ant-design/icons';
-import { Button, Steps, theme } from 'antd';
-import { Button as MobileButton, Steps as MobileSteps } from 'antd-mobile';
+import { theme } from 'antd';
+import { Button as MobileButton, DatePicker as MobileDatePicker, Form as MobileForm, Stepper, Steps as MobileSteps, Switch as MobileSwitch } from 'antd-mobile';
 import { FillinOutline, SetOutline } from 'antd-mobile-icons';
-import React, { useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
 
-import './PollStarter.css';
+
+import type { DatePickerRef } from 'antd-mobile/es/components/date-picker';
+import dayjs from 'dayjs';
+
 
 const { Step } = MobileSteps;
 
-const steps = [
-  {
-    key: 1,
-    title: 'Options',
-    content: 'How many options will your poll have?',
-    icon: <SetOutline />,
-  },
-  {
-    key: 2,
-    title: 'Duration',
-    content: 'How long will it gather responses?',
-    icon: <HourglassOutlined />,
-  },
-  {
-    key: 3,
-    title: 'Responses',
-    content: 'How many respones does it need?',
-    icon: <FillinOutline />,
-  },
-  {
-    key: 4,
-    title: 'Budget',
-    content: 'How much budget does the poll have??',
-    icon: <DollarOutlined />,
-  },
-  {
-    key: 5,
-    title: 'Distribution',
-    content: 'When will you distribute the rewards?',
-    icon: <DeploymentUnitOutlined />,
-  },
-];
+import './PollWizardSteps.css';
 
 const PollWizardSteps = (hocProps: HOCProps) => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
   const [ current, setCurrent ] = useState(0);
   const [ poll, setPoll ] = useState<Poll | null>(null);
+
+  const [options, setOptions] = useState(0);
+  console.log('options', options)
+
+  const steps = [
+    {
+      key: 1,
+      title: 'Options',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            className='custom-width'
+            name='options'
+            label='How many options will your poll have?'
+            childElementPosition='right'
+          >
+            <Stepper min={0} onChange={value => setOptions(value)} />
+          </MobileForm.Item>
+      </MobileForm>,
+      icon: <SetOutline />,
+    },
+    {
+      key: 2,
+      title: 'Duration',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            className='custom-width'
+            name='duration'
+            label='Until when will it gather responses?'
+            childElementPosition='right'
+            trigger='onConfirm'
+            onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
+              datePickerRef.current?.open()
+            }}
+          >
+            <MobileDatePicker cancelText='Cancel' confirmText='OK'>
+              {value =>
+                value ? dayjs(value).format('YYYY-MM-DD') : 'Select end date'
+              }
+            </MobileDatePicker>
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <HourglassOutlined />,
+    },
+    {
+      key: 3,
+      title: 'Responses',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            name='isLimited'
+            label='Will it limit responses?'
+            childElementPosition='right'
+          >
+            <MobileSwitch defaultChecked />
+          </MobileForm.Item>
+          <MobileForm.Item
+            name='responses'
+            label='How many responses will it get?'
+            childElementPosition='right'
+          >
+            <Stepper min={0} />
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <FillinOutline />,
+    },
+    {
+      key: 4,
+      title: 'Budget',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            name='budget'
+            label='How much budget does it have?'
+            childElementPosition='right'
+          >
+            <Stepper />
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <DollarOutlined />,
+    },
+    {
+      key: 5,
+      title: 'Distribution',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            name='distribution'
+            label='How will you distribute the rewards?'
+            childElementPosition='right'
+          >
+            <Stepper />
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <DeploymentUnitOutlined />,
+    },
+  ];
 
   const next = () => {
     setCurrent(current + 1);
@@ -60,12 +140,6 @@ const PollWizardSteps = (hocProps: HOCProps) => {
   };
 
   const contentStyle: React.CSSProperties = {
-    lineHeight: '260px',
-    textAlign: 'center',
-    // color: "#ffffff",
-    // backgroundColor: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
   };
 
@@ -75,44 +149,6 @@ const PollWizardSteps = (hocProps: HOCProps) => {
         {/* Hero content */}
         <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
           <div className='mb-10' style={contentStyle}>{steps[current].content}</div>
-          {/* Desktop */}
-          <div className="hidden md:flex max-w-3xl mx-auto pb-12 md:pb-16">
-            <Steps
-              current={current} items={steps}
-              className='text-white dark:text-white'
-              style={{color: 'white' }}
-            />
-          </div>
-          <div className="hidden md:flex max-w-3xl mx-auto pb-12 md:pb-16">
-              <div style={{ marginTop: 24 }} className='dark:text-white'>
-                {current < steps.length - 1 && (
-                  <Button
-                    className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white'
-                    //type='primary'
-                    onClick={() => next()}
-                  >
-                    Next
-                  </Button>
-                )}
-                {current === steps.length - 1 && (
-                  <Button
-                    className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0 dark:text-white'
-                    //type='primary'
-                    onClick={() => navigate("/poll_config")}
-                  >
-                    Done
-                  </Button>
-                )}
-                {current > 0 && (
-                  <Button
-                    className='btn bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0  dark:text-white'
-                    style={{ margin: '0 8px' }} onClick={() => prev()}
-                  >
-                    Previous
-                  </Button>
-                )}
-              </div>
-          </div>
           {/* Mobile menu */}
           <div className="md:hidden">
             <MobileSteps current={current}>
@@ -121,7 +157,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
               )}
             </MobileSteps>
           </div>
-          <div className="md:hidden">
+          <div>
             <div className='dark:text-white' style={{ justifyItems: "center"}}>
               {/* <div>
                 {current > 0 && (
