@@ -7,11 +7,11 @@ import HeroHome from '../partials/HeroHome';
 import PageIllustration from '../partials/PageIllustration';
 import HOCProps from '../types/HOCProps';
 
-const HomeV2 = (hocProps: HOCProps) => {
+const HomeV2 = (props: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
-      <Header setMode={hocProps.setMode} mode={hocProps.mode} />
+      <Header setMode={props.setMode} mode={props.mode} pathname={props.pathname}  />
 
       {/*  Page content */}
       <main className="grow">
