@@ -1,30 +1,53 @@
 
 import { DeploymentUnitOutlined, DollarOutlined, HourglassOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
-import { Button as MobileButton, DatePicker as MobileDatePicker, Form as MobileForm, Stepper, Steps as MobileSteps, Switch as MobileSwitch } from 'antd-mobile';
+import { Button as MobileButton, DatePicker as MobileDatePicker, Form as MobileForm, Selector, Slider, Stepper, Steps as MobileSteps, Switch as MobileSwitch, Toast } from 'antd-mobile';
 import { FillinOutline, SetOutline } from 'antd-mobile-icons';
 import React, { RefObject, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
+import { options as distributionOptions } from './options';
 
 
 import type { DatePickerRef } from 'antd-mobile/es/components/date-picker';
 import dayjs from 'dayjs';
 
-
 const { Step } = MobileSteps;
 
 import './PollWizardSteps.css';
+
+const marks = {
+  0: '0 π',
+  20: '20 π',
+  40: '40 π',
+  60: '60 π',
+  80: '80 π',
+  100: '100 π',
+}
 
 const PollWizardSteps = (hocProps: HOCProps) => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
   const [ current, setCurrent ] = useState(0);
   const [ poll, setPoll ] = useState<Poll | null>(null);
+  const [ checked, setChecked ] = useState(true);
+  const [ budget, setBudget ] = useState(0);
 
-  const [options, setOptions] = useState(0);
-  console.log('options', options)
+  const [optionCount, setOptionCount] = useState(0);
+  console.log('option count', optionCount)
+
+  const toastValue = (value: number | number[]) => {
+    let text = ''
+    if (typeof value === 'number') {
+      text = `${value}`
+      setBudget(value);
+    } else {
+      text = `[${value.join(',')}]`
+    }
+    Toast.show(`selected value： ${text} π`)
+    console.log(value)
+  }
 
   const steps = [
     {
@@ -40,7 +63,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
             label='How many options will your poll have?'
             childElementPosition='right'
           >
-            <Stepper min={0} onChange={value => setOptions(value)} />
+            <Stepper min={0} onChange={value => setOptionCount(value)} />
           </MobileForm.Item>
       </MobileForm>,
       icon: <SetOutline />,
@@ -62,9 +85,9 @@ const PollWizardSteps = (hocProps: HOCProps) => {
               datePickerRef.current?.open()
             }}
           >
-            <MobileDatePicker cancelText='Cancel' confirmText='OK'>
+            <MobileDatePicker cancelText='Cancel' confirmText='OK' aria-placeholder='end date'>
               {value =>
-                value ? dayjs(value).format('YYYY-MM-DD') : 'Select end date'
+                value ? dayjs(value).format('YYYY-MM-DD') : 'Select Date'
               }
             </MobileDatePicker>
           </MobileForm.Item>
@@ -77,20 +100,32 @@ const PollWizardSteps = (hocProps: HOCProps) => {
       content:
         <MobileForm
           layout='horizontal'
+          style={{
+            '--prefix-width': '75%'
+          }}
         >
           <MobileForm.Item
             name='isLimited'
             label='Will it limit responses?'
             childElementPosition='right'
           >
-            <MobileSwitch defaultChecked />
+            <MobileSwitch
+              checked={checked}
+              onChange={val => {
+                setChecked(val)
+              }}
+            />
           </MobileForm.Item>
           <MobileForm.Item
             name='responses'
-            label='How many responses will it get?'
+            label='How many responses will it gather?'
             childElementPosition='right'
+            disabled={!checked}
           >
-            <Stepper min={0} />
+            <Stepper
+              step={10}
+              min={0}
+            />
           </MobileForm.Item>
         </MobileForm>,
       icon: <FillinOutline />,
@@ -100,14 +135,22 @@ const PollWizardSteps = (hocProps: HOCProps) => {
       title: 'Budget',
       content:
         <MobileForm
-          layout='horizontal'
+          layout='vertical'
         >
           <MobileForm.Item
             name='budget'
             label='How much budget does it have?'
-            childElementPosition='right'
           >
-            <Stepper />
+            <Slider
+              step={10}
+              min={0}
+              max={100}
+              ticks
+              onAfterChange={toastValue}
+              icon='π'
+              marks={marks}
+              popover
+            />
           </MobileForm.Item>
         </MobileForm>,
       icon: <DollarOutlined />,
@@ -117,14 +160,18 @@ const PollWizardSteps = (hocProps: HOCProps) => {
       title: 'Distribution',
       content:
         <MobileForm
-          layout='horizontal'
+          layout='vertical'
         >
           <MobileForm.Item
             name='distribution'
-            label='How will you distribute the rewards?'
-            childElementPosition='right'
+            label='When will you distribute the rewards?'
           >
-            <Stepper />
+            <Selector
+              columns={2}
+              options={distributionOptions}
+              defaultValue={['1']}
+              onChange={(arr, extend) => console.log(arr, extend.items)}
+            />
           </MobileForm.Item>
         </MobileForm>,
       icon: <DeploymentUnitOutlined />,
@@ -132,7 +179,11 @@ const PollWizardSteps = (hocProps: HOCProps) => {
   ];
 
   const next = () => {
-    setCurrent(current + 1);
+    if(current === steps.length - 2) {
+      navigate("/poll_config");
+    } else {
+      setCurrent(current + 1);
+    }
   };
 
   const prev = () => {
@@ -140,7 +191,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
   };
 
   const contentStyle: React.CSSProperties = {
-    marginTop: 16,
+
   };
 
   return (
