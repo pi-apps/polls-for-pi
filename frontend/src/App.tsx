@@ -14,7 +14,7 @@ import { Browse, Home, Shop } from './pages';
 import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
 import PollConfig from './pages/PollConfig';
-import PollConfigMobile from './pages/PollConfigMobile';
+import PollConfigDesktop from './pages/PollConfigDesktop';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
 import { AuthResult, User } from './types/UserType';
@@ -182,7 +182,7 @@ function App() {
       <Route
         path="/poll_config"
         element={
-          <PollConfigMobile
+          <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
           />
@@ -191,7 +191,7 @@ function App() {
       <Route
         path="/poll_config_desktop"
         element={
-          <PollConfig
+          <PollConfigDesktop
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
           />

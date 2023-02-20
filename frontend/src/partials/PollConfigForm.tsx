@@ -1,31 +1,26 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import {
+  Button, Form, Input, Selector, Slider, Stepper, Switch
+} from 'antd-mobile';
+import { useState } from 'react';
 import HOCProps from '../types/HOCProps';
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-};
-
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-};
-
+import { options as distributionOptions } from './options';
 import './PollStarter.css';
 
 const PollConfigForm = (hocProps: HOCProps) => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form:', values);
-  };
+  const [optionCount, setOptionCount] = useState(0);
+  const [ checked, setChecked ] = useState(true);
+  const [ budget, setBudget ] = useState(0);
+
+  const onBudgetChange = (value: number | number[]) => {
+    let text = ''
+    if (typeof value === 'number') {
+      text = `${value}`
+      setBudget(value);
+    }
+    console.log(value)
+  }
+
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
@@ -34,83 +29,88 @@ const PollConfigForm = (hocProps: HOCProps) => {
           {/* Section header */}
           <div className="max-w-3xl mx-auto pb-12 md:pb-16">
             <Form
-              name="dynamic_form_item"
-              {...formItemLayoutWithOutLabel}
-              onFinish={onFinish}
-              style={{ maxWidth: 600 }}
-            >
-              <Form.List
-                name="names"
-                rules={[
-                  {
-                    validator: async (_, names) => {
-                      if (!names || names.length < 2) {
-                        return Promise.reject(new Error('At least 2 passengers'));
-                      }
-                    },
-                  },
-                ]}
-              >
-                {(fields, { add, remove }, { errors }) => (
-                  <>
-                    {fields.map((field, index) => (
-                      <Form.Item
-                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                        label={index === 0 ? 'Passengers' : ''}
-                        required={false}
-                        key={field.key}
-                      >
-                        <Form.Item
-                          {...field}
-                          validateTrigger={['onChange', 'onBlur']}
-                          rules={[
-                            {
-                              required: true,
-                              whitespace: true,
-                              message: "Please input passenger's name or delete this field.",
-                            },
-                          ]}
-                          noStyle
-                        >
-                          <Input placeholder="passenger name" style={{ width: '60%' }} />
-                        </Form.Item>
-                        {fields.length > 1 ? (
-                          <MinusCircleOutlined
-                            className="dynamic-delete-button"
-                            onClick={() => remove(field.name)}
-                          />
-                        ) : null}
-                      </Form.Item>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        style={{ width: '60%' }}
-                        icon={<PlusOutlined />}
-                      >
-                        Add field
-                      </Button>
-                      <Button
-                        type="dashed"
-                        onClick={() => {
-                          add('The head item', 0);
-                        }}
-                        style={{ width: '60%', marginTop: '20px' }}
-                        icon={<PlusOutlined />}
-                      >
-                        Add field at head
-                      </Button>
-                      <Form.ErrorList errors={errors} />
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">
+              layout='horizontal'
+              footer={
+                <Button block type='submit' color='primary' size='large'>
                   Submit
                 </Button>
+              }
+            >
+              <Form.Header>Poll Title</Form.Header>
+              <Form.Item
+                name='title'
+                label='Tite'
+                rules={[{ required: true, message: 'Title is required' }]}
+              >
+                <Input onChange={console.log} placeholder='Poll Title' />
               </Form.Item>
+              <Form.Item
+                className='custom-width'
+                name='options'
+                label='How many options will your poll have?'
+                childElementPosition='right'
+              >
+                <Stepper min={0} onChange={value => setOptionCount(value)} />
+              </Form.Item>
+              <Form.Item
+                name='isLimited'
+                label='Will it limit responses?'
+                childElementPosition='right'
+              >
+                <Switch
+                  uncheckedText='No' checkedText='Yes'
+                  checked={checked}
+                  onChange={val => {
+                    setChecked(val)
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                name='responses'
+                label='How many responses will it gather?'
+                childElementPosition='right'
+                disabled={!checked}
+              >
+                <Stepper
+                  step={10}
+                  min={0}
+                />
+              </Form.Item>
+              <Form
+                layout='vertical'
+              >
+                <Form.Item
+                  name='budget'
+                  label='How much budget does it have?'
+                >
+                  <Slider
+                    min={0}
+                    max={10}
+                    onAfterChange={onBudgetChange}
+                    icon='π'
+                    popover={(value) => <span>{value} π</span>}
+                    step={0.5}
+                    // step={10}
+                    // ticks
+                    // marks={marks}
+                  />
+                </Form.Item>
+              </Form>
+              <Form
+                layout='vertical'
+              >
+                <Form.Item
+                  name='distribution'
+                  label='When will you distribute the rewards?'
+                >
+                  <Selector
+                    columns={2}
+                    options={distributionOptions}
+                    defaultValue={['1']}
+                    onChange={(arr, extend) => console.log(arr, extend.items)}
+                  />
+                </Form.Item>
+              </Form>,
             </Form>
           </div>
         </div>

@@ -1,9 +1,10 @@
 
 import Header from '../partials/Header';
-import PollConfigMobileForm from '../partials/PollConfigMobileForm';
+import PollConfigFormDesktop from '../partials/PollConfigFormDesktop';
+
 import HOCProps from '../types/HOCProps';
 
-const PollConfigMobile = (props: HOCProps) => {
+const PollConfigDesktop = (props: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
@@ -11,11 +12,11 @@ const PollConfigMobile = (props: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PollConfigMobileForm setTitle={props.setTitle} />
+        <PollConfigFormDesktop setTitle={props.setTitle} />
       </main>
 
     </div>
   );
 }
 
-export default PollConfigMobile;
+export default PollConfigDesktop;

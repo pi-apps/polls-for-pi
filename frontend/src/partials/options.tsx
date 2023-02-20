@@ -1,10 +1,10 @@
 export const options = [
   {
-    label: 'Immediate',
+    label: 'After Response',
     value: 'immediate',
   },
   {
-    label: 'End of Survey',
+    label: 'End of Poll',
     value: 'end',
   },
 ]
