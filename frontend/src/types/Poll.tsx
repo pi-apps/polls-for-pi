@@ -11,5 +11,8 @@ export type Poll = {
     uid: string,
     username: string
   },
+  optionCount?: number,
+  budget?: number,
+
   setTitle?: (title: string) => void;
 };

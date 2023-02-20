@@ -35,6 +35,7 @@ services:
       MONGODB_USERNAME: ${MONGODB_USERNAME}
       MONGODB_PASSWORD: ${MONGODB_PASSWORD}
       FRONTEND_URL: ${FRONTEND_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
 
   mongo:
     image: mongo:5.0

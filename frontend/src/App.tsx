@@ -17,6 +17,7 @@ import PollConfig from './pages/PollConfig';
 import PollConfigDesktop from './pages/PollConfigDesktop';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
+import { Poll } from './types/Poll';
 import { AuthResult, User } from './types/UserType';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
@@ -42,6 +43,7 @@ function App() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [mode, setMode] = useState<string>('dark');
+  const [poll, setPoll] = useState<Poll>({});
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -71,6 +73,10 @@ function App() {
   const onSetTitle = (title: string) => {
     console.log('title', title)
     setTitle(title);
+  }
+
+  const onSetPoll = (poll: Poll) => {
+    setPoll(poll);
   }
 
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -176,6 +182,7 @@ function App() {
           <PollWizard
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
+            setPoll={onSetPoll} poll={poll}
           />
         }
       />
@@ -184,7 +191,7 @@ function App() {
         element={
           <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode}
+            setMode={onChangeMode} mode={mode} title={title}
           />
         }
       />

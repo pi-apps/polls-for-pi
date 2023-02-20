@@ -1,3 +1,4 @@
+import axios from "axios";
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -9,6 +10,7 @@ import logger from 'morgan';
 import path from 'path';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
+import mountPollsAiEndpoints from './handlers/polls_ai';
 import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
 
@@ -27,6 +29,28 @@ const mongoClientOptions = {
   },
 }
 
+const OPENAI_API_KEY = env.openai_api_key;
+
+async function generateText(prompt: string): Promise<string> {
+  const response = await axios.post("https://api.openai.com/v1/engines/davinci-codex/completions", {
+    prompt: prompt,
+    max_tokens: 50
+  }, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${OPENAI_API_KEY}`
+    }
+  });
+
+  if (response.status === 200) {
+    const choices = response.data.choices;
+    if (choices && choices.length > 0) {
+      return choices[0].text;
+    }
+  }
+
+  throw new Error(`Request failed with status code ${response.status}`);
+}
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:
@@ -85,6 +109,10 @@ app.use('/user', userRouter);
 const productsRouter = express.Router();
 mountProductsEndpoints(productsRouter)
 app.use('/v1/products', productsRouter);
+
+const pollsAiRouter = express.Router();
+mountPollsAiEndpoints(pollsAiRouter)
+app.use('/v1/polls_ai', pollsAiRouter);
 
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {

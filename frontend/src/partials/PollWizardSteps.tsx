@@ -1,6 +1,5 @@
 
 import { DeploymentUnitOutlined, DollarOutlined } from '@ant-design/icons';
-import { theme } from 'antd';
 import { Button as MobileButton, Form as MobileForm, Selector, Slider, Stepper, Steps as MobileSteps } from 'antd-mobile';
 import { SetOutline } from 'antd-mobile-icons';
 import React, { useState } from 'react';
@@ -33,13 +32,10 @@ while (x <= 100) {
 
 const PollWizardSteps = (hocProps: HOCProps) => {
   const navigate = useNavigate();
-  const { token } = theme.useToken();
   const [ current, setCurrent ] = useState(0);
-  const [ poll, setPoll ] = useState<Poll | null>(null);
-  const [ checked, setChecked ] = useState(true);
   const [ budget, setBudget ] = useState(0);
-
-  const [optionCount, setOptionCount] = useState(0);
+  const [ optionCount, setOptionCount] = useState(2);
+  const [ distribution, setDistribution] = useState('');
   console.log('option count', optionCount)
 
   const onBudgetChange = (value: number | number[]) => {
@@ -123,7 +119,10 @@ const PollWizardSteps = (hocProps: HOCProps) => {
               columns={2}
               options={distributionOptions}
               defaultValue={['1']}
-              onChange={(arr, extend) => console.log(arr, extend.items)}
+              onChange={(arr, extend) => {
+                console.log(arr, extend.items)
+                setDistribution(arr[0]);
+              }}
             />
           </MobileForm.Item>
         </MobileForm>,
@@ -143,6 +142,16 @@ const PollWizardSteps = (hocProps: HOCProps) => {
     setCurrent(current - 1);
   };
 
+  const onDone = () => {
+    const poll: Poll = {};
+    poll.optionCount = optionCount;
+    poll.budget = budget;
+    if (hocProps.setPoll) {
+      hocProps.setPoll(poll)
+    }
+    navigate("/poll_config")
+  };
+
   const contentStyle: React.CSSProperties = {
 
   };
@@ -157,7 +166,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
           <div className="md:hidden">
             <MobileSteps current={current}>
               {steps.map((item) =>
-                <Step title={item.title} icon={item.icon} />
+                <Step key={item.key} title={item.title} icon={item.icon} />
               )}
             </MobileSteps>
           </div>
@@ -194,7 +203,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
                     block
                     color='primary' size='large'
                     className='mb-4'
-                    onClick={() => navigate("/poll_config")}
+                    onClick={onDone}
                     >
                     Done
                   </MobileButton>

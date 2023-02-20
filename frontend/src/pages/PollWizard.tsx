@@ -11,7 +11,7 @@ const PollWizard = (hocProps: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PollWizardSteps setTitle={hocProps.setTitle} />
+        <PollWizardSteps setTitle={hocProps.setTitle} setPoll={hocProps.setPoll} />
       </main>
 
     </div>

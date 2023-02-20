@@ -1,11 +1,28 @@
 import {
   Button, Form, Input, Selector, Slider, Stepper, Switch
 } from 'antd-mobile';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import HOCProps from '../types/HOCProps';
 
 import { options as distributionOptions } from './options';
 import './PollStarter.css';
+
+interface WindowWithEnv extends Window {
+  __ENV?: {
+    backendURL: string, // REACT_APP_BACKEND_URL environment variable
+    sandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
+    viteBackendURL: string, // REACT_APP_BACKEND_URL environment variable
+    viteSandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
+  }
+}
+
+const _window: WindowWithEnv = window;
+const backendURL = _window.__ENV && (_window.__ENV.backendURL || _window.__ENV.viteBackendURL);
+console.log('_window.__ENV', _window.__ENV)
+console.log('backendURL', backendURL)
+
+const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
 const PollConfigForm = (hocProps: HOCProps) => {
   const [optionCount, setOptionCount] = useState(0);
@@ -20,6 +37,15 @@ const PollConfigForm = (hocProps: HOCProps) => {
     }
     console.log(value)
   }
+
+  const getPollOptions = (prompt?: string) => {
+    console.log("get poll options ai API", prompt);
+    return axiosClient.post('/v1/polls_ai', { prompt });
+  }
+
+  useEffect(() => {
+    getPollOptions(hocProps?.title);
+  });
 
   return (
     <section>
@@ -64,7 +90,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
               </Form.Item>
               <Form.Item
                 name='isLimited'
-                label='Will it limit responses?'
+                label='Will it limit the number of responses?'
                 childElementPosition='right'
               >
                 <Switch
