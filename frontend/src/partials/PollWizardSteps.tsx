@@ -64,8 +64,20 @@ const PollWizardSteps = (hocProps: HOCProps) => {
             name='options'
             label='How many options will your poll have?'
             childElementPosition='right'
+            rules={[
+              {
+                min: 2,
+                type: 'number',
+                message: 'Should have at least two options'
+              },
+            ]}
           >
-            <Stepper min={0} onChange={value => setOptionCount(value)} />
+            <Stepper
+              defaultValue={2}
+              min={2}
+              max={10}
+              onChange={value => setOptionCount(value)}
+            />
           </MobileForm.Item>
       </MobileForm>,
       icon: <SetOutline />,
@@ -105,7 +117,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
         >
           <MobileForm.Item
             name='distribution'
-            label='When will you distribute the rewards?'
+            label='When will you distribute the incentives?'
           >
             <Selector
               columns={2}

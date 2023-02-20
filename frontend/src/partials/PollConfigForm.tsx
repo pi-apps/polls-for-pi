@@ -49,8 +49,18 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 name='options'
                 label='How many options will your poll have?'
                 childElementPosition='right'
+                rules={[
+                  {
+                    min: 2,
+                    type: 'number',
+                    message: 'Should have at least two options'
+                  },
+                ]}
               >
-                <Stepper min={0} onChange={value => setOptionCount(value)} />
+                <Stepper
+                  max={10}
+                  onChange={value => setOptionCount(value)}
+                />
               </Form.Item>
               <Form.Item
                 name='isLimited'
@@ -70,10 +80,18 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 label='How many responses will it gather?'
                 childElementPosition='right'
                 disabled={!checked}
+                rules={[
+                  {
+                    min: 1,
+                    type: 'number',
+                    message: 'Should gather at least one response'
+                  },
+                ]}
               >
                 <Stepper
                   step={10}
                   min={0}
+                  max={1000}
                 />
               </Form.Item>
               <Form
@@ -101,7 +119,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
               >
                 <Form.Item
                   name='distribution'
-                  label='When will you distribute the rewards?'
+                  label='When will you distribute the incentives?'
                 >
                   <Selector
                     columns={2}
