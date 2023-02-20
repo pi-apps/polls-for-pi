@@ -1,29 +1,49 @@
-import { defineConfig } from 'vite'
-import postcss from './postcss.config.js'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
+import { loadEnv } from 'vite';
+import { createHtmlPlugin } from 'vite-plugin-html';
+import postcss from './postcss.config.js';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  define: {
-    'process.env': process.env
-  },
-  css: {
-    postcss,
-  },
-  plugins: [react()],
-  resolve: {
-    alias: [
-      {
-        find: /^~.+/,
-        replacement: (val) => {
-          return val.replace(/^~/, "");
-        },
-      },
+export default ({mode}) => {
+  console.log('mode', mode)
+  const env = loadEnv(mode, process.cwd())
+  console.log('env', env)
+  return {
+    define: {
+      'process.env': process.env,
+      REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
+      REACT_APP_SANDBOX_SDK: process.env.REACT_APP_SANDBOX_SDK
+    },
+    css: {
+      postcss,
+    },
+    plugins: [
+      react(),
+      createHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            title: env.VITE_MY_FOO,
+            REACT_APP_BACKEND_URL: env.REACT_APP_BACKEND_URL,
+            REACT_APP_SANDBOX_SDK: env.REACT_APP_SANDBOX_SDK
+          }
+        }
+      }),
     ],
-  },
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
+    resolve: {
+      alias: [
+        {
+          find: /^~.+/,
+          replacement: (val) => {
+            return val.replace(/^~/, "");
+          },
+        },
+      ],
+    },
+    build: {
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      }
     }
-  } 
-})
+  }
+}

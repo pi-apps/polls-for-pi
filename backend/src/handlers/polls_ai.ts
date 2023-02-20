@@ -5,8 +5,10 @@ import "../types/session";
 
 const OPENAI_API_KEY = env.openai_api_key;
 
-async function generateText(prompt: string): Promise<string> {
-  const response = await axios.post("https://api.openai.com/v1/engines/davinci-codex/completions", {
+async function generatePollOptions(question: string): Promise<string> {
+  const prompt = `Generate a list of poll options for the question '${question}'`
+  console.log('prompt', prompt)
+  const response = await axios.post("https://api.openai.com/v1/engines/text-davinci-002/completions", {
     prompt: prompt,
     max_tokens: 50
   }, {
@@ -29,6 +31,7 @@ async function generateText(prompt: string): Promise<string> {
 export default function mountPollsAiEndpoints(router: Router) {
   router.post('/', async (req, res) => {
     console.log('polls ai api endpoint')
+    console.log('polls ai api endpoint')
 
     const app = req.app;
     const { Product } = app.locals.collections;
@@ -37,21 +40,15 @@ export default function mountPollsAiEndpoints(router: Router) {
     const prompt = req.body.prompt;
     console.log('prompt', prompt)
 
-    generateText(prompt)
-      .then((generatedText) => {
-        console.log(generatedText);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
+    const options = await generatePollOptions(prompt);
+    console.log('options', options);
 
     // order doesn't exist
     if (!products || products.length <= 0) {
       return res.status(400).json({ message: "No products found." });
     }
 
-    return res.status(200).json({ data: products });
+    return res.status(200).json({ data: options });
   });
 
 }

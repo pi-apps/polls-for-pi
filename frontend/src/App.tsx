@@ -72,10 +72,8 @@ function App() {
 
   const onSetTitle = (title: string) => {
     console.log('title', title)
+    poll.title = title;
     setTitle(title);
-  }
-
-  const onSetPoll = (poll: Poll) => {
     setPoll(poll);
   }
 
@@ -182,7 +180,7 @@ function App() {
           <PollWizard
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
-            setPoll={onSetPoll} poll={poll}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
@@ -191,7 +189,9 @@ function App() {
         element={
           <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode} title={title}
+            setMode={onChangeMode} mode={mode}
+            setTitle={onSetTitle} title={title}
+            setPoll={setPoll} poll={poll}
           />
         }
       />

@@ -2,7 +2,7 @@ import {
   Button, Form, Input, Selector, Slider, Stepper, Switch
 } from 'antd-mobile';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import HOCProps from '../types/HOCProps';
 
 import { options as distributionOptions } from './options';
@@ -18,7 +18,7 @@ interface WindowWithEnv extends Window {
 }
 
 const _window: WindowWithEnv = window;
-const backendURL = _window.__ENV && (_window.__ENV.backendURL || _window.__ENV.viteBackendURL);
+const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
 console.log('_window.__ENV', _window.__ENV)
 console.log('backendURL', backendURL)
 
@@ -27,13 +27,15 @@ const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, wit
 const PollConfigForm = (hocProps: HOCProps) => {
   const [optionCount, setOptionCount] = useState(0);
   const [ checked, setChecked ] = useState(true);
-  const [ budget, setBudget ] = useState(0);
+  const [ distribution, setDistribution] = useState('');
 
   const onBudgetChange = (value: number | number[]) => {
     let text = ''
     if (typeof value === 'number') {
       text = `${value}`
-      setBudget(value);
+      if (hocProps.poll) {
+        hocProps.poll.budget = value;
+      }
     }
     console.log(value)
   }
@@ -43,9 +45,16 @@ const PollConfigForm = (hocProps: HOCProps) => {
     return axiosClient.post('/v1/polls_ai', { prompt });
   }
 
-  useEffect(() => {
-    getPollOptions(hocProps?.title);
-  });
+  const onFinish = async (values: any) => {
+    console.log('values', values)
+    const options = await getPollOptions(values.title)
+    console.log('options', options)
+  }
+
+  // useEffect(() => {
+  //   getPollOptions(hocProps?.title);
+  // });
+  console.log('hocProps.poll', hocProps.poll);
 
   return (
     <section>
@@ -61,14 +70,19 @@ const PollConfigForm = (hocProps: HOCProps) => {
                   Submit
                 </Button>
               }
+              onFinish={onFinish}
             >
               <Form.Header>Poll Title</Form.Header>
               <Form.Item
                 name='title'
                 label='Tite'
                 rules={[{ required: true, message: 'Title is required' }]}
+                initialValue={hocProps.poll?.title}
               >
-                <Input onChange={console.log} placeholder='Poll Title' />
+                <Input
+                  onChange={hocProps.setTitle}
+                  placeholder='Poll Title'
+                />
               </Form.Item>
               <Form.Item
                 className='custom-width'
@@ -82,6 +96,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
                     message: 'Should have at least two options'
                   },
                 ]}
+                initialValue={hocProps.poll?.optionCount}
               >
                 <Stepper
                   max={10}
@@ -92,6 +107,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 name='isLimited'
                 label='Will it limit the number of responses?'
                 childElementPosition='right'
+                initialValue={true}
               >
                 <Switch
                   uncheckedText='No' checkedText='Yes'
@@ -113,6 +129,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
                     message: 'Should gather at least one response'
                   },
                 ]}
+                initialValue={100}
               >
                 <Stepper
                   step={10}
@@ -137,6 +154,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
                     // step={10}
                     // ticks
                     // marks={marks}
+                    defaultValue={hocProps.poll?.budget}
                   />
                 </Form.Item>
               </Form>
@@ -146,12 +164,15 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 <Form.Item
                   name='distribution'
                   label='When will you distribute the incentives?'
+                  initialValue={[hocProps.poll?.distribution || '1']}
                 >
                   <Selector
                     columns={2}
                     options={distributionOptions}
-                    defaultValue={['1']}
-                    onChange={(arr, extend) => console.log(arr, extend.items)}
+                    onChange={(arr, extend) => {
+                      console.log(arr, extend.items)
+                      setDistribution(arr[0]);
+                    }}
                   />
                 </Form.Item>
               </Form>,
