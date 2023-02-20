@@ -1,15 +1,17 @@
 
-import { DeploymentUnitOutlined, DollarOutlined } from '@ant-design/icons';
+import { DeploymentUnitOutlined, DollarOutlined, HourglassOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
-import { Button as MobileButton, Form as MobileForm, Selector, Slider, Stepper, Steps as MobileSteps } from 'antd-mobile';
-import { SetOutline } from 'antd-mobile-icons';
-import React, { useState } from 'react';
+import { Button as MobileButton, DatePicker as MobileDatePicker, Form as MobileForm, Selector, Slider, Stepper, Steps as MobileSteps, Switch as MobileSwitch } from 'antd-mobile';
+import { FillinOutline, SetOutline } from 'antd-mobile-icons';
+import React, { RefObject, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
 import { options as distributionOptions } from './options';
 
 
+import type { DatePickerRef } from 'antd-mobile/es/components/date-picker';
+import dayjs from 'dayjs';
 
 const { Step } = MobileSteps;
 
@@ -64,23 +66,74 @@ const PollWizardSteps = (hocProps: HOCProps) => {
             name='options'
             label='How many options will your poll have?'
             childElementPosition='right'
-            rules={[
-              {
-                min: 2,
-                type: 'number',
-                message: 'Should have at least two options'
-              },
-            ]}
           >
-            <Stepper
-              defaultValue={2}
-              min={2}
-              max={10}
-              onChange={value => setOptionCount(value)}
-            />
+            <Stepper min={0} onChange={value => setOptionCount(value)} />
           </MobileForm.Item>
       </MobileForm>,
       icon: <SetOutline />,
+    },
+    {
+      key: 2,
+      title: 'Duration',
+      content:
+        <MobileForm
+          layout='horizontal'
+        >
+          <MobileForm.Item
+            className='custom-width'
+            name='duration'
+            label='Until when will it gather responses?'
+            childElementPosition='right'
+            trigger='onConfirm'
+            onClick={(e, datePickerRef: RefObject<DatePickerRef>) => {
+              datePickerRef.current?.open()
+            }}
+          >
+            <MobileDatePicker cancelText='Cancel' confirmText='OK' aria-placeholder='end date'>
+              {value =>
+                value ? dayjs(value).format('YYYY-MM-DD') : 'Select Date'
+              }
+            </MobileDatePicker>
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <HourglassOutlined />,
+    },
+    {
+      key: 3,
+      title: 'Responses',
+      content:
+        <MobileForm
+          layout='horizontal'
+          style={{
+            '--prefix-width': '75%'
+          }}
+        >
+          <MobileForm.Item
+            name='isLimited'
+            label='Will it limit responses?'
+            childElementPosition='right'
+          >
+            <MobileSwitch
+              uncheckedText='No' checkedText='Yes'
+              checked={checked}
+              onChange={val => {
+                setChecked(val)
+              }}
+            />
+          </MobileForm.Item>
+          <MobileForm.Item
+            name='responses'
+            label='How many responses will it gather?'
+            childElementPosition='right'
+            disabled={!checked}
+          >
+            <Stepper
+              step={10}
+              min={0}
+            />
+          </MobileForm.Item>
+        </MobileForm>,
+      icon: <FillinOutline />,
     },
     {
       key: 4,
@@ -117,7 +170,7 @@ const PollWizardSteps = (hocProps: HOCProps) => {
         >
           <MobileForm.Item
             name='distribution'
-            label='When will you distribute the incentives?'
+            label='When will you distribute the rewards?'
           >
             <Selector
               columns={2}
