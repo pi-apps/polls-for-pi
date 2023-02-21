@@ -12,7 +12,9 @@ export default ({mode}) => {
     define: {
       'process.env': process.env,
       REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
-      REACT_APP_SANDBOX_SDK: process.env.REACT_APP_SANDBOX_SDK
+      REACT_APP_SANDBOX_SDK: process.env.REACT_APP_SANDBOX_SDK,
+      VITE_BACKEND_URL: process.env.VITE_BACKEND_URL,
+      VITE_SANDBOX_SDK: process.env.VITE_SANDBOX_SDK
     },
     css: {
       postcss,
@@ -25,7 +27,9 @@ export default ({mode}) => {
           data: {
             title: env.VITE_MY_FOO,
             REACT_APP_BACKEND_URL: env.REACT_APP_BACKEND_URL,
-            REACT_APP_SANDBOX_SDK: env.REACT_APP_SANDBOX_SDK
+            REACT_APP_SANDBOX_SDK: env.REACT_APP_SANDBOX_SDK,
+            VITE_BACKEND_URL: process.env.VITE_BACKEND_URL,
+            VITE_SANDBOX_SDK: process.env.VITE_SANDBOX_SDK
           }
         }
       }),
