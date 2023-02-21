@@ -43,7 +43,14 @@ function App() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [mode, setMode] = useState<string>('dark');
-  const [poll, setPoll] = useState<Poll>({});
+  const [poll, setPoll] = useState<Poll>({
+    title: '',
+    budget: 0,
+    optionCount: 2,
+    distribution: '',
+    isLimitResponse: true,
+    responseLimit: 100,
+  });
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -101,7 +108,6 @@ function App() {
 
   const location = useLocation();
   const pathname = getPathname();
-  console.log('pathname', pathname)
 
   useEffect(() => {
     AOS.init({
@@ -116,6 +122,17 @@ function App() {
     document.querySelector('html').style.scrollBehavior = 'auto'
     window.scroll({ top: 0 })
     document.querySelector('html').style.scrollBehavior = ''
+
+    if (location.pathname === "/") {
+      setPoll({
+        title: '',
+        budget: 0,
+        optionCount: 2,
+        distribution: '',
+        isLimitResponse: true,
+        responseLimit: 100,
+      });
+    }
   }, [location.pathname]); // triggered on route change
 
   document.documentElement.setAttribute(
@@ -133,44 +150,26 @@ function App() {
   //   }
   // }, [mode]); // triggered on mode change
 
+  console.log('poll', poll)
+
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <HomeV2 pathname={pathname} setMode={onChangeMode} mode={mode} />
+          <HomeV2
+            pathname={pathname} setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
         }
       />
       <Route
         path="/get_started"
         element={
-          <GetStarted title={title} setTitle={onSetTitle} pathname={pathname} setMode={onChangeMode} mode={mode}  />
-        }
-      />
-      <Route
-        path="/demo"
-        element={
-          <Home
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+          <GetStarted
+            title={title} setTitle={onSetTitle} pathname={pathname}
             setMode={onChangeMode} mode={mode}
-          />
-        }
-      />
-      <Route
-        path="/pricing"
-        element={
-          <Browse
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode}
-          />
-        }
-      />
-      <Route
-        path="/shop"
-        element={
-          <Shop
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
@@ -201,9 +200,44 @@ function App() {
           <PollConfigDesktop
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
+
+
+      <Route
+        path="/demo"
+        element={
+          <Home
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+      <Route
+        path="/pricing"
+        element={
+          <Browse
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+      <Route
+        path="/shop"
+        element={
+          <Shop
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+
+
       <Route element={Notfound} />
     </Routes>
   );

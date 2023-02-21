@@ -11,7 +11,7 @@ const PollConfig = (props: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PollConfigForm setTitle={props.setTitle} />
+        <PollConfigForm {...props} />
       </main>
 
     </div>

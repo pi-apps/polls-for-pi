@@ -2,7 +2,6 @@ import {
   Button, Form, Input, Selector, Slider, Stepper, Switch
 } from 'antd-mobile';
 import axios from 'axios';
-import { useState } from 'react';
 import HOCProps from '../types/HOCProps';
 
 import { options as distributionOptions } from './options';
@@ -25,17 +24,13 @@ console.log('backendURL', backendURL)
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
 const PollConfigForm = (hocProps: HOCProps) => {
-  const [optionCount, setOptionCount] = useState(0);
-  const [ checked, setChecked ] = useState(true);
-  const [ distribution, setDistribution] = useState('');
 
   const onBudgetChange = (value: number | number[]) => {
     let text = ''
     if (typeof value === 'number') {
       text = `${value}`
-      if (hocProps.poll) {
-        hocProps.poll.budget = value;
-      }
+      hocProps.poll.budget = value;
+      hocProps.setPoll(hocProps.poll);
     }
     console.log(value)
   }
@@ -80,7 +75,9 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 initialValue={hocProps.poll?.title}
               >
                 <Input
-                  onChange={hocProps.setTitle}
+                  onChange={(value) => {
+                    hocProps.poll.title = value;
+                  }}
                   placeholder='Poll Title'
                 />
               </Form.Item>
@@ -100,20 +97,23 @@ const PollConfigForm = (hocProps: HOCProps) => {
               >
                 <Stepper
                   max={10}
-                  onChange={value => setOptionCount(value)}
+                  onChange={value => {
+                    hocProps.poll.optionCount = value;
+                    hocProps.setPoll(hocProps.poll);
+                  }}
                 />
               </Form.Item>
               <Form.Item
                 name='isLimited'
                 label='Will it limit the number of responses?'
                 childElementPosition='right'
-                initialValue={true}
+                initialValue={hocProps.poll.isLimitResponse}
               >
                 <Switch
                   uncheckedText='No' checkedText='Yes'
-                  checked={checked}
-                  onChange={val => {
-                    setChecked(val)
+                  checked={hocProps.poll.isLimitResponse}
+                  onChange={isLimitResponse => {
+                    hocProps.poll.isLimitResponse = isLimitResponse;
                   }}
                 />
               </Form.Item>
@@ -121,7 +121,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 name='responses'
                 label='How many responses will it gather?'
                 childElementPosition='right'
-                disabled={!checked}
+                disabled={!hocProps.poll.isLimitResponse}
                 rules={[
                   {
                     min: 1,
@@ -129,53 +129,51 @@ const PollConfigForm = (hocProps: HOCProps) => {
                     message: 'Should gather at least one response'
                   },
                 ]}
-                initialValue={100}
+                initialValue={hocProps.poll.responseLimit}
               >
                 <Stepper
                   step={10}
                   min={0}
                   max={1000}
+                  onChange={value => {
+                    hocProps.poll.responseLimit = value;
+                    hocProps.setPoll(hocProps.poll);
+                  }}
                 />
               </Form.Item>
-              <Form
+              <Form.Item
+                name='budget'
+                label='How much budget does it have?'
                 layout='vertical'
               >
-                <Form.Item
-                  name='budget'
-                  label='How much budget does it have?'
-                >
-                  <Slider
-                    min={0}
-                    max={10}
-                    onAfterChange={onBudgetChange}
-                    icon='π'
-                    popover={(value) => <span>{value} π</span>}
-                    step={0.5}
-                    // step={10}
-                    // ticks
-                    // marks={marks}
-                    defaultValue={hocProps.poll?.budget}
-                  />
-                </Form.Item>
-              </Form>
-              <Form
+                <Slider
+                  min={0}
+                  max={10}
+                  onAfterChange={onBudgetChange}
+                  icon='π'
+                  popover={(value) => <span>{value} π</span>}
+                  step={0.5}
+                  // step={10}
+                  // ticks
+                  // marks={marks}
+                  defaultValue={hocProps.poll?.budget}
+                />
+              </Form.Item>
+              <Form.Item
+                name='distribution'
+                label='When will you distribute the incentives?'
+                initialValue={[hocProps.poll?.distribution || '1']}
                 layout='vertical'
               >
-                <Form.Item
-                  name='distribution'
-                  label='When will you distribute the incentives?'
-                  initialValue={[hocProps.poll?.distribution || '1']}
-                >
-                  <Selector
-                    columns={2}
-                    options={distributionOptions}
-                    onChange={(arr, extend) => {
-                      console.log(arr, extend.items)
-                      setDistribution(arr[0]);
-                    }}
-                  />
-                </Form.Item>
-              </Form>,
+                <Selector
+                  columns={2}
+                  options={distributionOptions}
+                  onChange={(arr, extend) => {
+                    hocProps.poll.distribution = arr[0];
+                    hocProps.setPoll(hocProps.poll);
+                  }}
+                />
+              </Form.Item>
             </Form>
           </div>
         </div>

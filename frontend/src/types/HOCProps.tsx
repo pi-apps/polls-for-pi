@@ -7,7 +7,7 @@ export default interface HOCProps {
   pathname?: string
   user?: User | null
   showModal?: boolean
-  poll?: Poll | null
+  poll: Poll
 
   setTitle?: (title: string) => void;
   setMode?: (title: string) => void;
@@ -15,6 +15,6 @@ export default interface HOCProps {
   onSignOut?: () => void;
   onModalClose?: () => void;
   setShowModal?: (showModal: boolean) => void;
-  setPoll?: (poll: Poll) => void;
+  setPoll: (poll: Poll) => void;
 }
 
