@@ -1,3 +1,4 @@
+import { Poll } from "./Poll"
 import { User } from "./UserType"
 
 export default interface HOCProps {
@@ -6,6 +7,7 @@ export default interface HOCProps {
   pathname?: string
   user?: User | null
   showModal?: boolean
+  poll: Poll
 
   setTitle?: (title: string) => void;
   setMode?: (title: string) => void;
@@ -13,5 +15,6 @@ export default interface HOCProps {
   onSignOut?: () => void;
   onModalClose?: () => void;
   setShowModal?: (showModal: boolean) => void;
+  setPoll: (poll: Poll) => void;
 }
 

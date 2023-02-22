@@ -11,7 +11,7 @@ const GetStarted = (props: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PollStarter setTitle={props.setTitle} />
+        <PollStarter {...props} />
       </main>
 
     </div>

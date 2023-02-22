@@ -4,12 +4,16 @@ export type Poll = {
   distribute?: string,
   rewards?: string,
   distribution?: string,
-  distributionType?: string,
   chartType?: string,
   options?: string[],
   owner?: {
     uid: string,
     username: string
   },
+  optionCount?: number,
+  budget?: number,
+  isLimitResponse?: boolean,
+  responseLimit?: number,
+
   setTitle?: (title: string) => void;
 };

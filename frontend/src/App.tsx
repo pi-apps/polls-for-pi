@@ -17,6 +17,7 @@ import PollConfig from './pages/PollConfig';
 import PollConfigDesktop from './pages/PollConfigDesktop';
 import PollWizard from './pages/PollWizard';
 import PaymentDTO from './types/PaymentDTO';
+import { Poll } from './types/Poll';
 import { AuthResult, User } from './types/UserType';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
@@ -40,8 +41,15 @@ const getPathname = () => {
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>('');
   const [mode, setMode] = useState<string>('dark');
+  const [poll, setPoll] = useState<Poll>({
+    title: '',
+    budget: 0,
+    optionCount: 2,
+    distribution: '',
+    isLimitResponse: true,
+    responseLimit: 100,
+  });
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
@@ -68,11 +76,6 @@ function App() {
     setShowModal(false);
   }
 
-  const onSetTitle = (title: string) => {
-    console.log('title', title)
-    setTitle(title);
-  }
-
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
     console.log("onIncompletePaymentFound", payment);
     return axiosClient.post('/payments/incomplete', { payment });
@@ -97,7 +100,6 @@ function App() {
 
   const location = useLocation();
   const pathname = getPathname();
-  console.log('pathname', pathname)
 
   useEffect(() => {
     AOS.init({
@@ -112,6 +114,17 @@ function App() {
     document.querySelector('html').style.scrollBehavior = 'auto'
     window.scroll({ top: 0 })
     document.querySelector('html').style.scrollBehavior = ''
+
+    if (location.pathname === "/") {
+      setPoll({
+        title: '',
+        budget: 0,
+        optionCount: 2,
+        distribution: '',
+        isLimitResponse: true,
+        responseLimit: 100,
+      });
+    }
   }, [location.pathname]); // triggered on route change
 
   document.documentElement.setAttribute(
@@ -129,44 +142,26 @@ function App() {
   //   }
   // }, [mode]); // triggered on mode change
 
+  console.log('poll', poll)
+
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <HomeV2 pathname={pathname} setMode={onChangeMode} mode={mode} />
+          <HomeV2
+            pathname={pathname} setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
         }
       />
       <Route
         path="/get_started"
         element={
-          <GetStarted title={title} setTitle={onSetTitle} pathname={pathname} setMode={onChangeMode} mode={mode}  />
-        }
-      />
-      <Route
-        path="/demo"
-        element={
-          <Home
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+          <GetStarted
+            pathname={pathname}
             setMode={onChangeMode} mode={mode}
-          />
-        }
-      />
-      <Route
-        path="/pricing"
-        element={
-          <Browse
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode}
-          />
-        }
-      />
-      <Route
-        path="/shop"
-        element={
-          <Shop
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
-            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
@@ -176,6 +171,7 @@ function App() {
           <PollWizard
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
@@ -185,6 +181,7 @@ function App() {
           <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
@@ -194,9 +191,44 @@ function App() {
           <PollConfigDesktop
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />
+
+
+      <Route
+        path="/demo"
+        element={
+          <Home
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+      <Route
+        path="/pricing"
+        element={
+          <Browse
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+      <Route
+        path="/shop"
+        element={
+          <Shop
+            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+
+
       <Route element={Notfound} />
     </Routes>
   );

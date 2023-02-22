@@ -6,7 +6,7 @@ import './PollStarter.css';
 
 const { Search } = Input;
 
-const PollStarter = (hocProps: HOCProps) => {
+const PollStarter = (props: HOCProps) => {
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
@@ -31,7 +31,12 @@ const PollStarter = (hocProps: HOCProps) => {
                 size="large"
                 className='title-box'
                 style={{backgroundColor: "#1677ff"}}
-                onSearch={hocProps.setTitle}
+                onSearch={(value) => {
+                  if (props) {
+                    props.poll.title = value;
+                    props.setPoll(props.poll);
+                  }
+                }}
               />
             </p>
           </div>

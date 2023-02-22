@@ -1,6 +1,6 @@
 export const options = [
   {
-    label: 'After Response',
+    label: 'After User Response',
     value: 'immediate',
   },
   {
