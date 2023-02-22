@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, Selector, Slider, Stepper, Switch, Toast
+  Button, Form, Input, Selector, Slider, Stepper, Switch
 } from 'antd-mobile';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +48,6 @@ const PollConfigForm = (hocProps: HOCProps) => {
   const onFinish = async (values: any) => {
     const options = await getPollOptions(values.title)
     console.log('options', options)
-    Toast.show("options", options)
   }
 
   // useEffect(() => {
@@ -68,17 +67,17 @@ const PollConfigForm = (hocProps: HOCProps) => {
                 layout='horizontal'
                 footer={
                   <>
-                    <div
+                    {/* <div
                       style={{
                         marginBottom: '24px',
                         fontSize: '15px',
                         color: 'var(--adm-color-weak)',
                       }}
                     >
-                      Pressing Submit will bring you to the payment page.
-                    </div>
+                      Proceed to payment page.
+                    </div> */}
                     <Button block type='submit' color='primary' size='large'>
-                      Submit
+                      Proceed
                     </Button>
                   </>
                 }
