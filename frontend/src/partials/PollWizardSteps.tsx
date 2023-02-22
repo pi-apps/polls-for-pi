@@ -32,7 +32,6 @@ while (x <= 100) {
 const PollWizardSteps = (props: HOCProps) => {
   const navigate = useNavigate();
   const [ current, setCurrent ] = useState(0);
-  console.log('props.poll', props.poll)
 
   const onBudgetChange = (value: number | number[]) => {
     let text = ''
@@ -41,7 +40,6 @@ const PollWizardSteps = (props: HOCProps) => {
       props.poll.budget = value;
       props.setPoll(props.poll);
     }
-    console.log(value)
   }
 
   const next = () => {

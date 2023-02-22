@@ -41,7 +41,6 @@ const getPathname = () => {
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>('');
   const [mode, setMode] = useState<string>('dark');
   const [poll, setPoll] = useState<Poll>({
     title: '',
@@ -75,13 +74,6 @@ function App() {
 
   const onModalClose = () => {
     setShowModal(false);
-  }
-
-  const onSetTitle = (title: string) => {
-    console.log('title', title)
-    poll.title = title;
-    setTitle(title);
-    setPoll(poll);
   }
 
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -167,7 +159,7 @@ function App() {
         path="/get_started"
         element={
           <GetStarted
-            title={title} setTitle={onSetTitle} pathname={pathname}
+            pathname={pathname}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -189,7 +181,6 @@ function App() {
           <PollConfig
             onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
-            setTitle={onSetTitle} title={title}
             setPoll={setPoll} poll={poll}
           />
         }

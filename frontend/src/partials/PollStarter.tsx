@@ -32,7 +32,6 @@ const PollStarter = (props: HOCProps) => {
                 className='title-box'
                 style={{backgroundColor: "#1677ff"}}
                 onSearch={(value) => {
-                  console.log('title', value)
                   if (props) {
                     props.poll.title = value;
                     props.setPoll(props.poll);
