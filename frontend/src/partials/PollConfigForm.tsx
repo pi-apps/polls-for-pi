@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, Selector, Slider, Stepper, Switch
+  Button, Form, Input, Selector, Slider, Stepper, Switch, Toast
 } from 'antd-mobile';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -48,6 +48,7 @@ const PollConfigForm = (hocProps: HOCProps) => {
   const onFinish = async (values: any) => {
     const options = await getPollOptions(values.title)
     console.log('options', options)
+    Toast.show("options", options)
   }
 
   // useEffect(() => {
@@ -167,12 +168,14 @@ const PollConfigForm = (hocProps: HOCProps) => {
                     max={10}
                     onAfterChange={onBudgetChange}
                     icon='π'
-                    popover={(value) => <span>{value} π</span>}
                     step={0.5}
+                    popover={(value) => <span>{value} π</span>}
+                    residentPopover
+                    className='mt-12'
+                    defaultValue={hocProps.poll.budget}
                     // step={10}
                     // ticks
                     // marks={marks}
-                    defaultValue={hocProps.poll?.budget}
                   />
                 </Form.Item>
                 <Form.Item

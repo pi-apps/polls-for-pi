@@ -13,21 +13,12 @@ const { Step } = MobileSteps;
 
 import './PollWizardSteps.css';
 
-// const marks = {
-//   0: '0 π',
-//   20: '20 π',
-//   40: '40 π',
-//   60: '60 π',
-//   80: '80 π',
-//   100: '100 π',
-// }
 const marks: any = { };
 let x = 0;
-while (x <= 100) {
+while (x <= 10) {
   marks[x] = `${x} π`;
-  x = x + 10;
+  x = x + 1;
 }
-
 
 const PollWizardSteps = (props: HOCProps) => {
   const navigate = useNavigate();
@@ -110,9 +101,10 @@ const PollWizardSteps = (props: HOCProps) => {
               icon='π'
               popover={(value) => <span>{value} π</span>}
               step={0.5}
-              // step={10}
-              // ticks
-              // marks={marks}
+              residentPopover
+              className='mt-12'
+              //ticks
+              //marks={marks}
             />
           </MobileForm.Item>
         </MobileForm>,
