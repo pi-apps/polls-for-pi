@@ -1,16 +1,19 @@
 import axios from "axios";
 import { Router } from "express";
+import _ from 'lodash';
 import env from '../environments';
 import "../types/session";
 
 const OPENAI_API_KEY = env.openai_api_key;
 
-async function generatePollOptions(question: string): Promise<string> {
+async function generatePollOptions(question: string): Promise<string[]> {
   const prompt = `Generate a list of poll options for the question '${question}'`
   console.log('prompt', prompt)
   const response = await axios.post("https://api.openai.com/v1/engines/text-davinci-002/completions", {
     prompt: prompt,
-    max_tokens: 50
+    max_tokens: 50,
+    n: 1,
+    format: 'text'
   }, {
     headers: {
       "Content-Type": "application/json",
@@ -20,8 +23,23 @@ async function generatePollOptions(question: string): Promise<string> {
 
   if (response.status === 200) {
     const choices = response.data.choices;
+    console.log('response.data', response.data);
     if (choices && choices.length > 0) {
-      return choices[0].text;
+      let tokens = choices[0].text.split(/\r?\n/).filter((line: any) => line.trim() !== '');
+      console.log('tokens-1', tokens)
+      if(tokens.length === 1) tokens = tokens[0].split(",");
+      console.log('tokens-2', tokens)
+      //const optionsArray = tokens.map((token: any) => String(token));
+
+      // trim whitespace from each string in the array
+      const optionsArray: string[] = [];
+      for (let i = 0; i < tokens.length; i++) {
+        let token = tokens[i].trim();
+        if (!_.isEmpty(token) && token !== '') {
+          optionsArray[i] = token;
+        }
+      }
+      return optionsArray;
     }
   }
 
@@ -38,7 +56,9 @@ export default function mountPollsAiEndpoints(router: Router) {
     const products = await Product.find({ });
 
     const prompt = req.body.prompt;
+    const maxOptions = req.body.maxOptions || 2;
     console.log('prompt', prompt)
+    console.log('maxOptions', maxOptions)
 
     const options = await generatePollOptions(prompt);
     console.log('options', options);
@@ -48,7 +68,7 @@ export default function mountPollsAiEndpoints(router: Router) {
       return res.status(400).json({ message: "No products found." });
     }
 
-    return res.status(200).json({ data: options });
+    return res.status(200).json({ data: options.slice(0, maxOptions) });
   });
 
 }

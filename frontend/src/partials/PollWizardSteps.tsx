@@ -23,6 +23,7 @@ while (x <= 10) {
 const PollWizardSteps = (props: HOCProps) => {
   const navigate = useNavigate();
   const [ current, setCurrent ] = useState(0);
+  const [ distribution, setDistribution ] = useState('');
 
   const onBudgetChange = (value: number | number[]) => {
     let text = ''
@@ -128,6 +129,7 @@ const PollWizardSteps = (props: HOCProps) => {
               onChange={(arr, extend) => {
                 props.poll.distribution = arr[0];
                 props.setPoll(props.poll);
+                setDistribution(arr[0])
               }}
             />
           </MobileForm.Item>
@@ -140,6 +142,7 @@ const PollWizardSteps = (props: HOCProps) => {
 
   };
 
+  console.log('props.poll.distribution', props.poll.distribution)
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative bg-white dark:bg-black">
@@ -188,7 +191,8 @@ const PollWizardSteps = (props: HOCProps) => {
                     color='primary' size='large'
                     className='mb-4'
                     onClick={onDone}
-                    >
+                    disabled={!distribution}
+                  >
                     Done
                   </MobileButton>
                 )}
