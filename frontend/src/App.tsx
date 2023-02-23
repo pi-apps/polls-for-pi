@@ -46,7 +46,7 @@ function App() {
     distribution: '',
     isLimitResponse: true,
     responseLimit: 100,
-    durationDays: 0,
+    durationDays: 30,
     perResponseReward: 0,
   });
 
@@ -122,6 +122,8 @@ function App() {
         distribution: '',
         isLimitResponse: true,
         responseLimit: 100,
+        durationDays: 30,
+        perResponseReward: 0,
       });
     }
   }, [location.pathname]); // triggered on route change
