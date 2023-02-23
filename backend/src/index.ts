@@ -1,4 +1,3 @@
-import axios from "axios";
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -6,18 +5,24 @@ import express from 'express';
 import session from 'express-session';
 import fs from 'fs';
 import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountPollsAiEndpoints from './handlers/polls_ai';
+import mountPricingEndpoints from './handlers/pricing';
 import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
+import PollPricingSchema from './schemas/poll_pricing';
+import PricingSchema from './schemas/pricing';
+import ProductSchema from './schemas/product';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
 // have no problem here)
 // https://stackoverflow.com/questions/65108033/property-user-does-not-exist-on-type-session-partialsessiondata#comment125163548_65381085
 import "./types/session";
+
 
 const dbName = env.mongo_db_name;
 const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
@@ -28,29 +33,14 @@ const mongoClientOptions = {
     password: env.mongo_password,
   },
 }
+var pollsDB = mongoose.createConnection(mongoUri, mongoClientOptions);
 
-const OPENAI_API_KEY = env.openai_api_key;
 
-async function generateText(prompt: string): Promise<string> {
-  const response = await axios.post("https://api.openai.com/v1/engines/davinci-codex/completions", {
-    prompt: prompt,
-    max_tokens: 50
-  }, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${OPENAI_API_KEY}`
-    }
-  });
+const Product = pollsDB.model('Product', ProductSchema);
+const Pricing = pollsDB.model('Pricing', PricingSchema);
+const PollPricing = pollsDB.model('PollPricing', PollPricingSchema);
 
-  if (response.status === 200) {
-    const choices = response.data.choices;
-    if (choices && choices.length > 0) {
-      return choices[0].text;
-    }
-  }
-
-  throw new Error(`Request failed with status code ${response.status}`);
-}
+const pollModels = { Product, Pricing, PollPricing };
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:
@@ -114,6 +104,10 @@ const pollsAiRouter = express.Router();
 mountPollsAiEndpoints(pollsAiRouter)
 app.use('/v1/polls_ai', pollsAiRouter);
 
+const pricingRouter = express.Router();
+mountPricingEndpoints(pricingRouter, pollModels);
+app.use('/v1/pricing', pricingRouter);
+
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
   res.status(200).send({ message: "Hello, World!" });
@@ -130,7 +124,8 @@ app.listen(8000, async () => {
     app.locals.userCollection = db.collection('users');
 
     const Product = db.collection('products');
-    const collections = { Product };
+    const PriceSchema = db.collection('priceschemas');
+    const collections = { Product, PriceSchema };
     app.locals.collections = collections;
 
     console.log('Connected to MongoDB on: ', mongoUri)
