@@ -97,7 +97,7 @@ mountUserEndpoints(userRouter);
 app.use('/user', userRouter);
 
 const productsRouter = express.Router();
-mountProductsEndpoints(productsRouter)
+mountProductsEndpoints(productsRouter, pollModels)
 app.use('/v1/products', productsRouter);
 
 const pollsAiRouter = express.Router();
@@ -106,7 +106,7 @@ app.use('/v1/polls_ai', pollsAiRouter);
 
 const pricingRouter = express.Router();
 mountPricingEndpoints(pricingRouter, pollModels);
-app.use('/v1/pricing', pricingRouter);
+app.use('/v1/pricings', pricingRouter);
 
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
@@ -124,8 +124,9 @@ app.listen(8000, async () => {
     app.locals.userCollection = db.collection('users');
 
     const Product = db.collection('products');
-    const PriceSchema = db.collection('priceschemas');
-    const collections = { Product, PriceSchema };
+    const Pricing = db.collection('pricings');
+    const PollPricing = db.collection('pollpricings');
+    const collections = { Product, Pricing, PollPricing };
     app.locals.collections = collections;
 
     console.log('Connected to MongoDB on: ', mongoUri)

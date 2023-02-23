@@ -2,7 +2,6 @@ import { Schema, Types } from 'mongoose';
 const { ObjectId } = Schema.Types;
 
 interface IPricing {
-  name: string;
   description: string;
   tier: number;
   perOption: number;
@@ -11,12 +10,6 @@ interface IPricing {
 }
 
 const PricingSchema = new Schema<IPricing>({
-  name: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: true,
-  },
   description: {
     type: String,
     trim: true,
@@ -31,6 +24,7 @@ const PricingSchema = new Schema<IPricing>({
   product: {
     type: ObjectId,
     ref: 'Product',
+    required: true,
   },
 });
 
