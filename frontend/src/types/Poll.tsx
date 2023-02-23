@@ -1,5 +1,5 @@
 export type Poll = {
-  title?: string,
+  title: string,
   type?: string,
   distribute?: string,
   rewards?: string,
@@ -10,10 +10,12 @@ export type Poll = {
     uid: string,
     username: string
   },
-  optionCount?: number,
+  optionCount: number,
   budget?: number,
+  perResponseReward: number,
   isLimitResponse?: boolean,
-  responseLimit?: number,
+  responseLimit: number,
+  durationDays: number,
 
   setTitle?: (title: string) => void;
 };

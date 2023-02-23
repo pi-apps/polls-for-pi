@@ -23,19 +23,28 @@ while (x <= 10) {
 const PollWizardSteps = (props: HOCProps) => {
   const navigate = useNavigate();
   const [ current, setCurrent ] = useState(0);
-  const [ distribution, setDistribution ] = useState('');
+  const [ distribution, setDistribution ] = useState(props.poll.distribution || '');
 
-  const onBudgetChange = (value: number | number[]) => {
+  // const onBudgetChange = (value: number | number[]) => {
+  //   let text = ''
+  //   if (typeof value === 'number') {
+  //     text = `${value}`
+  //     props.poll.budget = value;
+  //     props.setPoll(props.poll);
+  //   }
+  // }
+
+  const onRewardChange = (value: number | number[]) => {
     let text = ''
     if (typeof value === 'number') {
       text = `${value}`
-      props.poll.budget = value;
+      props.poll.perResponseReward = value;
       props.setPoll(props.poll);
     }
   }
 
   const next = () => {
-    if(current === steps.length - 2 && props.poll.budget === 0) {
+    if(current === steps.length - 2 && props.poll.perResponseReward === 0) {
       navigate("/poll_config");
     } else {
       setCurrent(current + 1);
@@ -61,7 +70,7 @@ const PollWizardSteps = (props: HOCProps) => {
           <MobileForm.Item
             className='custom-width'
             name='options'
-            label='How many options will your poll have?'
+            label='How many options would you like your poll to have?'
             childElementPosition='right'
             rules={[
               {
@@ -86,22 +95,23 @@ const PollWizardSteps = (props: HOCProps) => {
     },
     {
       key: 4,
-      title: 'Budget',
+      title: 'Per Response Reward',
       content:
         <MobileForm
           layout='vertical'
         >
           <MobileForm.Item
-            name='budget'
-            label='How much budget does it have?'
+            name='perResponseReward'
+            label='How much incentive would you like each response to get?'
+            initialValue={props.poll.perResponseReward}
           >
             <Slider
               min={0}
-              max={10}
-              onAfterChange={onBudgetChange}
+              max={1}
+              onAfterChange={onRewardChange}
               icon='π'
               popover={(value) => <span>{value} π</span>}
-              step={0.5}
+              step={0.1}
               residentPopover
               className='mt-12'
               //ticks

@@ -25,6 +25,7 @@ const PricingSchema = new Schema<IPricing>({
     type: ObjectId,
     ref: 'Product',
     required: true,
+    unique: true,
   },
 });
 

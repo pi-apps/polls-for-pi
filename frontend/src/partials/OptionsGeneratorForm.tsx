@@ -39,7 +39,7 @@ const OptionsGeneratorForm = (props: HOCProps) => {
 
   const proceedToPayment = async (values: any) => {
     console.log('values', values)
-    //navigate('/payment', { state: { message: 'Home', type: 'success' } })
+    navigate('/payment', { state: { message: 'Home', type: 'success' } })
   }
 
   console.log('props.poll', props.poll);
@@ -101,6 +101,7 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                     {options.map((item, index) =>
                       <Form.Item
                         name={item}
+                        key={item}
                         initialValue={item}
                         label={index === 0 ? props.poll.title : null}
                       >

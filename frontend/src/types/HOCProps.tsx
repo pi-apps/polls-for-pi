@@ -14,7 +14,7 @@ export default interface HOCProps {
   onSignIn?: () => void;
   onSignOut?: () => void;
   onModalClose?: () => void;
-  setShowModal?: (showModal: boolean) => void;
+  setShowModal: (showModal: boolean) => void;
   setPoll: (poll: Poll) => void;
 }
 

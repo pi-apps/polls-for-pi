@@ -15,7 +15,7 @@ const PollStarter = (props: HOCProps) => {
           {/* Section header */}
           <div className="max-w-3xl mx-auto pb-12 md:pb-16">
             <h2 className="h2 mb-4" data-aos="fade-up">
-              What should we title your poll?
+              What question does your poll aim to answer?
             </h2>
             <p className="text-xl mb-8" data-aos="fade-up" data-aos-delay="200">
               <Search

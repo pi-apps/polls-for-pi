@@ -1,6 +1,6 @@
 
 import Header from '../partials/Header';
-import PriceCalculatorForm from '../partials/PriceCalculatorForm';
+import PaymentForm from '../partials/PaymentForm';
 import HOCProps from '../types/HOCProps';
 
 const Payment = (props: HOCProps) => {
@@ -11,7 +11,7 @@ const Payment = (props: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PriceCalculatorForm {...props} />
+        <PaymentForm {...props} />
       </main>
 
     </div>

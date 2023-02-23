@@ -25,11 +25,20 @@ const PollConfigForm = (props: HOCProps) => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
   }
 
-  const onBudgetChange = (value: number | number[]) => {
+  // const onBudgetChange = (value: number | number[]) => {
+  //   let text = ''
+  //   if (typeof value === 'number') {
+  //     text = `${value}`
+  //     props.poll.budget = value;
+  //     props.setPoll(props.poll);
+  //   }
+  // }
+
+  const onRewardChange = (value: number | number[]) => {
     let text = ''
     if (typeof value === 'number') {
       text = `${value}`
-      props.poll.budget = value;
+      props.poll.perResponseReward = value;
       props.setPoll(props.poll);
     }
   }
@@ -67,6 +76,7 @@ const PollConfigForm = (props: HOCProps) => {
             {props.poll.title ?
               <Form
                 layout='horizontal'
+                requiredMarkStyle='none'
                 footer={
                   <>
                     {/* <div
@@ -89,12 +99,13 @@ const PollConfigForm = (props: HOCProps) => {
                 }
                 onFinish={onFinish}
               >
-                <Form.Header><h1>Are you ok with this configuration?</h1></Form.Header>
+                <Form.Header>Poll Configuration</Form.Header>
                 <Form.Item
                   name='title'
                   label='Title'
                   rules={[{ required: true, message: 'Title is required' }]}
                   initialValue={props.poll.title}
+                  layout="vertical"
                 >
                   <Input
                     onChange={(value) => {
@@ -164,23 +175,50 @@ const PollConfigForm = (props: HOCProps) => {
                   />
                 </Form.Item>
                 <Form.Item
-                  name='budget'
-                  label='How much budget does it have?'
+                  name='perResponseReward'
+                  label='How much incentive would you like each response to get?'
                   layout='vertical'
-                  initialValue={props.poll.budget}
+                  initialValue={props.poll.perResponseReward}
                 >
                   <Slider
                     min={0}
-                    max={10}
-                    onAfterChange={onBudgetChange}
+                    max={1}
+                    onAfterChange={onRewardChange}
                     icon='π'
-                    step={0.5}
+                    step={0.1}
                     popover={(value) => <span>{value} π</span>}
                     residentPopover
                     className='mt-12'
                     // step={10}
                     // ticks
                     // marks={marks}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='duration'
+                  label='For how long will you gather responses?'
+                  childElementPosition='right'
+                  initialValue={props.poll.durationDays}
+                  rules={[
+                    {
+                      min: 1,
+                      type: 'number',
+                      message: 'Should gather responses for at least one day'
+                    },
+                  ]}
+                >
+                  <Stepper
+                    style={{
+                      "--input-width": '80px'
+                    }}
+                    step={1}
+                    min={1}
+                    max={30}
+                    formatter={value => `${value} days`}
+                    onChange={value => {
+                      props.poll.durationDays = value;
+                      props.setPoll(props.poll);
+                    }}
                   />
                 </Form.Item>
                 <Form.Item
