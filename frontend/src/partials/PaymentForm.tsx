@@ -41,11 +41,11 @@ const PaymentForm = (props: HOCProps) => {
 
     priceItems.forEach((item: any) => {
       const name = item.name.toLowerCase();
-      if (name === "per option") {
+      if (name.toLowerCase() === "per option") {
         total += (item.price * props.poll.optionCount);
-      } else if (name === "per response") {
+      } else if (name.toLowerCase() === "per response") {
         total += (item.price * props.poll.responseLimit);
-      } else if (name === "per hour") {
+      } else if (name.toLowerCase() === "per hour") {
         total += (item.price * (props.poll.durationDays * 24));
       }
     })
