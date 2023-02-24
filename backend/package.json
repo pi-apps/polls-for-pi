@@ -2,7 +2,7 @@
   "name": "polls-for-pi-backend",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "A demo app to showcase usage of the Pi App Platform.",
+  "description": "Backend for Polls for Pi.",
   "author": {
     "name": "East Mael"
   },
@@ -23,6 +23,7 @@
     "express-session": "^1.17.2",
     "lodash": "^4.17.21",
     "mongodb": "^4.0.0",
+    "mongoose": "^6.10.0",
     "morgan": "^1.10.0",
     "openai": "^3.1.0"
   },
@@ -30,6 +31,7 @@
     "@types/cors": "^2.8.11",
     "@types/express": "^4.17.12",
     "@types/lodash": "^4.14.191",
+    "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.2",
     "@types/node": "^18.7.23",
     "ts-node-dev": "^2.0.0",

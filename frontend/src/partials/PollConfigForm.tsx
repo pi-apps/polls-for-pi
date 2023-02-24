@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, Selector, Slider, Stepper, Switch
+  Button, Form, Input, Selector, Stepper, Switch
 } from 'antd-mobile';
 import axios from 'axios';
 import { useState } from 'react';
@@ -25,18 +25,30 @@ const PollConfigForm = (props: HOCProps) => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
   }
 
-  const onBudgetChange = (value: number | number[]) => {
-    let text = ''
+  // const onBudgetChange = (value: number | number[]) => {
+  //   let text = ''
+  //   if (typeof value === 'number') {
+  //     text = `${value}`
+  //     props.poll.budget = value;
+  //     props.setPoll(props.poll);
+  //   }
+  // }
+
+  const onRewardChange = (value: number | number[]) => {
     if (typeof value === 'number') {
-      text = `${value}`
-      props.poll.budget = value;
+      props.poll.perResponseReward = value;
       props.setPoll(props.poll);
     }
   }
 
-  const getPollOptions = async (prompt: string, maxOptions: number) => {
-    console.log("get poll options ai API", prompt);
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, maxOptions });
+  const onRewardChangeStepper = (value: number) => {
+    props.poll.perResponseReward = value;
+    props.setPoll(props.poll);
+  }
+
+  const getPollOptions = async (prompt: string, optionsCount: number) => {
+    console.log("get poll options ai API", { prompt, optionsCount });
+    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 
@@ -67,6 +79,7 @@ const PollConfigForm = (props: HOCProps) => {
             {props.poll.title ?
               <Form
                 layout='horizontal'
+                requiredMarkStyle='none'
                 footer={
                   <>
                     {/* <div
@@ -89,12 +102,13 @@ const PollConfigForm = (props: HOCProps) => {
                 }
                 onFinish={onFinish}
               >
-                <Form.Header><h1>Are you ok with this configuration?</h1></Form.Header>
+                <Form.Header>Poll Configuration</Form.Header>
                 <Form.Item
                   name='title'
                   label='Title'
                   rules={[{ required: true, message: 'Title is required' }]}
                   initialValue={props.poll.title}
+                  layout="vertical"
                 >
                   <Input
                     onChange={(value) => {
@@ -164,23 +178,59 @@ const PollConfigForm = (props: HOCProps) => {
                   />
                 </Form.Item>
                 <Form.Item
-                  name='budget'
-                  label='How much budget does it have?'
-                  layout='vertical'
-                  initialValue={props.poll.budget}
+                  name='perResponseReward'
+                  label='How much incentive would you like each response to get?'
+                  childElementPosition='right'
+                  initialValue={props.poll.perResponseReward}
                 >
-                  <Slider
+                  <Stepper
+                    style={{
+                      "--input-width": '80px'
+                    }}
+                    min={0.001}
+                    formatter={value => `${value} π`}
+                    step={0.001}
+                    onChange={onRewardChangeStepper}
+                  />
+                  {/* <Slider
                     min={0}
-                    max={10}
-                    onAfterChange={onBudgetChange}
+                    max={1}
+                    onAfterChange={onRewardChange}
                     icon='π'
-                    step={0.5}
+                    step={0.001}
                     popover={(value) => <span>{value} π</span>}
                     residentPopover
                     className='mt-12'
                     // step={10}
                     // ticks
                     // marks={marks}
+                  /> */}
+                </Form.Item>
+                <Form.Item
+                  name='duration'
+                  label='For how long will you gather responses?'
+                  childElementPosition='right'
+                  initialValue={props.poll.durationDays}
+                  rules={[
+                    {
+                      min: 1,
+                      type: 'number',
+                      message: 'Should gather responses for at least one day'
+                    },
+                  ]}
+                >
+                  <Stepper
+                    style={{
+                      "--input-width": '80px'
+                    }}
+                    step={5}
+                    min={1}
+                    max={90}
+                    formatter={value => `${value} days`}
+                    onChange={value => {
+                      props.poll.durationDays = value;
+                      props.setPoll(props.poll);
+                    }}
                   />
                 </Form.Item>
                 <Form.Item

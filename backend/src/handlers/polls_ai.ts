@@ -6,8 +6,8 @@ import "../types/session";
 
 const OPENAI_API_KEY = env.openai_api_key;
 
-async function generatePollOptions(question: string): Promise<string[]> {
-  const prompt = `Generate a list of poll options for the question '${question}'`
+async function generatePollOptions(question: string, optionsCount: number): Promise<string[]> {
+  const prompt = `Generate ${optionsCount} choices for the question '${question}'`
   console.log('prompt', prompt)
   const response = await axios.post("https://api.openai.com/v1/engines/text-davinci-002/completions", {
     prompt: prompt,
@@ -51,24 +51,20 @@ export default function mountPollsAiEndpoints(router: Router) {
     console.log('polls ai api endpoint')
     console.log('polls ai api endpoint')
 
-    const app = req.app;
-    const { Product } = app.locals.collections;
-    const products = await Product.find({ });
-
     const prompt = req.body.prompt;
-    const maxOptions = req.body.maxOptions || 2;
+    const optionsCount = req.body.optionsCount || 2;
     console.log('prompt', prompt)
-    console.log('maxOptions', maxOptions)
+    console.log('optionsCount', optionsCount)
 
-    const options = await generatePollOptions(prompt);
+    const options = await generatePollOptions(prompt, optionsCount);
     console.log('options', options);
 
-    // order doesn't exist
-    if (!products || products.length <= 0) {
-      return res.status(400).json({ message: "No products found." });
+    // failed to generate options
+    if (!options || options.length <= 0) {
+      return res.status(400).json({ message: "Failed to generate options." });
     }
 
-    return res.status(200).json({ data: options.slice(0, maxOptions) });
+    return res.status(200).json({ data: options.slice(0, optionsCount) });
   });
 
 }

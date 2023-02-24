@@ -25,9 +25,10 @@ const OptionsGeneratorForm = (props: HOCProps) => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
   }
 
-  const getPollOptions = async (prompt?: string) => {
-    console.log("get poll options ai API", prompt);
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, maxOptions: props.poll.optionCount });
+  const getPollOptions = async (prompt: string) => {
+    const optionsCount = props.poll.optionCount;
+    console.log("get poll options ai API", `Generate ${optionsCount} choices for the question '${prompt}'`);
+    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 
@@ -39,7 +40,7 @@ const OptionsGeneratorForm = (props: HOCProps) => {
 
   const proceedToPayment = async (values: any) => {
     console.log('values', values)
-    //navigate('/payment', { state: { message: 'Home', type: 'success' } })
+    navigate('/payment', { state: { message: 'Home', type: 'success' } })
   }
 
   console.log('props.poll', props.poll);
@@ -101,6 +102,7 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                     {options.map((item, index) =>
                       <Form.Item
                         name={item}
+                        key={item}
                         initialValue={item}
                         label={index === 0 ? props.poll.title : null}
                       >

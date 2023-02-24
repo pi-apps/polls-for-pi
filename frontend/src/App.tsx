@@ -46,6 +46,8 @@ function App() {
     distribution: '',
     isLimitResponse: true,
     responseLimit: 100,
+    durationDays: 30,
+    perResponseReward: 0,
   });
 
   const signIn = async () => {
@@ -120,6 +122,8 @@ function App() {
         distribution: '',
         isLimitResponse: true,
         responseLimit: 100,
+        durationDays: 30,
+        perResponseReward: 0,
       });
     }
   }, [location.pathname]); // triggered on route change
@@ -147,7 +151,9 @@ function App() {
         path="/"
         element={
           <HomeV2
+            onSignIn={signIn} onSignOut={signOut} user={user}
             pathname={pathname} setMode={onChangeMode} mode={mode}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setPoll={setPoll} poll={poll}
           />
         }
@@ -156,7 +162,9 @@ function App() {
         path="/get_started"
         element={
           <GetStarted
+            onSignIn={signIn} onSignOut={signOut} user={user}
             pathname={pathname}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -166,7 +174,8 @@ function App() {
         path="/wizard"
         element={
           <PollWizard
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
