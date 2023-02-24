@@ -1,6 +1,6 @@
 
 import { DeploymentUnitOutlined, DollarOutlined } from '@ant-design/icons';
-import { Button as MobileButton, Form as MobileForm, Selector, Slider, Stepper, Steps as MobileSteps } from 'antd-mobile';
+import { Button as MobileButton, Form as MobileForm, Selector, Stepper, Steps as MobileSteps } from 'antd-mobile';
 import { SetOutline } from 'antd-mobile-icons';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,7 @@ const PollWizardSteps = (props: HOCProps) => {
   const navigate = useNavigate();
   const [ current, setCurrent ] = useState(0);
   const [ distribution, setDistribution ] = useState(props.poll.distribution || '');
+  const [ thisReward, setReward ] = useState<number>(props.poll.perResponseReward);
 
   // const onBudgetChange = (value: number | number[]) => {
   //   let text = ''
@@ -40,9 +41,19 @@ const PollWizardSteps = (props: HOCProps) => {
       text = `${value}`
       props.poll.perResponseReward = value;
       props.setPoll(props.poll);
+      setReward(value);
     }
   }
 
+  const onRewardChangeStepper = (value: any) => {
+    let text = ''
+    if (typeof value === 'number') {
+      text = `${value}`
+      props.poll.perResponseReward = value;
+      props.setPoll(props.poll);
+      setReward(value);
+    }
+  }
   const next = () => {
     if(current === steps.length - 2 && props.poll.perResponseReward === 0) {
       navigate("/poll_config");
@@ -98,12 +109,23 @@ const PollWizardSteps = (props: HOCProps) => {
       title: 'Per Response Reward',
       content:
         <MobileForm
-          layout='vertical'
+          layout='horizontal'
         >
           <MobileForm.Item
             name='perResponseReward'
             label='How much incentive would you like each response to get?'
             initialValue={props.poll.perResponseReward}
+          >
+            <Stepper
+              style={{ width: '100%' }}
+              formatter={value => `${value} π`}
+              min={0.000}
+              step={0.001}
+              onChange={onRewardChangeStepper}
+            />
+          </MobileForm.Item>
+          {/* <MobileForm.Item
+            name='perResponseRewardSlider'
           >
             <Slider
               min={0}
@@ -111,13 +133,14 @@ const PollWizardSteps = (props: HOCProps) => {
               onAfterChange={onRewardChange}
               icon='π'
               popover={(value) => <span>{value} π</span>}
-              step={0.1}
+              step={0.001}
               residentPopover
               className='mt-12'
+              value={thisReward}
               //ticks
               //marks={marks}
             />
-          </MobileForm.Item>
+          </MobileForm.Item> */}
         </MobileForm>,
       icon: <DollarOutlined />,
     },
@@ -152,7 +175,8 @@ const PollWizardSteps = (props: HOCProps) => {
 
   };
 
-  console.log('props.poll.distribution', props.poll.distribution)
+  console.log('thisReward', thisReward)
+
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative bg-white dark:bg-black">

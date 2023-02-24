@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, Selector, Slider, Stepper, Switch
+  Button, Form, Input, Selector, Stepper, Switch
 } from 'antd-mobile';
 import axios from 'axios';
 import { useState } from 'react';
@@ -35,17 +35,20 @@ const PollConfigForm = (props: HOCProps) => {
   // }
 
   const onRewardChange = (value: number | number[]) => {
-    let text = ''
     if (typeof value === 'number') {
-      text = `${value}`
       props.poll.perResponseReward = value;
       props.setPoll(props.poll);
     }
   }
 
-  const getPollOptions = async (prompt: string, maxOptions: number) => {
-    console.log("get poll options ai API", prompt);
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, maxOptions });
+  const onRewardChangeStepper = (value: number) => {
+    props.poll.perResponseReward = value;
+    props.setPoll(props.poll);
+  }
+
+  const getPollOptions = async (prompt: string, optionsCount: number) => {
+    console.log("get poll options ai API", { prompt, optionsCount });
+    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 
@@ -177,22 +180,31 @@ const PollConfigForm = (props: HOCProps) => {
                 <Form.Item
                   name='perResponseReward'
                   label='How much incentive would you like each response to get?'
-                  layout='vertical'
+                  childElementPosition='right'
                   initialValue={props.poll.perResponseReward}
                 >
-                  <Slider
+                  <Stepper
+                    style={{
+                      "--input-width": '80px'
+                    }}
+                    min={0.001}
+                    formatter={value => `${value} π`}
+                    step={0.001}
+                    onChange={onRewardChangeStepper}
+                  />
+                  {/* <Slider
                     min={0}
                     max={1}
                     onAfterChange={onRewardChange}
                     icon='π'
-                    step={0.1}
+                    step={0.001}
                     popover={(value) => <span>{value} π</span>}
                     residentPopover
                     className='mt-12'
                     // step={10}
                     // ticks
                     // marks={marks}
-                  />
+                  /> */}
                 </Form.Item>
                 <Form.Item
                   name='duration'
@@ -213,7 +225,7 @@ const PollConfigForm = (props: HOCProps) => {
                     }}
                     step={1}
                     min={1}
-                    max={30}
+                    max={90}
                     formatter={value => `${value} days`}
                     onChange={value => {
                       props.poll.durationDays = value;

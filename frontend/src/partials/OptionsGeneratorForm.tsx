@@ -25,9 +25,10 @@ const OptionsGeneratorForm = (props: HOCProps) => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
   }
 
-  const getPollOptions = async (prompt?: string) => {
-    console.log("get poll options ai API", prompt);
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, maxOptions: props.poll.optionCount });
+  const getPollOptions = async (prompt: string) => {
+    const optionsCount = props.poll.optionCount;
+    console.log("get poll options ai API", `Generate ${optionsCount} choices for the question '${prompt}'`);
+    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 

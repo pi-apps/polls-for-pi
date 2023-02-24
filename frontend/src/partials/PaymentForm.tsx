@@ -1,6 +1,7 @@
 import {
-  Button, Form, List
+  Button, Form, List, Space
 } from 'antd-mobile';
+import { UndoOutline } from 'antd-mobile-icons';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Al
 const PaymentForm = (props: HOCProps) => {
   const navigate = useNavigate()
   const [ priceItems, setPriceItems ] = useState<any>([]);
-  const [ total, setTotal ] = useState<number>(0.0);
+  const [ grandTotal, setGrandTotal ] = useState<number>(0.0);
 
   const toRoot = () => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
@@ -41,18 +42,18 @@ const PaymentForm = (props: HOCProps) => {
 
     priceItems.forEach((item: any) => {
       const name = item.name.toLowerCase();
-      if (name.toLowerCase() === "per option") {
+      if (name === "per option") {
         total += (item.price * props.poll.optionCount);
-      } else if (name.toLowerCase() === "per response") {
+      } else if (name === "per response") {
         total += (item.price * props.poll.responseLimit);
-      } else if (name.toLowerCase() === "per hour") {
+      } else if (name === "per hour") {
         total += (item.price * (props.poll.durationDays * 24));
       }
     })
 
     total += (props.poll.responseLimit * props.poll.perResponseReward);
 
-    setTotal(total);
+    setGrandTotal(total);
     console.log('total', total)
   }
 
@@ -104,7 +105,7 @@ const PaymentForm = (props: HOCProps) => {
 
   useEffect(() => {
     calculateTotal();
-  }, []);
+  });
 
   console.log('props.poll', props.poll)
 
@@ -138,7 +139,17 @@ const PaymentForm = (props: HOCProps) => {
                   onFinish={orderPoll}
                 >
                   <Form.Header>
-                      Poll: {props.poll.title}
+                    <Space block justify="between">
+                      <span>
+                        Here are the options generated.
+                      </span>
+                      <Button
+                        onClick={calculateTotal}
+                        color='success' size='large'
+                      >
+                        <UndoOutline />
+                      </Button>
+                    </Space>
                   </Form.Header>
                   <List>
                     {priceItems.map((item: any) =>
@@ -166,7 +177,7 @@ const PaymentForm = (props: HOCProps) => {
                         <>
                           <div>Total Reward for Responses</div>
                           <div>
-                            ({props.poll.perResponseReward + ' π * ' + props.poll.responseLimit + ' max responses'})
+                            ({props.poll.perResponseReward + ' π x ' + props.poll.responseLimit + ' max responses'})
                           </div>
                         </>
                       }
@@ -178,7 +189,7 @@ const PaymentForm = (props: HOCProps) => {
                       initialValue={props.poll.perResponseReward * props.poll.responseLimit}
                       label="Grand Total:"
                     >
-                      <span>{total.toFixed(3)} π</span>
+                      <span>{grandTotal.toFixed(3)} π</span>
                     </Form.Item>
                   </List>
                 </Form>
