@@ -223,7 +223,7 @@ const PollConfigForm = (props: HOCProps) => {
                     style={{
                       "--input-width": '80px'
                     }}
-                    step={1}
+                    step={5}
                     min={1}
                     max={90}
                     formatter={value => `${value} days`}
