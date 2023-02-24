@@ -43,6 +43,6 @@ export default function mountProductsEndpoints(router: Router, models: any) {
       console.log('error', error)
       return res.status(400).json({ message: "Error deleting product." });
     }
-  }
+  });
 
 }
