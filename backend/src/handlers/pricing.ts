@@ -65,6 +65,11 @@ export default function mountPricingEndpoints(router: Router, models: any) {
       const product = await Product.find(query);
       console.log('product', product)
 
+      // no products found
+      if (!product) {
+        return res.status(400).json({ message: "No products found." });
+      }
+
       pricing = await Pricing.find({ product });
     } else {
       pricing = await Pricing.find({  });
