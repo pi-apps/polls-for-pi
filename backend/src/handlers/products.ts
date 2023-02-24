@@ -30,4 +30,19 @@ export default function mountProductsEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: products });
   });
 
+  router.delete('/:_id', async (req, res) => {
+    const { _id } = req.params;
+    console.log('_id', _id)
+
+    const { Product } = models;
+
+    try {
+      const item = await Product.findOneAndDelete({ _id });
+      res.status(200).send({ data: item, message: "Product successfully deleted!" });
+    } catch (error) {
+      console.log('error', error)
+      return res.status(400).json({ message: "Error deleting product." });
+    }
+  }
+
 }

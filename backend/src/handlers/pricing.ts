@@ -84,10 +84,10 @@ export default function mountPricingEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: pricing });
   });
 
-  router.get('/:id', async (req, res) => {
+  router.get('/:_id', async (req, res) => {
     console.log('get pricing endpoint')
     const { Pricing } = models;
-    const _id = req.params.id;
+    const { _id } = req.params;
     console.log('_id', _id)
 
     const pricing = await Pricing.find({ _id });
@@ -100,5 +100,20 @@ export default function mountPricingEndpoints(router: Router, models: any) {
 
     return res.status(200).json({ data: pricing[0] });
   });
+
+  router.delete('/:_id', async (req, res) => {
+    const { _id } = req.params;
+    console.log('_id', _id)
+
+    const { Pricing } = models;
+
+    try {
+      const item = await Pricing.findOneAndDelete({ _id });
+      res.status(200).send({ data: item, message: "Pricing successfully deleted!" });
+    } catch (error) {
+      console.log('error', error)
+      return res.status(400).json({ message: "Error deleting pricing." });
+    }
+  }
 
 }
