@@ -72,15 +72,15 @@ const PaymentForm = (props: HOCProps) => {
       return;
     }
 
-    //const paymentData = { amount, memo, metadata: props.poll };
+    const paymentData = { amount: grandTotal, memo: `poll:${{...props.poll}}`, metadata: props.poll };
     const callbacks = {
       onReadyForServerApproval,
       onReadyForServerCompletion,
       onCancel,
       onError
     };
-    //const payment = await window.Pi.createPayment(paymentData, callbacks);
-    //console.log(payment);
+    const payment = await window.Pi.createPayment(paymentData, callbacks);
+    console.log(payment);
   }
 
   const onReadyForServerApproval = (paymentId: string) => {
