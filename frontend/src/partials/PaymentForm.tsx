@@ -1,5 +1,5 @@
 import {
-  Button, Form, List, Space
+  Button, Form, List, Modal, Space
 } from 'antd-mobile';
 import { UndoOutline } from 'antd-mobile-icons';
 import axios from 'axios';
@@ -59,7 +59,17 @@ const PaymentForm = (props: HOCProps) => {
 
   const orderPoll = async () => {
     if(props.user === null) {
-      return props.setShowModal(true);
+      console.log('set show modal')
+      Modal.confirm({
+        title: 'Signin',
+        content: <span style={{ fontWeight: 'bold', justifyContent: 'center', display: 'flex' }}>You need to sign in first.</span>,
+        showCloseButton: true,
+        onConfirm: props.onSignIn,
+        confirmText: "Signin",
+        cancelText: "Cancel",
+      })
+      //return props.setShowModal(true);
+      return;
     }
 
     //const paymentData = { amount, memo, metadata: props.poll };
@@ -141,7 +151,7 @@ const PaymentForm = (props: HOCProps) => {
                   <Form.Header>
                     <Space block justify="between">
                       <span>
-                        Here are the options generated.
+                        Here's how much this poll will cost.
                       </span>
                       <Button
                         onClick={calculateTotal}

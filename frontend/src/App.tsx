@@ -151,7 +151,9 @@ function App() {
         path="/"
         element={
           <HomeV2
+            onSignIn={signIn} onSignOut={signOut} user={user}
             pathname={pathname} setMode={onChangeMode} mode={mode}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setPoll={setPoll} poll={poll}
           />
         }
@@ -160,6 +162,7 @@ function App() {
         path="/get_started"
         element={
           <GetStarted
+            onSignIn={signIn} onSignOut={signOut} user={user}
             pathname={pathname}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
