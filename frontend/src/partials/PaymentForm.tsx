@@ -149,10 +149,10 @@ const PaymentForm = (props: HOCProps) => {
                         label={`${item.name} Fee : ${item.price} π`}
                       >
                         {item.name.toLowerCase() === "per option" &&
-                          <span>{item.price * props.poll.optionCount} π for {props.poll.optionCount} options</span>
+                          <span>{(item.price * props.poll.optionCount).toFixed(3)} π for {props.poll.optionCount} options</span>
                         }
                         {item.name.toLowerCase() === "per response" &&
-                          <span>{item.price * props.poll.responseLimit} π for {props.poll.responseLimit} response limit</span>
+                          <span>{(item.price * props.poll.responseLimit).toFixed(3)} π for {props.poll.responseLimit} response limit</span>
                         }
                         {item.name.toLowerCase() === "per hour" &&
                           <span>{(item.price * (props.poll.durationDays * 24)).toFixed(3) } π for {props.poll.durationDays} days ({props.poll.durationDays * 24} hours)</span>
