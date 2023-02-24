@@ -24,7 +24,7 @@ const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Al
 const PaymentForm = (props: HOCProps) => {
   const navigate = useNavigate()
   const [ priceItems, setPriceItems ] = useState<any>([]);
-  const [ total, setTotal ] = useState<number>(0);
+  const [ total, setTotal ] = useState<number>(0.0);
 
   const toRoot = () => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
@@ -37,7 +37,7 @@ const PaymentForm = (props: HOCProps) => {
   }
 
   const calculateTotal = async () => {
-    let total = 0;
+    let total = 0.0;
 
     priceItems.forEach((item: any) => {
       const name = item.name.toLowerCase();
@@ -178,7 +178,7 @@ const PaymentForm = (props: HOCProps) => {
                       initialValue={props.poll.perResponseReward * props.poll.responseLimit}
                       label="Grand Total:"
                     >
-                      <span>{total} π</span>
+                      <span>{total.toFixed(3)} π</span>
                     </Form.Item>
                   </List>
                 </Form>
