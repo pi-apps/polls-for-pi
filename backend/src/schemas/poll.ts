@@ -6,7 +6,7 @@ interface IPoll {
   status: string;
   distribution: string,
   options?: string[],
-  owner?: {
+  owner: {
     uid: string,
     username: string
   },
@@ -17,6 +17,7 @@ interface IPoll {
   durationDays: number,
   responses: any,
   paid: boolean,
+  paymentId: string,
 }
 
 const PollSchema = new Schema<IPoll>({
@@ -46,20 +47,27 @@ const PollSchema = new Schema<IPoll>({
   durationDays: {
     type: Number,
   },
-  owner: {
-    type: ObjectId,
-    ref: 'User',
-  },
+  // owner: {
+  //   type: ObjectId,
+  //   ref: 'User',
+  // },
   options: [{
     type: String
   }],
   paid: {
     type: Boolean,
   },
+  paymentId: {
+    type: String,
+  },
   responses: [{
     name: String,
     response: String
   }],
+  owner: {
+    uid: String,
+    username: String,
+  }
 });
 
 // var diffHistory = require("mongoose-diff-history/diffHistory").plugin;

@@ -85,7 +85,7 @@ const PaymentForm = (props: HOCProps) => {
 
   const onReadyForServerApproval = async (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
-    axiosClient.post('/payments/approve', {paymentId, ...props.user }, config);
+    axiosClient.post('/payments/approve', {paymentId, user: props.user, poll: props.poll }, config);
     const unpaidPoll = await axiosClient.post('/polls', {paymentId, user: props.user, poll: props.poll }, config);
     console.log('unpaidPoll', unpaidPoll)
   }

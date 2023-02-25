@@ -82,8 +82,12 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       const { Poll } = models;
 
       const unpaidPoll = new Poll();
-      _.extend(unpaidPoll, {req.body})
+      _.extend(unpaidPoll, {
+        owner: {
 
+        }
+      });
+      await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
       await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
