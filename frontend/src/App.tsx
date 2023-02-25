@@ -210,7 +210,7 @@ function App() {
         }
       />
 
-      {["/dashboard", "/dashboard/home", "/dashboard/polls", "/dashboard/me"].map((path, index) => {
+      {["/dashboard/home", "/dashboard/polls", "/dashboard/me"].map((path, index) => {
         return (
           <Route
             path={path}

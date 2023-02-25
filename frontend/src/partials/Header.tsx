@@ -47,7 +47,7 @@ const onClick: MenuProps['onClick'] = (e) => {
   console.log('e', e)
 }
 
-const Header = (hocProps: HOCProps)  => {
+const Header = (props: HOCProps)  => {
   const [theme, setTheme] = useState<MenuTheme>('dark');
   const [current, setCurrent] = useState('1');
 
@@ -58,8 +58,8 @@ const Header = (hocProps: HOCProps)  => {
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
     setCurrent(e.key);
-    if (hocProps) {
-      hocProps.setMode(e.key);
+    if (props) {
+      props.setMode(e.key);
       setTheme(e.key === 'dark' ? 'dark' : 'light');
       console.log('theme', theme)
     }
@@ -91,7 +91,7 @@ const Header = (hocProps: HOCProps)  => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
-  const pathname = hocProps.pathname;
+  const pathname = props.pathname;
   console.log('pathname', pathname)
   console.log('theme', theme)
   return (
@@ -156,7 +156,7 @@ const Header = (hocProps: HOCProps)  => {
                 <li>
                   <Dropdown menu={{ items, selectable: true, onClick, theme }} trigger={['click']} placement="bottomRight">
                     <a onClick={(e) => e.preventDefault()}>
-                      {hocProps.mode === "dark" ?
+                      {props.mode === "dark" ?
                         <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 mr-2">
                           <path fillRule="evenodd" clipRule="evenodd" d="M17.715 15.15A6.5 6.5 0 0 1 9 6.035C6.106 6.922 4 9.645 4 12.867c0 3.94 3.153 7.136 7.042 7.136 3.101 0 5.734-2.032 6.673-4.853Z"
                             className="fill-sky-400/20"/>
@@ -231,7 +231,12 @@ const Header = (hocProps: HOCProps)  => {
                   </ul>
                 </li> */}
                 <li>
-                  <Link to="/signin" className="flex font-medium w-full text-purple-600 hover:text-gray-200 py-2 justify-center">Sign in</Link>
+
+                  {props.user ?
+                    <span>@{props.user.username}</span>
+                    :
+                    <Link to="/signin" className="flex font-medium w-full text-purple-600 hover:text-gray-200 py-2 justify-center">Sign in</Link>
+                  }
                 </li>
                 {/* <li>
                   <Link to="/signup" className="font-medium w-full inline-flex items-center justify-center border border-transparent px-4 py-2 my-2 rounded-sm text-white bg-purple-600 hover:bg-purple-700 transition duration-150 ease-in-out">Sign up</Link>

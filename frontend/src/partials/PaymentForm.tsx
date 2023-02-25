@@ -92,7 +92,7 @@ const PaymentForm = (props: HOCProps) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
     const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
     console.log('resp', resp);
-    navigate("/dashboard")
+    navigate("/dashboard/home")
   }
 
   const onCancel = (paymentId: string) => {
