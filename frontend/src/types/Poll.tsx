@@ -1,3 +1,5 @@
+import { PollResponse } from "./PollResponse";
+
 export type Poll = {
   title: string,
   distribution?: string,
@@ -11,6 +13,7 @@ export type Poll = {
   isLimitResponse?: boolean,
   responseLimit: number,
   durationDays: number,
+  responses: PollResponse[]
 
   setTitle?: (title: string) => void;
 };

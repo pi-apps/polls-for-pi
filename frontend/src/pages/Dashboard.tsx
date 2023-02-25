@@ -1,13 +1,16 @@
-import { TabBar } from 'antd-mobile';
+import { List, TabBar } from 'antd-mobile';
 import {
   AppOutline, UnorderedListOutline,
   UserOutline
 } from 'antd-mobile-icons';
-import { FC } from 'react';
+import axios from 'axios';
+import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import WindowWithEnv from '../interfaces/WindowWithEnv';
 
 import Header from '../partials/Header';
 import HOCProps from '../types/HOCProps';
+import { Poll } from '../types/Poll';
 
 import './demo2.css';
 
@@ -53,8 +56,34 @@ const Bottom: FC = () => {
   )
 }
 
+const _window: WindowWithEnv = window;
+const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
+console.log('_window.__ENV', _window.__ENV)
+console.log('backendURL', backendURL)
+
+const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
+const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
+
+
 const Dashboard = (props: HOCProps) => {
   const pathname = getPathname();
+  const [userPolls, setPolls] = useState<Poll[]>([]);
+
+  const getUserPolls = async (username?: string) => {
+    console.log("get user polls ", username);
+    const options = await axiosClient.get(`/v1/polls?username=${username}`);
+    return options.data;
+  }
+
+  useEffect(() => {
+    getUserPolls(props.user?.username || 'eastmael').then(resp => {
+      console.log('polls data', resp.data)
+      setPolls(resp.data);
+    })
+  }, []);
+
+  console.log('userPolls', userPolls);
+  console.log('pathname', pathname);
 
   return (
     <>
@@ -65,10 +94,10 @@ const Dashboard = (props: HOCProps) => {
       </div>
         <div className={"body"}>
           {pathname === '/dashboard/home' &&
-            <Home />
+            <Home polls={userPolls} />
           }
           {pathname === '/dashboard/polls' &&
-            <Todo />
+            <Todo polls={userPolls} />
           }
           {pathname === '/dashboard/me' &&
             <PersonalCenter />
@@ -82,13 +111,52 @@ const Dashboard = (props: HOCProps) => {
   );
 }
 
-
-function Home() {
-  return <div>Home</div>
+interface TabProps {
+  polls: Poll[]
 }
 
-function Todo() {
-  return <div>Polls</div>
+const Home = (props: TabProps) => {
+  function handleClick() {
+    // ...
+  }
+
+  return (
+    <>
+      <List header='Polls'>
+        {props.polls.map((item, index) =>
+          <List.Item
+            key={index}
+            extra={`${item.responses.length} responses`}
+            onClick={handleClick}
+          >
+            {item.title}
+          </List.Item>
+        )}
+      </List>
+    </>
+  )
+}
+
+const Todo = (props: TabProps) => {
+  function handleClick() {
+    // ...
+  }
+
+  return (
+    <>
+      <List header='Polls'>
+        {props.polls.map((item, index) =>
+          <List.Item
+            key={index}
+            extra={`${item.responses.length} responses`}
+            onClick={handleClick}
+          >
+            {item.title}
+          </List.Item>
+        )}
+      </List>
+    </>
+  )
 }
 
 function PersonalCenter() {

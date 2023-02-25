@@ -24,15 +24,15 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.get('/', async (req, res) => {
-    const { Product } = models;
-    const products = await Product.find({ });
+    const { Poll } = models;
+    const items = await Poll.find({ });
 
     // order doesn't exist
-    if (!products || products.length <= 0) {
-      return res.status(400).json({ message: "No products found." });
+    if (!items || items.length <= 0) {
+      return res.status(400).json({ message: "No polls found." });
     }
 
-    return res.status(200).json({ data: products });
+    return res.status(200).json({ data: items });
   });
 
   router.patch('/:_id', async (req, res) => {
