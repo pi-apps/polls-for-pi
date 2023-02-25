@@ -7,6 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './css/style.css';
 
+import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import WindowWithEnv from './interfaces/WindowWithEnv';
 import Notfound from './notfound';
@@ -47,11 +48,15 @@ function App() {
     responseLimit: 100,
     durationDays: 30,
     perResponseReward: 0,
+    responses: [],
   });
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    if (authResult) {
+      Toast.show("Successfully logged in!");
+    }
     signInUser(authResult);
     setUser(authResult.user);
   }
@@ -122,6 +127,7 @@ function App() {
         responseLimit: 100,
         durationDays: 30,
         perResponseReward: 0,
+        responses: [],
       });
     }
   }, [location.pathname]); // triggered on route change

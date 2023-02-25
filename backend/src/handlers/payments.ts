@@ -99,7 +99,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       // let Pi Servers know that you're ready
       await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
-      return res.status(200).json({ message: `Approved the payment ${paymentId}` });
+      return res.status(200).json({ pollId: unpaidPoll._id, message: `Approved the payment ${paymentId}` });
 
     } catch (err) {
       console.log('err', err)
@@ -121,9 +121,15 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
     await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
 
+    const { Poll } = models;
+    const unpaidPoll = await Poll.findOne({ paymentId });
+    console.log('unpaidPoll', unpaidPoll);
+    unpaidPoll.paid = true;
+    await unpaidPoll.save();
+
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
-    return res.status(200).json({ message: `Completed the payment ${paymentId}` });
+    return res.status(200).json({ message: `Completed the payment ${paymentId}`, pollId: unpaidPoll._id });
   });
 
   // handle the cancelled payment

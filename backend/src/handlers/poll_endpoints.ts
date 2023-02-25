@@ -45,6 +45,10 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
+    item.paid = true;
+    await item.save();
+    console.log('patched poll', item);
+
     return res.status(200).json({ data: item });
   });
 

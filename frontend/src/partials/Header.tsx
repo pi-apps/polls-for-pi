@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 
 import { Dropdown, MenuProps, MenuTheme } from 'antd';
+import { Button } from 'antd-mobile';
 
 const items: MenuProps['items'] = [
   {
@@ -235,7 +236,7 @@ const Header = (props: HOCProps)  => {
                   {props.user ?
                     <span>@{props.user.username}</span>
                     :
-                    <Link to="/signin" className="flex font-medium w-full text-purple-600 hover:text-gray-200 py-2 justify-center">Sign in</Link>
+                    <Button onClick={props.onSignIn}>Sign in</Button>
                   }
                 </li>
                 {/* <li>
