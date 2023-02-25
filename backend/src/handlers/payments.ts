@@ -58,8 +58,9 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const paymentId = req.body.paymentId;
       const { uid, username } = req.body.user;
-      const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+      console.log('user', req.body.user)
 
+      const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
       console.log('currentPayment', currentPayment)
 
       const orderCollection = app.locals.orderCollection;
@@ -79,6 +80,8 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
         created_at: new Date()
       });
 
+      const pollReq = req.body.poll;
+      console.log('user', req.body.user)
       const { Poll } = models;
 
       const unpaidPoll = new Poll();
