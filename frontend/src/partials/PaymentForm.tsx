@@ -88,9 +88,11 @@ const PaymentForm = (props: HOCProps) => {
     axiosClient.post('/payments/approve', {paymentId}, config);
   }
 
-  const onReadyForServerCompletion = (paymentId: string, txid: string) => {
+  const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
-    axiosClient.post('/payments/complete', {paymentId, txid}, config);
+    const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
+    console.log('resp', resp);
+    navigate("/poll/")
   }
 
   const onCancel = (paymentId: string) => {

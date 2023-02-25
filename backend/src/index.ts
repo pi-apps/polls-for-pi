@@ -88,7 +88,7 @@ app.use(session({
 
 // Payments endpoint under /payments:
 const paymentsRouter = express.Router();
-mountPaymentsEndpoints(paymentsRouter);
+mountPaymentsEndpoints(paymentsRouter, pollModels);
 app.use('/payments', paymentsRouter);
 
 // User endpoints (e.g signin, signout) under /user:

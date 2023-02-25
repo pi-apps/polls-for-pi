@@ -3,7 +3,7 @@ import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 
-export default function mountPaymentsEndpoints(router: Router) {
+export default function mountPaymentsEndpoints(router: Router, models: any) {
   // handle the incomplete payment
   router.post('/incomplete', async (req, res) => {
     const payment = req.body.payment;
@@ -57,6 +57,8 @@ export default function mountPaymentsEndpoints(router: Router) {
 
       const paymentId = req.body.paymentId;
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+
+      const { Polls } = models;
       const orderCollection = app.locals.orderCollection;
 
       /*
