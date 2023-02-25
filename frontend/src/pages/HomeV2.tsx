@@ -11,7 +11,7 @@ const HomeV2 = (props: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
-      <Header setMode={props.setMode} mode={props.mode} pathname={props.pathname}  />
+      <Header {...props}  />
 
       {/*  Page content */}
       <main className="grow">

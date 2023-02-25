@@ -25,7 +25,15 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
   router.get('/', async (req, res) => {
     const { Poll } = models;
-    const items = await Poll.find({ });
+    const { filter } = req.query;
+    console.log('filter', filter)
+
+    let items = [];
+    if (filter) {
+      items = await Poll.find({ filter });
+    } else {
+      items = await Poll.find({ });
+    }
 
     // order doesn't exist
     if (!items || items.length <= 0) {
@@ -33,6 +41,19 @@ export default function mountPollEndpoints(router: Router, models: any) {
     }
 
     return res.status(200).json({ data: items });
+  });
+
+  router.get('/:_id', async (req, res) => {
+    const { _id } = req.params;
+    const { Poll } = models;
+    const item = await Poll.findOne({ _id });
+
+    // order doesn't exist
+    if (!item) {
+      return res.status(400).json({ message: "No poll found." });
+    }
+
+    return res.status(200).json({ data: item });
   });
 
   router.patch('/:paymentId', async (req, res) => {
