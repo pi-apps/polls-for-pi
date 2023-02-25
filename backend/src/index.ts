@@ -12,7 +12,7 @@ import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountPollsAiEndpoints from './handlers/polls_ai';
 import mountPollEndpoints from './handlers/poll_endpoints';
-import mountPricingEndpoints from './handlers/pricing';
+import mountPricingEndpoints from './handlers/pricing_endpoints';
 import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
 import PollSchema from './schemas/poll';

@@ -48,6 +48,8 @@ const PaymentForm = (props: HOCProps) => {
         total += (item.price * props.poll.responseLimit);
       } else if (name === "per hour") {
         total += (item.price * (props.poll.durationDays * 24));
+      } else if (name === "per transaction") {
+        total += (item.price * (props.poll.responseLimit));
       }
     })
 
@@ -183,6 +185,9 @@ const PaymentForm = (props: HOCProps) => {
                         }
                         {item.name.toLowerCase() === "per hour" &&
                           <span>{(item.price * (props.poll.durationDays * 24)).toFixed(4) } π for {props.poll.durationDays} days ({props.poll.durationDays * 24} hours)</span>
+                        }
+                        {item.name.toLowerCase() === "per transaction" &&
+                          <span>{(item.price * (props.poll.responseLimit)).toFixed(4) } π for {props.poll.responseLimit} responses</span>
                         }
                       </Form.Item>
                     )}

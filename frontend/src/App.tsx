@@ -55,7 +55,10 @@ function App() {
     const scopes = ['username', 'payments'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     if (authResult) {
-      Toast.show("Successfully logged in!");
+      Toast.show({
+        icon: 'success',
+        content: 'Successfully logged in!',
+      });
     }
     signInUser(authResult);
     setUser(authResult.user);
