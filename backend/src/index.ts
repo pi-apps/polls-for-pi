@@ -43,7 +43,7 @@ const Pricing = pollsDB.model('Pricing', PricingSchema);
 const PollPricing = pollsDB.model('PollPricing', PollPricingSchema);
 const Poll = pollsDB.model('Poll', PollSchema);
 
-const pollModels = { Product, Pricing, PollPricing };
+const pollModels = { Product, Pricing, PollPricing, Poll };
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:
