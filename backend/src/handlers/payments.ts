@@ -93,6 +93,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
             uid: user.uid,
             username: user.username
           },
+          paymentId,
         }
       );
       await unpaidPoll.save();
@@ -114,6 +115,10 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     const txid = req.body.txid;
     const orderCollection = app.locals.orderCollection;
 
+    const { user } = req.body;
+    console.log('paymentId', paymentId)
+    console.log('user', user)
+
     /*
       implement your logic here
       e.g. verify the transaction, deliver the item to the user, etc...
@@ -121,14 +126,18 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
     await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
 
+    // let Pi server know that the payment is completed
+    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
+
     const { Poll } = models;
     const unpaidPoll = await Poll.findOne({ paymentId });
     console.log('unpaidPoll', unpaidPoll);
+    if (!unpaidPoll) {
+      return res.status(200).json({ message: `Completed the payment ${paymentId} but no poll record found.`, pollId: unpaidPoll._id });
+    }
     unpaidPoll.paid = true;
     await unpaidPoll.save();
 
-    // let Pi server know that the payment is completed
-    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
     return res.status(200).json({ message: `Completed the payment ${paymentId}`, pollId: unpaidPoll._id });
   });
 

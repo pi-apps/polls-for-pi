@@ -72,7 +72,7 @@ const PaymentForm = (props: HOCProps) => {
       return;
     }
 
-    const paymentData = { amount: grandTotal, memo: `poll:${{...props.poll}}`, metadata: props.poll };
+    const paymentData = { amount: grandTotal, memo: `poll:'${props.poll.title}'`, metadata: props.poll };
     const callbacks = {
       onReadyForServerApproval,
       onReadyForServerCompletion,
@@ -94,7 +94,7 @@ const PaymentForm = (props: HOCProps) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
     const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
     console.log('resp', resp);
-    const paidPoll = axiosClient.patch(`/polls/${resp.pollId}`, {paymentId, user: props.user, poll: props.poll }, config);
+    const paidPoll = axiosClient.patch(`/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
     navigate("/dashboard/home")
   }
