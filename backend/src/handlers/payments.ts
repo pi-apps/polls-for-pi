@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Router } from "express";
+import _ from "lodash";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 
@@ -56,9 +57,11 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       const app = req.app;
 
       const paymentId = req.body.paymentId;
+      const { uid, username } = req.body.user;
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
 
-      const { Polls } = models;
+      console.log('currentPayment', currentPayment)
+
       const orderCollection = app.locals.orderCollection;
 
       /*
@@ -69,12 +72,18 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       await orderCollection.insertOne({
         pi_payment_id: paymentId,
         product_id: currentPayment.data.metadata.productId,
-        user: req.session.currentUser ? req.session.currentUser.uid : null,
+        user: req.session.currentUser ? req.session.currentUser.uid : uid ? uid : 'dummyuser',
         txid: null,
         paid: false,
         cancelled: false,
         created_at: new Date()
       });
+
+      const { Poll } = models;
+
+      const unpaidPoll = new Poll();
+      _.extend(unpaidPoll, {req.body})
+
 
       // let Pi Servers know that you're ready
       await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);

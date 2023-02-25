@@ -16,6 +16,7 @@ interface IPoll {
   responseLimit: number,
   durationDays: number,
   responses: any,
+  paid: boolean,
 }
 
 const PollSchema = new Schema<IPoll>({
@@ -52,6 +53,9 @@ const PollSchema = new Schema<IPoll>({
   options: [{
     type: String
   }],
+  paid: {
+    type: Boolean,
+  },
   responses: [{
     name: String,
     response: String
