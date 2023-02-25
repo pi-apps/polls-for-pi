@@ -34,7 +34,7 @@ const env: Environment = {
   mongo_db_name: process.env.MONGODB_DATABASE_NAME || 'demo-app',
   mongo_user: process.env.MONGODB_USERNAME || '',
   mongo_password: process.env.MONGODB_PASSWORD || '',
-  frontend_url: process.env.FRONTEND_URL || 'http://localhost:3314',
+  frontend_url: process.env.FRONTEND_URL || 'http://localhost:5173',
   openai_api_key: process.env.OPENAI_API_KEY || '',
 };
 

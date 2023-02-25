@@ -12,6 +12,8 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     const txid = payment.transaction && payment.transaction.txid;
     const txURL = payment.transaction && payment.transaction._link;
 
+    console.log('incomplete paymentId', paymentId);
+
     /*
       implement your logic here
       e.g. verifying the payment, delivering the item to the user, etc...
