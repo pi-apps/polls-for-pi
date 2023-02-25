@@ -56,9 +56,9 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const app = req.app;
 
-      const paymentId = req.body.paymentId;
-      const { uid, username } = req.body.user;
-      console.log('user', req.body.user)
+      const { paymentId, user } = req.body;
+      console.log('paymentId', paymentId)
+      console.log('user', user)
 
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
       console.log('currentPayment', currentPayment)
@@ -82,14 +82,19 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const pollReq = req.body.poll;
       console.log('user', req.body.user)
+      console.log('pollReq', pollReq)
       const { Poll } = models;
 
       const unpaidPoll = new Poll();
-      _.extend(unpaidPoll, {
-        owner: {
-
+      _.extend(unpaidPoll,
+        {
+          ...pollReq,
+          owner: {
+            uid: user.uid,
+            username: user.username
+          },
         }
-      });
+      );
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
