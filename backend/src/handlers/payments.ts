@@ -1,15 +1,18 @@
 import axios from "axios";
 import { Router } from "express";
+import _ from "lodash";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 
-export default function mountPaymentsEndpoints(router: Router) {
+export default function mountPaymentsEndpoints(router: Router, models: any) {
   // handle the incomplete payment
   router.post('/incomplete', async (req, res) => {
     const payment = req.body.payment;
     const paymentId = payment.identifier;
     const txid = payment.transaction && payment.transaction.txid;
     const txURL = payment.transaction && payment.transaction._link;
+
+    console.log('incomplete paymentId', paymentId);
 
     /*
       implement your logic here
@@ -48,14 +51,20 @@ export default function mountPaymentsEndpoints(router: Router) {
   // approve the current payment
   router.post('/approve', async (req, res) => {
     try {
-      if (!req.session.currentUser) {
-        return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
-      }
+      console.log('req.session', req.session)
+      // if (!req.session.currentUser) {
+      //   return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+      // }
 
       const app = req.app;
 
-      const paymentId = req.body.paymentId;
+      const { paymentId, user } = req.body;
+      console.log('paymentId', paymentId)
+      console.log('user', user)
+
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+      console.log('currentPayment', currentPayment)
+
       const orderCollection = app.locals.orderCollection;
 
       /*
@@ -66,16 +75,34 @@ export default function mountPaymentsEndpoints(router: Router) {
       await orderCollection.insertOne({
         pi_payment_id: paymentId,
         product_id: currentPayment.data.metadata.productId,
-        user: req.session.currentUser ? req.session.currentUser.uid : null,
+        user: req.session.currentUser ? req.session.currentUser.uid : user.uid ? user.uid : 'dummyuser',
         txid: null,
         paid: false,
         cancelled: false,
         created_at: new Date()
       });
 
+      const pollReq = req.body.poll;
+      console.log('user', req.body.user)
+      console.log('pollReq', pollReq)
+      const { Poll } = models;
+
+      const unpaidPoll = new Poll();
+      _.extend(unpaidPoll,
+        {
+          ...pollReq,
+          owner: {
+            uid: user.uid,
+            username: user.username
+          },
+          paymentId,
+        }
+      );
+      await unpaidPoll.save();
+
       // let Pi Servers know that you're ready
       await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
-      return res.status(200).json({ message: `Approved the payment ${paymentId}` });
+      return res.status(200).json({ pollId: unpaidPoll._id, message: `Approved the payment ${paymentId}` });
 
     } catch (err) {
       console.log('err', err)
@@ -90,6 +117,10 @@ export default function mountPaymentsEndpoints(router: Router) {
     const txid = req.body.txid;
     const orderCollection = app.locals.orderCollection;
 
+    const { user } = req.body;
+    console.log('paymentId', paymentId)
+    console.log('user', user)
+
     /*
       implement your logic here
       e.g. verify the transaction, deliver the item to the user, etc...
@@ -99,7 +130,17 @@ export default function mountPaymentsEndpoints(router: Router) {
 
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
-    return res.status(200).json({ message: `Completed the payment ${paymentId}` });
+
+    const { Poll } = models;
+    const unpaidPoll = await Poll.findOne({ paymentId });
+    console.log('unpaidPoll', unpaidPoll);
+    if (!unpaidPoll) {
+      return res.status(200).json({ message: `Completed the payment ${paymentId} but no poll record found.`, pollId: unpaidPoll._id });
+    }
+    unpaidPoll.paid = true;
+    await unpaidPoll.save();
+
+    return res.status(200).json({ message: `Completed the payment ${paymentId}`, pollId: unpaidPoll._id });
   });
 
   // handle the cancelled payment

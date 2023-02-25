@@ -3,15 +3,16 @@ import {
   Route, Routes, useLocation
 } from 'react-router-dom';
 
+import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './css/style.css';
 
-import AOS from 'aos';
-
+import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import WindowWithEnv from './interfaces/WindowWithEnv';
 import Notfound from './notfound';
 import { Browse, Home, Shop } from './pages';
+import Dashboard from './pages/Dashboard';
 import GetStarted from './pages/GetStarted';
 import HomeV2 from './pages/HomeV2';
 import OptionsGenerator from './pages/OptionsGenerator';
@@ -41,18 +42,24 @@ function App() {
   const [mode, setMode] = useState<string>('dark');
   const [poll, setPoll] = useState<Poll>({
     title: '',
-    budget: 0,
     optionCount: 2,
     distribution: '',
     isLimitResponse: true,
     responseLimit: 100,
     durationDays: 30,
     perResponseReward: 0,
+    responses: [],
   });
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    if (authResult) {
+      Toast.show({
+        icon: 'success',
+        content: 'Successfully logged in!',
+      });
+    }
     signInUser(authResult);
     setUser(authResult.user);
   }
@@ -117,13 +124,13 @@ function App() {
     if (location.pathname === "/") {
       setPoll({
         title: '',
-        budget: 0,
         optionCount: 2,
         distribution: '',
         isLimitResponse: true,
         responseLimit: 100,
         durationDays: 30,
         perResponseReward: 0,
+        responses: [],
       });
     }
   }, [location.pathname]); // triggered on route change
@@ -211,6 +218,23 @@ function App() {
           />
         }
       />
+
+      {["/dashboard/home", "/dashboard/polls", "/dashboard/me"].map((path, index) => {
+        return (
+          <Route
+            path={path}
+            key={index}
+            element={
+              <Dashboard
+                onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+                setMode={onChangeMode} mode={mode}
+                setPoll={setPoll} poll={poll}
+              />
+            }
+          />
+        )
+      })}
+
       <Route
         path="/price_calc"
         element={
@@ -264,7 +288,6 @@ function App() {
           />
         }
       />
-
 
       <Route element={Notfound} />
     </Routes>

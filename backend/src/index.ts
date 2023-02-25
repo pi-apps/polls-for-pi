@@ -11,9 +11,11 @@ import path from 'path';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountPollsAiEndpoints from './handlers/polls_ai';
-import mountPricingEndpoints from './handlers/pricing';
+import mountPollEndpoints from './handlers/poll_endpoints';
+import mountPricingEndpoints from './handlers/pricing_endpoints';
 import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
+import PollSchema from './schemas/poll';
 import PollPricingSchema from './schemas/poll_pricing';
 import PricingSchema from './schemas/pricing';
 import ProductSchema from './schemas/product';
@@ -39,8 +41,9 @@ var pollsDB = mongoose.createConnection(mongoUri, mongoClientOptions);
 const Product = pollsDB.model('Product', ProductSchema);
 const Pricing = pollsDB.model('Pricing', PricingSchema);
 const PollPricing = pollsDB.model('PollPricing', PollPricingSchema);
+const Poll = pollsDB.model('Poll', PollSchema);
 
-const pollModels = { Product, Pricing, PollPricing };
+const pollModels = { Product, Pricing, PollPricing, Poll };
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:
@@ -88,7 +91,7 @@ app.use(session({
 
 // Payments endpoint under /payments:
 const paymentsRouter = express.Router();
-mountPaymentsEndpoints(paymentsRouter);
+mountPaymentsEndpoints(paymentsRouter, pollModels);
 app.use('/payments', paymentsRouter);
 
 // User endpoints (e.g signin, signout) under /user:
@@ -107,6 +110,10 @@ app.use('/v1/polls_ai', pollsAiRouter);
 const pricingRouter = express.Router();
 mountPricingEndpoints(pricingRouter, pollModels);
 app.use('/v1/pricings', pricingRouter);
+
+const pollRouter = express.Router();
+mountPollEndpoints(pollRouter, pollModels);
+app.use('/v1/polls', pollRouter);
 
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {

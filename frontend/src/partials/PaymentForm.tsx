@@ -48,6 +48,8 @@ const PaymentForm = (props: HOCProps) => {
         total += (item.price * props.poll.responseLimit);
       } else if (name === "per hour") {
         total += (item.price * (props.poll.durationDays * 24));
+      } else if (name === "per transaction") {
+        total += (item.price * (props.poll.responseLimit));
       }
     })
 
@@ -72,7 +74,7 @@ const PaymentForm = (props: HOCProps) => {
       return;
     }
 
-    const paymentData = { amount: grandTotal, memo: `poll:${{...props.poll}}`, metadata: props.poll };
+    const paymentData = { amount: grandTotal, memo: `poll:'${props.poll.title}'`, metadata: props.poll };
     const callbacks = {
       onReadyForServerApproval,
       onReadyForServerCompletion,
@@ -83,14 +85,20 @@ const PaymentForm = (props: HOCProps) => {
     console.log(payment);
   }
 
-  const onReadyForServerApproval = (paymentId: string) => {
+  const onReadyForServerApproval = async (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
-    axiosClient.post('/payments/approve', {paymentId}, config);
+    axiosClient.post('/payments/approve', {paymentId, user: props.user, poll: props.poll }, config);
+    const unpaidPoll = await axiosClient.post('/polls', {paymentId, user: props.user, poll: props.poll }, config);
+    console.log('unpaidPoll', unpaidPoll)
   }
 
-  const onReadyForServerCompletion = (paymentId: string, txid: string) => {
+  const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
-    axiosClient.post('/payments/complete', {paymentId, txid}, config);
+    const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
+    console.log('resp', resp);
+    const paidPoll = axiosClient.patch(`/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
+    console.log('paidPoll', paidPoll)
+    navigate("/dashboard/home")
   }
 
   const onCancel = (paymentId: string) => {
@@ -177,6 +185,9 @@ const PaymentForm = (props: HOCProps) => {
                         }
                         {item.name.toLowerCase() === "per hour" &&
                           <span>{(item.price * (props.poll.durationDays * 24)).toFixed(4) } π for {props.poll.durationDays} days ({props.poll.durationDays * 24} hours)</span>
+                        }
+                        {item.name.toLowerCase() === "per transaction" &&
+                          <span>{(item.price * (props.poll.responseLimit)).toFixed(4) } π for {props.poll.responseLimit} responses</span>
                         }
                       </Form.Item>
                     )}

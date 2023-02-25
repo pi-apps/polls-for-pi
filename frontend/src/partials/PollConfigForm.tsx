@@ -236,8 +236,9 @@ const PollConfigForm = (props: HOCProps) => {
                 <Form.Item
                   name='distribution'
                   label='When will you distribute the incentives?'
-                  initialValue={[props.poll?.distribution || '1']}
+                  initialValue={[props.poll?.distribution]}
                   layout='vertical'
+                  rules={[{ required: true, message: 'Distribution method is required' }]}
                 >
                   <Selector
                     columns={2}

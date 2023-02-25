@@ -101,6 +101,32 @@ export default function mountPricingEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: pricing[0] });
   });
 
+  router.put('/:_id', async (req, res) => {
+    console.log('patching pricing');
+    const { _id } = req.params;
+
+    const { Pricing } = models;
+    const item = await Pricing.findOne({ _id });
+
+    // poll doesn't exist
+    if (!item) {
+      return res.status(400).json({ message: "Pricing not found." });
+    }
+    _.assign(item, ...req.body);
+
+    const { priceItems } = req.body;
+    console.log('priceItems', priceItems)
+    if (priceItems.length > 0) {
+      priceItems.forEach((priceItem: any, index: number) => {
+        item.priceItems[index] = { name: priceItem.name, price: priceItem.price };
+      })
+    }
+    await item.save();
+    console.log('patched pricing', item);
+
+    return res.status(200).json({ data: item });
+  });
+
   router.delete('/:_id', async (req, res) => {
     const { _id } = req.params;
     console.log('_id', _id)
