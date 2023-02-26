@@ -1,4 +1,5 @@
 
+import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import PaymentForm from '../partials/PaymentForm';
 import HOCProps from '../types/HOCProps';
@@ -14,6 +15,10 @@ const Payment = (props: HOCProps) => {
       <main className="grow">
         <PaymentForm {...props} />
       </main>
+
+      {props.user &&
+        <BottomBar {...props} />
+      }
 
     </div>
     {/* {props.showModal && <SignIn onSignIn={props.onSignIn} onModalClose={props.onModalClose} />} */}

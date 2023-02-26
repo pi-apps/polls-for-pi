@@ -1,4 +1,5 @@
 
+import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import PollConfigForm from '../partials/PollConfigForm';
 import HOCProps from '../types/HOCProps';
@@ -13,6 +14,10 @@ const PollConfig = (props: HOCProps) => {
       <main className="grow">
         <PollConfigForm {...props} />
       </main>
+
+      {props.user &&
+        <BottomBar {...props} />
+      }
 
     </div>
   );

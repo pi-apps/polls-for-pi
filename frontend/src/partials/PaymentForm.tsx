@@ -61,7 +61,6 @@ const PaymentForm = (props: HOCProps) => {
 
   const orderPoll = async () => {
     if(props.user === null) {
-      console.log('set show modal')
       Modal.confirm({
         title: 'Signin',
         content: <span style={{ fontWeight: 'bold', justifyContent: 'center', display: 'flex' }}>You need to sign in first.</span>,
@@ -70,7 +69,6 @@ const PaymentForm = (props: HOCProps) => {
         confirmText: "Signin",
         cancelText: "Cancel",
       })
-      //return props.setShowModal(true);
       return;
     }
 
