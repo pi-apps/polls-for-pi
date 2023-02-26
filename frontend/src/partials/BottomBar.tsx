@@ -1,4 +1,4 @@
-import { List, TabBar } from 'antd-mobile';
+import { List, Popup, TabBar } from 'antd-mobile';
 import {
   AppOutline, UnorderedListOutline,
   UserOutline
@@ -10,6 +10,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import WindowWithEnv from '../interfaces/WindowWithEnv';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
+import TabProps from '../types/TabProps';
+import ListItemPollForm from './ListItemPollForm';
 
 const Bottom: FC = () => {
 
@@ -86,7 +88,7 @@ const BottomBar = (props: HOCProps) => {
           <Home />
         }
         {pathname === '/dashboard/polls' &&
-          <Todo polls={userPolls} />
+          <PollsTab polls={userPolls} />
         }
         {pathname === '/dashboard/me' &&
           <PersonalCenter />
@@ -99,10 +101,6 @@ const BottomBar = (props: HOCProps) => {
   )
 }
 
-interface TabProps {
-  polls: Poll[]
-}
-
 export const Home = () => {
   return (
     <>
@@ -111,22 +109,45 @@ export const Home = () => {
   )
 }
 
-export const Todo = (props: TabProps) => {
+export const PollsTab = (props: TabProps) => {
   function handleClick() {
     // ...
   }
+
+  const [visibleCloseRight, setVisibleCloseRight] = useState(false);
 
   return (
     <>
       <List header='Polls'>
         {props.polls.map((item, index) =>
-          <List.Item
-            key={index}
-            extra={`${item.responses.length} responses`}
-            onClick={handleClick}
-          >
-            {item.title}
-          </List.Item>
+          <>
+            <List.Item
+              key={index}
+              extra={`${item.responses.length} responses`}
+              onClick={() => {
+                setVisibleCloseRight(true);
+              }}
+            >
+              {item.title}
+            </List.Item>
+            <Popup
+              key={`popup-${index}`}
+              position='right'
+              visible={visibleCloseRight}
+              showCloseButton
+              onClose={() => {
+                setVisibleCloseRight(false)
+              }}
+              bodyStyle={{ height: '40vh' }}
+            >
+              <div
+                style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
+                key={`div-${index}`}
+              >
+                <ListItemPollForm {...item} closePopup={setVisibleCloseRight} />
+              </div>
+            </Popup>
+          </>
         )}
       </List>
     </>
