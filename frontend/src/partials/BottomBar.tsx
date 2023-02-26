@@ -149,6 +149,7 @@ export const PollsTab = (props: TabProps) => {
         onClose={() => {
           setDisplayPopup(false)
         }}
+        destroyOnClose={true}
       >
         <div
           style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
