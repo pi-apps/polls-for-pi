@@ -1,4 +1,5 @@
 
+import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import PollWizardSteps from '../partials/PollWizardSteps';
 import HOCProps from '../types/HOCProps';
@@ -13,6 +14,10 @@ const PollWizard = (props: HOCProps) => {
       <main className="grow">
         <PollWizardSteps {...props} />
       </main>
+
+      {props.user &&
+        <BottomBar {...props} />
+      }
 
     </div>
   );

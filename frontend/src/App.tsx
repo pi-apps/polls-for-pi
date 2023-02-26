@@ -53,10 +53,19 @@ function App() {
 
   const signIn = async () => {
     const scopes = ['username', 'payments'];
-    const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    let authResult: AuthResult = {
+      accessToken: "accessToken",
+      user: {
+        uid: "uid",
+        username: "eastmael"
+      }
+    };
+    if (!_window.__ENV?.sandbox) {
+      authResult= await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    }
+
     if (authResult) {
       Toast.show({
-        icon: 'success',
         content: 'Successfully logged in!',
       });
     }

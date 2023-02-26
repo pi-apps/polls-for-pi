@@ -1,4 +1,5 @@
 
+import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import OptionsGeneratorForm from '../partials/OptionsGeneratorForm';
 import HOCProps from '../types/HOCProps';
@@ -13,6 +14,10 @@ const OptionsGenerator = (props: HOCProps) => {
       <main className="grow">
         <OptionsGeneratorForm {...props} />
       </main>
+
+      {props.user &&
+        <BottomBar {...props} />
+      }
 
     </div>
   );

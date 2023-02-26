@@ -75,6 +75,31 @@ export default function mountPollEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: item });
   });
 
+  router.put('/:_id', async (req, res) => {
+    console.log('updating poll', req.body);
+
+    const { Poll } = models;
+    const { _id } = req.params;
+    const item = await Poll.findOne({ _id });
+
+    // poll doesn't exist
+    if (!item) {
+      return res.status(400).json({ message: "Poll not found." });
+    }
+
+    _.assign(item, ...req.body)
+    const options: string[] = req.body.options;
+    if (!_.isEmpty(options)) {
+      options.forEach((option: string, index: number) => {
+        item.options[index] = option;
+      })
+    }
+    await item.save();
+    console.log('updated poll', item);
+
+    return res.status(200).json({ data: item });
+  });
+
   router.delete('/:_id', async (req, res) => {
     const { _id } = req.params;
     console.log('_id', _id)

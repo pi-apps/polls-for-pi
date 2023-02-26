@@ -1,6 +1,7 @@
 import { PollResponse } from "./PollResponse";
 
 export type Poll = {
+  _id?: string,
   title: string,
   distribution?: string,
   options?: string[],

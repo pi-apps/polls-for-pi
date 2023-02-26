@@ -236,7 +236,16 @@ const Header = (props: HOCProps)  => {
                   {props.user ?
                     <span>@{props.user.username}</span>
                     :
-                    <Button onClick={props.onSignIn}>Sign in</Button>
+                    <Button
+                      size='mini'
+                      color='primary' fill='none'
+                      onClick={props.onSignIn}
+                      style={{
+                        paddingLeft: '0px'
+                      }}
+                    >
+                      Sign in
+                    </Button>
                   }
                 </li>
                 {/* <li>
