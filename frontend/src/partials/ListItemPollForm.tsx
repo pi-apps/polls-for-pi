@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WindowWithEnv from '../interfaces/WindowWithEnv';
+import ListItemPollProps from '../types/ListItemPollProps';
 import { Poll } from '../types/Poll';
 
 import { options as distributionOptions } from './options';
@@ -17,7 +18,8 @@ console.log('backendURL', backendURL)
 
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
-const ListItemPollForm = (poll: Poll) => {
+const ListItemPollForm = (props: ListItemPollProps ) => {
+  const { poll } = props;
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -26,7 +28,7 @@ const ListItemPollForm = (poll: Poll) => {
   }
 
   const onRewardChangeStepper = (value: number) => {
-    poll.perResponseReward = value;
+    props.poll.perResponseReward = value;
   }
 
   const patchPoll = async (poll: Poll) => {
@@ -45,14 +47,15 @@ const ListItemPollForm = (poll: Poll) => {
 
   const onFinish = async (values: any) => {
     setLoading(true);
-    const patchedPoll: any = await patchPoll(poll);
+    const patchedPoll: any = await patchPoll(props.poll);
     setLoading(false);
     console.log('patchedPoll', patchedPoll)
 
     navigate('/dashboard/polls', { state: { message: 'Home', type: 'success' } })
+    props.setDisplayPopup(false);
   }
 
-  console.log('poll', poll);
+  console.log('poll', props.poll);
 
   return (
     <section>
@@ -105,6 +108,7 @@ const ListItemPollForm = (poll: Poll) => {
                     },
                   ]}
                   initialValue={poll?.optionCount}
+                  disabled={true}
                 >
                   <Stepper
                     max={10}
@@ -118,6 +122,7 @@ const ListItemPollForm = (poll: Poll) => {
                   label='Will it limit the number of responses?'
                   childElementPosition='right'
                   initialValue={poll.isLimitResponse}
+                  disabled={true}
                 >
                   <Switch
                     uncheckedText='No' checkedText='Yes'
@@ -131,7 +136,7 @@ const ListItemPollForm = (poll: Poll) => {
                   name='responses'
                   label='How many responses will it gather?'
                   childElementPosition='right'
-                  disabled={!poll.isLimitResponse}
+                  disabled={true}
                   rules={[
                     {
                       min: 1,
@@ -155,6 +160,7 @@ const ListItemPollForm = (poll: Poll) => {
                   label='How much incentive would you like each response to get?'
                   childElementPosition='right'
                   initialValue={poll.perResponseReward}
+                  disabled={true}
                 >
                   <Stepper
                     style={{
@@ -165,19 +171,6 @@ const ListItemPollForm = (poll: Poll) => {
                     step={0.001}
                     onChange={onRewardChangeStepper}
                   />
-                  {/* <Slider
-                    min={0}
-                    max={1}
-                    onAfterChange={onRewardChange}
-                    icon='π'
-                    step={0.001}
-                    popover={(value) => <span>{value} π</span>}
-                    residentPopover
-                    className='mt-12'
-                    // step={10}
-                    // ticks
-                    // marks={marks}
-                  /> */}
                 </Form.Item>
                 <Form.Item
                   name='duration'
@@ -191,6 +184,7 @@ const ListItemPollForm = (poll: Poll) => {
                       message: 'Should gather responses for at least one day'
                     },
                   ]}
+                  disabled={true}
                 >
                   <Stepper
                     style={{
@@ -225,7 +219,7 @@ const ListItemPollForm = (poll: Poll) => {
                     {poll.options?.map((item, index) =>
                       <Form.Item
                         name={item}
-                        key={index}
+                        key={item}
                         initialValue={item}
                       >
                         <Input

@@ -114,7 +114,7 @@ export const PollsTab = (props: TabProps) => {
     // ...
   }
 
-  const [visibleCloseRight, setVisibleCloseRight] = useState(false);
+  const [displayPopup, setDisplayPopup] = useState(false);
 
   return (
     <>
@@ -125,7 +125,7 @@ export const PollsTab = (props: TabProps) => {
               key={index}
               extra={`${item.responses.length} responses`}
               onClick={() => {
-                setVisibleCloseRight(true);
+                setDisplayPopup(true);
               }}
             >
               {item.title}
@@ -133,17 +133,17 @@ export const PollsTab = (props: TabProps) => {
             <Popup
               key={`popup-${index}`}
               position='right'
-              visible={visibleCloseRight}
+              visible={displayPopup}
               showCloseButton
               onClose={() => {
-                setVisibleCloseRight(false)
+                setDisplayPopup(false)
               }}
             >
               <div
                 style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
                 key={`div-${index}`}
               >
-                <ListItemPollForm {...item} closePopup={setVisibleCloseRight} />
+                <ListItemPollForm poll={item} setDisplayPopup={setDisplayPopup} />
               </div>
             </Popup>
           </>

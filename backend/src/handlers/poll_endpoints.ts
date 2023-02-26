@@ -88,6 +88,12 @@ export default function mountPollEndpoints(router: Router, models: any) {
     }
 
     _.assign(item, ...req.body)
+    const options: string[] = req.body.options;
+    if (!_.isEmpty(options)) {
+      options.forEach((option: string, index: number) => {
+        item.options[index] = option;
+      })
+    }
     await item.save();
     console.log('updated poll', item);
 

@@ -17,5 +17,4 @@ export type Poll = {
   responses: PollResponse[]
 
   setTitle?: (title: string) => void;
-  closePopup?: (close: boolean) => void;
 };

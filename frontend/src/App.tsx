@@ -66,7 +66,6 @@ function App() {
 
     if (authResult) {
       Toast.show({
-        icon: 'success',
         content: 'Successfully logged in!',
       });
     }
