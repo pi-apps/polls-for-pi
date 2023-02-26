@@ -138,7 +138,6 @@ export const PollsTab = (props: TabProps) => {
               onClose={() => {
                 setVisibleCloseRight(false)
               }}
-              bodyStyle={{ height: '40vh' }}
             >
               <div
                 style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
