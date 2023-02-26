@@ -8,6 +8,7 @@ export default interface HOCProps {
   user: User | null
   showModal: boolean
   poll: Poll
+  signingIn: boolean
 
   setTitle?: (title: string) => void;
   setMode?: (title: string) => void;

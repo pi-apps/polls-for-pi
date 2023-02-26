@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import HOCProps from '../types/HOCProps';
 
-const Footer = (hocProps: HOCProps) => {
+const Footer = () => {
   return (
     <footer>
       <div className="py-12 md:py-16">

@@ -50,8 +50,10 @@ function App() {
     perResponseReward: 0,
     responses: [],
   });
+  const [signingIn, setSigningIn] = useState<boolean>(false);
 
   const signIn = async () => {
+    setSigningIn(true);
     const scopes = ['username', 'payments'];
     let authResult: AuthResult = {
       accessToken: "accessToken",
@@ -69,6 +71,7 @@ function App() {
         content: 'Successfully logged in!',
       });
     }
+    setSigningIn(false);
     signInUser(authResult);
     setUser(authResult.user);
   }
@@ -168,6 +171,7 @@ function App() {
         element={
           <HomeV2
             onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
             pathname={pathname} setMode={onChangeMode} mode={mode}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setPoll={setPoll} poll={poll}
@@ -179,6 +183,7 @@ function App() {
         element={
           <GetStarted
             onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
             pathname={pathname}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
@@ -191,6 +196,7 @@ function App() {
         element={
           <PollWizard
             onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
@@ -201,7 +207,9 @@ function App() {
         path="/poll_config"
         element={
           <PollConfig
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -211,7 +219,9 @@ function App() {
         path="/options"
         element={
           <OptionsGenerator
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -221,7 +231,9 @@ function App() {
         path="/payment"
         element={
           <Payment
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -235,7 +247,9 @@ function App() {
             key={index}
             element={
               <Dashboard
-                onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+                onSignIn={signIn} onSignOut={signOut} user={user}
+                signingIn={signingIn}
+                showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
                 setMode={onChangeMode} mode={mode}
                 setPoll={setPoll} poll={poll}
               />
@@ -248,7 +262,9 @@ function App() {
         path="/price_calc"
         element={
           <PriceCalculator
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -259,7 +275,9 @@ function App() {
         path="/poll_config_desktop"
         element={
           <PollConfigDesktop
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -271,7 +289,9 @@ function App() {
         path="/demo"
         element={
           <Home
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -281,7 +301,9 @@ function App() {
         path="/pricing"
         element={
           <Browse
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
@@ -291,7 +313,9 @@ function App() {
         path="/shop"
         element={
           <Shop
-            onSignIn={signIn} onSignOut={signOut} user={user} showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
           />
