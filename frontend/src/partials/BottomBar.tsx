@@ -115,40 +115,50 @@ export const PollsTab = (props: TabProps) => {
   }
 
   const [displayPopup, setDisplayPopup] = useState(false);
+  const [itemPoll, setItemPoll] = useState<Poll>({
+    title: '',
+    optionCount: 2,
+    distribution: '',
+    isLimitResponse: true,
+    responseLimit: 100,
+    durationDays: 30,
+    perResponseReward: 0,
+    responses: [],
+  });
 
   return (
     <>
       <List header='Polls'>
         {props.polls.map((item, index) =>
-          <>
-            <List.Item
-              key={index}
-              extra={`${item.responses.length} responses`}
-              onClick={() => {
-                setDisplayPopup(true);
-              }}
-            >
-              {item.title}
-            </List.Item>
-            <Popup
-              key={`popup-${index}`}
-              position='right'
-              visible={displayPopup}
-              showCloseButton
-              onClose={() => {
-                setDisplayPopup(false)
-              }}
-            >
-              <div
-                style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
-                key={`div-${index}`}
-              >
-                <ListItemPollForm poll={item} setDisplayPopup={setDisplayPopup} />
-              </div>
-            </Popup>
-          </>
+          <List.Item
+            key={index}
+            extra={`${item.responses.length} responses`}
+            onClick={() => {
+              setDisplayPopup(true);
+              setItemPoll(item);
+            }}
+          >
+            <span key={`span-${index}`}>{item.title}</span>
+          </List.Item>
         )}
       </List>
+      <Popup
+        position='right'
+        visible={displayPopup}
+        showCloseButton
+        onClose={() => {
+          setDisplayPopup(false)
+        }}
+        destroyOnClose={true}
+      >
+        <div
+          style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
+        >
+          <ListItemPollForm
+            poll={itemPoll} setDisplayPopup={setDisplayPopup}
+          />
+        </div>
+      </Popup>
     </>
   )
 }

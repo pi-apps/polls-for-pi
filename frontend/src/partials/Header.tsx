@@ -243,6 +243,7 @@ const Header = (props: HOCProps)  => {
                       style={{
                         paddingLeft: '0px'
                       }}
+                      loading={props.signingIn}
                     >
                       Sign in
                     </Button>
