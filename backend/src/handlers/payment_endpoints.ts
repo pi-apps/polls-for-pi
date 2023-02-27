@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Router } from "express";
 import _ from "lodash";
+import { v4 as uuidv4 } from 'uuid';
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 
@@ -129,6 +130,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       }
 
       const unpaidPoll = new Poll();
+      const responseUrl = uuidv4();
       _.extend(unpaidPoll,
         {
           ...pollReq,
@@ -137,6 +139,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
             username: user.username
           },
           paymentId,
+          responseUrl,
         }
       );
       await unpaidPoll.save();
