@@ -79,7 +79,7 @@ const PaymentForm = (props: HOCProps) => {
       onCancel,
       onError
     };
-    if (process.env.VITE_LOCALHOST !== "true") {
+    if (process.env.VITE_LOCALHOST === "true") {
       navigate(`/dashboard/polls/63f9f07a1bb68f9b3c1a96f1`)
     } else {
       const payment = await window.Pi.createPayment(paymentData, callbacks);
