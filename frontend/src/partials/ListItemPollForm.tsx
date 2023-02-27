@@ -84,7 +84,11 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                         block
                         loading={loading}
                         color='primary' size='large'
-                        onClick={props.callback}
+                        onClick={(e) => {
+                          if (props.callback) {
+                            props.callback();
+                          }
+                        }}
                       >
                         {props.buttonTxt}
                       </Button>
