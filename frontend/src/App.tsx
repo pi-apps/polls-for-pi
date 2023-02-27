@@ -19,6 +19,7 @@ import OptionsGenerator from './pages/OptionsGenerator';
 import Payment from './pages/Payment';
 import PollConfig from './pages/PollConfig';
 import PollConfigDesktop from './pages/PollConfigDesktop';
+import PollEdit from './pages/PollEdit';
 import PollWizard from './pages/PollWizard';
 import PriceCalculator from './pages/PriceCalculator';
 import PaymentDTO from './types/PaymentDTO';
@@ -49,6 +50,7 @@ function App() {
     durationDays: 30,
     perResponseReward: 0,
     responses: [],
+    responseUrl: '',
   });
   const [signingIn, setSigningIn] = useState<boolean>(false);
 
@@ -143,6 +145,7 @@ function App() {
         durationDays: 30,
         perResponseReward: 0,
         responses: [],
+        responseUrl: '',
       });
     }
   }, [location.pathname]); // triggered on route change
@@ -257,6 +260,19 @@ function App() {
           />
         )
       })}
+
+      <Route
+        path={"/dashboard/polls/:_id"}
+        element={
+          <PollEdit
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
 
       <Route
         path="/price_calc"

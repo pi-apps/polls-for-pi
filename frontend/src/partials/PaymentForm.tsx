@@ -1,5 +1,5 @@
 import {
-  Button, Form, List, Modal, Space
+  Button, Form, List, Modal, Space, Toast
 } from 'antd-mobile';
 import { UndoOutline } from 'antd-mobile-icons';
 import axios from 'axios';
@@ -79,8 +79,12 @@ const PaymentForm = (props: HOCProps) => {
       onCancel,
       onError
     };
-    const payment = await window.Pi.createPayment(paymentData, callbacks);
-    console.log(payment);
+    if (process.env.VITE_LOCALHOST === "true") {
+      navigate(`/dashboard/polls/63f9f07a1bb68f9b3c1a96f1`)
+    } else {
+      const payment = await window.Pi.createPayment(paymentData, callbacks);
+      console.log(payment);
+    }
   }
 
   const onReadyForServerApproval = async (paymentId: string) => {
@@ -94,9 +98,11 @@ const PaymentForm = (props: HOCProps) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
     const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
     console.log('resp', resp);
-    const paidPoll = await axiosClient.patch(`/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
+    const paidPoll = await axiosClient.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
-    navigate(`/dashboard/polls/${paidPoll._id}`)
+    const navigateUrl = `/dashboard/polls/${paidPoll.data.data._id}`;
+    Toast.show(`navigate to ${navigateUrl}`)
+    navigate(navigateUrl);
   }
 
   const onCancel = (paymentId: string) => {
