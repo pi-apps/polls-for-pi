@@ -62,6 +62,27 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       console.log('paymentId', paymentId)
       console.log('user', user)
 
+      const pollReq = req.body.poll;
+      console.log('user', req.body.user)
+      console.log('pollReq', pollReq)
+
+      const { Product, Pricing, Poll } = models;
+
+      const product = await Product.find({
+        name: new RegExp("poll", 'i')
+      });
+      // product not found
+      if (!product) {
+        return res.status(400).json({ message: "No product found." });
+      }
+
+      const pricingItem = await Pricing.findOne({ product });
+      // pricing not found
+      if (!pricingItem) {
+        return res.status(400).json({ message: "No pricing found." });
+      }
+
+      // Create payment
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
       console.log('currentPayment', currentPayment)
 
@@ -71,7 +92,6 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
         implement your logic here
         e.g. creating an order record, reserve an item if the quantity is limited, etc...
       */
-
       await orderCollection.insertOne({
         pi_payment_id: paymentId,
         product_id: currentPayment.data.metadata.productId,
@@ -82,10 +102,31 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
         created_at: new Date()
       });
 
-      const pollReq = req.body.poll;
-      console.log('user', req.body.user)
-      console.log('pollReq', pollReq)
-      const { Poll } = models;
+      // compute total
+      const priceItems = pricingItem.priceItems;
+      let total = 0.0;
+      priceItems.forEach((item: any) => {
+        const name = item.name.toLowerCase();
+        if (name === "per option") {
+          total += (item.price * pollReq.optionCount);
+        } else if (name === "per response") {
+          total += (item.price * pollReq.responseLimit);
+        } else if (name === "per hour") {
+          total += (item.price * (pollReq.durationDays * 24));
+        } else if (name === "per transaction") {
+          total += (item.price * (pollReq.responseLimit));
+        }
+      })
+      total += (pollReq.responseLimit * pollReq.perResponseReward);
+      console.log('computed total: ', total);
+      console.log('payment total: ', currentPayment.data.amount);
+
+      // Order payment not equal to computed total
+      if (total !== currentPayment.data.amount) {
+        const cancelledPayment = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+        console.log('cancelledPayment', cancelledPayment);
+        return res.status(400).json({ data: cancelledPayment, message: "Order payment not equal to computed total. Payment cancelled." });
+      }
 
       const unpaidPoll = new Poll();
       _.extend(unpaidPoll,
@@ -131,7 +172,9 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
 
-    const { Poll } = models;
+    const { Poll, } = models;
+
+
     const unpaidPoll = await Poll.findOne({ paymentId });
     console.log('unpaidPoll', unpaidPoll);
     if (!unpaidPoll) {

@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, List, Selector, Stepper, Switch
+  Button, Form, Input, List, Selector, Stepper, Switch, Toast
 } from 'antd-mobile';
 import axios from 'axios';
 import { useState } from 'react';
@@ -53,6 +53,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
 
     navigate('/dashboard/polls', { state: { message: 'Home', type: 'success' } })
     props.setDisplayPopup(false);
+    Toast.show('Poll successfully updated!');
   }
 
   console.log('poll', props.poll);
@@ -205,6 +206,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                   initialValue={[poll?.distribution]}
                   layout='vertical'
                   rules={[{ required: true, message: 'Distribution method is required' }]}
+                  disabled={true}
                 >
                   <Selector
                     columns={2}

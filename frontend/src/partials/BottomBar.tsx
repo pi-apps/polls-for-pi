@@ -115,6 +115,7 @@ export const Home = () => {
 export const PollsTab = (props: TabProps) => {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showLinksPopup, setShowLinksPopup] = useState(false);
+
   const [itemPoll, setItemPoll] = useState<Poll>({
     title: '',
     optionCount: 2,
@@ -124,6 +125,7 @@ export const PollsTab = (props: TabProps) => {
     durationDays: 30,
     perResponseReward: 0,
     responses: [],
+    responseUrl: '',
   });
 
   return (
@@ -188,7 +190,10 @@ export const PollsTab = (props: TabProps) => {
             <List.Item
               key={index}
               extra={`${item.responses.length} responses`}
-              // clickable
+              clickable
+              onClick={() => {
+                Toast.show('Swipe left to see actions.')
+              }}
               // onClick={() => {
               //   setShowEditPopup(true);
               //   setItemPoll(item);
