@@ -1,5 +1,5 @@
 import {
-  Button, Form, List, Modal, Space
+  Button, Form, List, Modal, Space, Toast
 } from 'antd-mobile';
 import { UndoOutline } from 'antd-mobile-icons';
 import axios from 'axios';
@@ -100,7 +100,9 @@ const PaymentForm = (props: HOCProps) => {
     console.log('resp', resp);
     const paidPoll = await axiosClient.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
-    navigate(`/dashboard/polls/${paidPoll.data._id}`)
+    const navigateUrl = `/dashboard/polls/${paidPoll.data._id}`;
+    Toast.show(`navigate to ${navigateUrl}`)
+    navigate(navigateUrl);
   }
 
   const onCancel = (paymentId: string) => {
