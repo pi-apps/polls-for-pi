@@ -100,7 +100,7 @@ const PaymentForm = (props: HOCProps) => {
     console.log('resp', resp);
     const paidPoll = await axiosClient.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
-    const navigateUrl = `/dashboard/polls/${paidPoll.data._id}`;
+    const navigateUrl = `/dashboard/polls/${paidPoll.data.data._id}`;
     Toast.show(`navigate to ${navigateUrl}`)
     navigate(navigateUrl);
   }

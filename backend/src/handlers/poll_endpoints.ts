@@ -45,6 +45,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
   router.get('/:_id', async (req, res) => {
     const { _id } = req.params;
+    console.log('_id', _id)
     const { Poll } = models;
     const item = await Poll.findOne({ _id });
 
