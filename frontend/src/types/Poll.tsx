@@ -15,6 +15,7 @@ export type Poll = {
   responseLimit: number,
   durationDays: number,
   responses: PollResponse[]
+  responseUrl: string,
 
   setTitle?: (title: string) => void;
 };

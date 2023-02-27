@@ -1,6 +1,6 @@
-import { List, Popup, TabBar } from 'antd-mobile';
+import { List, Popup, SwipeAction, TabBar, Toast } from 'antd-mobile';
 import {
-  AppOutline, UnorderedListOutline,
+  AppOutline, EditSOutline, EyeOutline, LinkOutline, UnorderedListOutline,
   UserOutline
 } from 'antd-mobile-icons';
 import axios from 'axios';
@@ -12,6 +12,9 @@ import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
 import TabProps from '../types/TabProps';
 import ListItemPollForm from './ListItemPollForm';
+
+import './BottomBar.css';
+import ListItemLinksForm from './ListItemLinksForm';
 
 const Bottom: FC = () => {
 
@@ -110,11 +113,8 @@ export const Home = () => {
 }
 
 export const PollsTab = (props: TabProps) => {
-  function handleClick() {
-    // ...
-  }
-
-  const [displayPopup, setDisplayPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [showLinksPopup, setShowLinksPopup] = useState(false);
   const [itemPoll, setItemPoll] = useState<Poll>({
     title: '',
     optionCount: 2,
@@ -128,34 +128,112 @@ export const PollsTab = (props: TabProps) => {
 
   return (
     <>
-      <List header='Polls'>
+      {/* <Collapse accordion style={{width: '100%'}}>
         {props.polls.map((item, index) =>
-          <List.Item
-            key={index}
-            extra={`${item.responses.length} responses`}
-            onClick={() => {
-              setDisplayPopup(true);
-              setItemPoll(item);
+          <Collapse.Panel
+            key={item.title} title={item.title}
+            style={{
+              justifyContent: 'flex-end'
             }}
           >
-            <span key={`span-${index}`}>{item.title}</span>
-          </List.Item>
+            <Space justify='end'>
+              <Button color='primary' fill='solid'>
+                <EditSOutline />
+              </Button>
+              <Button color='primary' fill='solid'>
+                <EyeOutline />
+              </Button>
+            </Space>
+          </Collapse.Panel>
+        )}
+      </Collapse> */}
+
+      <List header='Polls'>
+        {props.polls.map((item, index) =>
+          <SwipeAction
+            key={index}
+            closeOnAction={false}
+            rightActions={[
+              {
+                key: 'edit',
+                text: <EditSOutline />,
+                color: 'primary',
+                onClick: (e) => {
+                  setShowEditPopup(true);
+                  setItemPoll(item);
+                }
+              },
+              {
+                key: 'show',
+                text: <EyeOutline />,
+                color: 'success',
+                onClick: (e) => {
+                  setShowLinksPopup(true);
+                  setItemPoll(item);
+                }
+              },
+              {
+                key: 'copy-lin',
+                text: <LinkOutline />,
+                color: 'light',
+                onClick: (e) => {
+                  navigator.clipboard.writeText(item.responseUrl || '');
+                  Toast.show({
+                    content: 'Response URL copied to clipboard.',
+                  })
+                }
+              }
+            ]}
+          >
+            <List.Item
+              key={index}
+              extra={`${item.responses.length} responses`}
+              // clickable
+              // onClick={() => {
+              //   setShowEditPopup(true);
+              //   setItemPoll(item);
+              // }}
+            >
+              <span key={`span-${index}`}>{item.title}</span>
+            </List.Item>
+          </SwipeAction>
         )}
       </List>
       <Popup
         position='right'
-        visible={displayPopup}
+        visible={showEditPopup}
         showCloseButton
         onClose={() => {
-          setDisplayPopup(false)
+          setShowEditPopup(false)
         }}
         destroyOnClose={true}
+        bodyStyle={{ width: '100vw' }}
       >
         <div
-          style={{ height: '98vh', overflowY: 'scroll', padding: '20px' }}
+          style={{ height: '98vh', overflowY: 'scroll' }}
         >
           <ListItemPollForm
-            poll={itemPoll} setDisplayPopup={setDisplayPopup}
+            poll={itemPoll} setDisplayPopup={setShowEditPopup}
+          />
+        </div>
+      </Popup>
+      <Popup
+        position='right'
+        visible={showLinksPopup}
+        showCloseButton
+        onClose={() => {
+          setShowLinksPopup(false)
+        }}
+        destroyOnClose={true}
+        bodyStyle={{ width: '100vw' }}
+      >
+        <div
+          style={{
+            height: '98vh', overflowY: 'scroll',
+          }}
+        >
+          <ListItemLinksForm
+            poll={itemPoll} setDisplayPopup={setShowLinksPopup}
           />
         </div>
       </Popup>

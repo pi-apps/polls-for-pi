@@ -18,6 +18,8 @@ interface IPoll {
   responses: any,
   paid: boolean,
   paymentId: string,
+  responseUrl: string,
+  isOpen: boolean,
 }
 
 const PollSchema = new Schema<IPoll>({
@@ -47,6 +49,12 @@ const PollSchema = new Schema<IPoll>({
   durationDays: {
     type: Number,
   },
+  responseUrl: {
+    type: String,
+  },
+  isOpen: {
+    type: Boolean,
+  },
   // owner: {
   //   type: ObjectId,
   //   ref: 'User',
@@ -61,7 +69,7 @@ const PollSchema = new Schema<IPoll>({
     type: String,
   },
   responses: [{
-    name: String,
+    username: String,
     response: String
   }],
   owner: {

@@ -49,6 +49,7 @@ function App() {
     durationDays: 30,
     perResponseReward: 0,
     responses: [],
+    responseUrl: '',
   });
   const [signingIn, setSigningIn] = useState<boolean>(false);
 
@@ -143,6 +144,7 @@ function App() {
         durationDays: 30,
         perResponseReward: 0,
         responses: [],
+        responseUrl: '',
       });
     }
   }, [location.pathname]); // triggered on route change
