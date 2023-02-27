@@ -71,13 +71,24 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                 requiredMarkStyle='none'
                 footer={
                   <>
-                    <Button
-                      block
-                      loading={loading}
-                      type='submit' color='primary' size='large'
-                    >
-                      Update
-                    </Button>
+                    {!props.buttonTxt ?
+                      <Button
+                        block
+                        loading={loading}
+                        type='submit' color='primary' size='large'
+                      >
+                        Update
+                      </Button>
+                      :
+                      <Button
+                        block
+                        loading={loading}
+                        color='primary' size='large'
+                        onClick={props.callback}
+                      >
+                        {props.buttonTxt}
+                      </Button>
+                    }
                   </>
                 }
                 onFinish={onFinish}

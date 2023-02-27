@@ -48,6 +48,8 @@ export default function mountPollEndpoints(router: Router, models: any) {
     const { Poll } = models;
     const item = await Poll.findOne({ _id });
 
+    console.log('_id', _id)
+
     // order doesn't exist
     if (!item) {
       return res.status(400).json({ message: "No poll found." });
