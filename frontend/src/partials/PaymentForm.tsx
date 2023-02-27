@@ -98,7 +98,7 @@ const PaymentForm = (props: HOCProps) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
     const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
     console.log('resp', resp);
-    const paidPoll = await axiosClient.patch(`/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
+    const paidPoll = await axiosClient.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
     navigate(`/dashboard/polls/${paidPoll.data._id}`)
   }
