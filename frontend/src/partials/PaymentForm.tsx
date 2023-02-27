@@ -96,7 +96,7 @@ const PaymentForm = (props: HOCProps) => {
     console.log('resp', resp);
     const paidPoll = await axiosClient.patch(`/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
-    navigate(`/dashboard/polls/${paidPoll._id}`)
+    navigate(`/dashboard/polls/${paidPoll.data._id}`)
   }
 
   const onCancel = (paymentId: string) => {
