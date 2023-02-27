@@ -143,7 +143,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       // let Pi Servers know that you're ready
       await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
-      return res.status(200).json({ pollId: unpaidPoll._id, message: `Approved the payment ${paymentId}` });
+      return res.status(200).json({ data: unpaidPoll._id, message: `Approved the payment ${paymentId}` });
 
     } catch (err) {
       console.log('err', err)
