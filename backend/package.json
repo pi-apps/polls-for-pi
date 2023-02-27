@@ -25,7 +25,8 @@
     "mongodb": "^4.0.0",
     "mongoose": "^6.10.0",
     "morgan": "^1.10.0",
-    "openai": "^3.1.0"
+    "openai": "^3.1.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.11",
@@ -34,6 +35,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.2",
     "@types/node": "^18.7.23",
+    "@types/uuid": "^9.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.4"
   }

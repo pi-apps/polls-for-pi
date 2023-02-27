@@ -1,5 +1,6 @@
 import { Router } from "express";
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import "../types/session";
 
 export default function mountPollEndpoints(router: Router, models: any) {
@@ -17,7 +18,10 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll should have a name." });
     }
 
-    _.extend(item, req.body.poll);
+    const responseUrl = uuidv4();
+    console.log('response url', responseUrl);
+
+    _.extend(item, req.body.poll, responseUrl);
     await item.save();
 
     return res.status(200).json({ data: item });
@@ -97,6 +101,29 @@ export default function mountPollEndpoints(router: Router, models: any) {
         item.options[index] = option;
       })
     }
+    await item.save();
+    console.log('updated poll', item);
+
+    return res.status(200).json({ data: item });
+  });
+
+  router.post('/:responseUrl/responses', async (req, res) => {
+    console.log('updating poll', req.body);
+
+    const { Poll } = models;
+    const { responseUrl } = req.params;
+    const item = await Poll.findOne({ responseUrl });
+
+    // poll doesn't exist
+    if (!item) {
+      return res.status(400).json({ message: "Poll not found." });
+    }
+
+    const { username, response } = req.body;
+    const pollResp = { username, response };
+    console.log('poll resp', pollResp);
+
+    item.responses.push(pollResp);
     await item.save();
     console.log('updated poll', item);
 

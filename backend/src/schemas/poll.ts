@@ -51,6 +51,8 @@ const PollSchema = new Schema<IPoll>({
   },
   responseUrl: {
     type: String,
+    unique: true,
+    required: true,
   },
   isOpen: {
     type: Boolean,
