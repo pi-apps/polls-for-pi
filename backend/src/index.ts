@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
 import env from './environments';
-import mountPaymentsEndpoints from './handlers/payments';
+import mountPaymentsEndpoints from './handlers/payment_endpoints';
 import mountPollsAiEndpoints from './handlers/polls_ai';
 import mountPollEndpoints from './handlers/poll_endpoints';
 import mountPricingEndpoints from './handlers/pricing_endpoints';
