@@ -25,7 +25,7 @@ const PollLinksForm = (props: HOCProps) => {
   const getPoll = async (pollId: string | undefined) => {
     console.log("get poll id", pollId);
     const resp = await pollsAPI.get(`/v1/polls/${pollId}`);
-    console.log('resp', resp);
+    console.log('resp.data.data', resp.data.data);
     setPoll(resp.data.data)
   }
 
@@ -40,11 +40,11 @@ const PollLinksForm = (props: HOCProps) => {
 
   return (
     <section>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div className="max-w-6xl relative">
         {/* Hero content */}
         <div className="relative pt-10 pb-10 md:pt-10 md:pb-10">
           {/* Section header */}
-          <div className="max-w-3xl mx-auto pb-10 md:pb-10">
+          <div className="max-w-3xl pb-10 md:pb-10">
             <ListItemLinksForm
               poll={poll} setDisplayPopup={() => {}}
               buttonTxt="Done" callback={navigateToDashboard}

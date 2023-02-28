@@ -21,6 +21,8 @@ import PollConfig from './pages/PollConfig';
 import PollConfigDesktop from './pages/PollConfigDesktop';
 import PollEdit from './pages/PollEdit';
 import PollLinks from './pages/PollLinks';
+import PollResponse from './pages/PollResponse';
+import PollResponseResult from './pages/PollResponseResult';
 import PollWizard from './pages/PollWizard';
 import PriceCalculator from './pages/PriceCalculator';
 import PaymentDTO from './types/PaymentDTO';
@@ -284,6 +286,28 @@ function App() {
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
             setMode={onChangeMode} mode={mode}
             setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+
+      <Route
+        path={"/polls/:responseUrl/response"}
+        element={
+          <PollResponse
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+          />
+        }
+      />
+
+      <Route
+        path={"/polls/:responseUrl/complete"}
+        element={
+          <PollResponseResult
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
           />
         }
       />

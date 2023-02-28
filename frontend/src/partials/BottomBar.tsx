@@ -3,16 +3,15 @@ import {
   AppOutline, EditSOutline, EyeOutline, LinkOutline, UnorderedListOutline,
   UserOutline
 } from 'antd-mobile-icons';
-import axios from 'axios';
 import { FC, useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
-import WindowWithEnv from '../interfaces/WindowWithEnv';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
 import TabProps from '../types/TabProps';
 import ListItemPollForm from './ListItemPollForm';
 
+import pollsAPI from '../apis/pollsAPI';
 import './BottomBar.css';
 import ListItemLinksForm from './ListItemLinksForm';
 
@@ -53,13 +52,6 @@ const Bottom: FC = () => {
   )
 }
 
-const _window: WindowWithEnv = window;
-const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
-console.log('_window.__ENV', _window.__ENV)
-console.log('backendURL', backendURL)
-
-const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
-
 const BottomBar = (props: HOCProps) => {
   const getPathname = () => {
     const location = useLocation();
@@ -70,7 +62,7 @@ const BottomBar = (props: HOCProps) => {
 
   const getUserPolls = async (username?: string) => {
     console.log("get user polls ", username);
-    const options = await axiosClient.get(`/v1/polls?username=${username}`);
+    const options = await pollsAPI.get(`/v1/polls?username=${username}`);
     return options.data;
   }
 
@@ -179,7 +171,7 @@ export const PollsTab = (props: TabProps) => {
                 text: <LinkOutline />,
                 color: 'light',
                 onClick: (e) => {
-                  navigator.clipboard.writeText(item.responseUrl || '');
+                  navigator.clipboard.writeText(`${window.location.origin}/${item.responseUrl}` || '');
                   Toast.show({
                     content: 'Response URL copied to clipboard.',
                   })

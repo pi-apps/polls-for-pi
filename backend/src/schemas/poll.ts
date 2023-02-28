@@ -22,6 +22,22 @@ interface IPoll {
   isOpen: boolean,
 }
 
+const ResponseSchema = new Schema({
+  responseUrl: {
+    type: String,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  response: {
+    type: String,
+    required: true,
+  },
+});
+ResponseSchema.index({ responseUrl: 1, username: 1 }, { unique: true })
+
 const PollSchema = new Schema<IPoll>({
   title: {
     type: String,
@@ -70,21 +86,14 @@ const PollSchema = new Schema<IPoll>({
   paymentId: {
     type: String,
   },
-  responses: [{
-    username: String,
-    response: String
-  }],
+  responses: [
+    ResponseSchema
+  ],
   owner: {
     uid: String,
     username: String,
   }
 });
-
-// var diffHistory = require("mongoose-diff-history/diffHistory").plugin;
-// const dbName = env.mongo_db_name;
-// const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
-// PricingSchema.plugin(diffHistory, {
-//   uri: mongoUri,
-// });
+//PollSchema.index({ "responses.responseUrl": 1, "responses.username": 1 }, { unique: true })
 
 export default PollSchema;

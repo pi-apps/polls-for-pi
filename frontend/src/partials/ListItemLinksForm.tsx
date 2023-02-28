@@ -1,10 +1,11 @@
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, theme, Typography } from 'antd';
 import {
   Button, Form, Skeleton
 } from 'antd-mobile';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useNavigate } from 'react-router-dom';
 import ListItemPollProps from '../types/ListItemPollProps';
+const { Link } = Typography;
 
 import './PollStarter.css';
 
@@ -42,14 +43,23 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
                     }}
                   >
                     {poll.responseUrl ?
-                      <Paragraph copyable>{poll.responseUrl}</Paragraph>
+                      <>
+                      <Paragraph copyable>{`${window.location.origin}/polls/${poll.responseUrl}/response`}</Paragraph>
+                      <ConfigProvider
+                        theme={{
+                          algorithm: theme.darkAlgorithm,
+                        }}
+                      >
+                        <Link href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank">Open</Link>
+                        </ConfigProvider>
+                      </>
                       :
                       <Skeleton.Title />
                     }
                   </ConfigProvider>
                 </Form.Item>
                 <>
-                  <h1>Responses</h1>
+                  <h1 className="pl-3">Responses</h1>
                   <DemoPie />
                 </>
               </Form>
