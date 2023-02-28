@@ -1,10 +1,10 @@
 
 import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
-import PollConfigForm from '../partials/PollConfigForm';
+import PollLinksForm from '../partials/PollLinksForm';
 import HOCProps from '../types/HOCProps';
 
-const PollConfig = (props: HOCProps) => {
+const PollLinks = (props: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
@@ -12,7 +12,7 @@ const PollConfig = (props: HOCProps) => {
 
       {/*  Page content */}
       <main className="grow">
-        <PollConfigForm {...props} />
+        <PollLinksForm {...props} />
       </main>
 
       {props.user &&
@@ -23,4 +23,4 @@ const PollConfig = (props: HOCProps) => {
   );
 }
 
-export default PollConfig;
+export default PollLinks;

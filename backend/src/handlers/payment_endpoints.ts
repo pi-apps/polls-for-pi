@@ -123,11 +123,14 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       console.log('payment total: ', currentPayment.data.amount);
 
       // Order payment not equal to computed total
+      // TODO: Disable total check
+      /*
       if (total !== currentPayment.data.amount) {
         const cancelledPayment = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
         console.log('cancelledPayment', cancelledPayment);
         return res.status(400).json({ data: cancelledPayment, message: "Order payment not equal to computed total. Payment cancelled." });
       }
+      */
 
       const unpaidPoll = new Poll();
       const responseUrl = uuidv4();

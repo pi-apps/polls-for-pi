@@ -2,20 +2,12 @@ import {
   Button, Form, Input, List, Space
 } from 'antd-mobile';
 import { UndoOutline } from 'antd-mobile-icons';
-import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WindowWithEnv from '../interfaces/WindowWithEnv';
+import pollsAPI from '../apis/pollsAPI';
 import HOCProps from '../types/HOCProps';
 
 import './PollStarter.css';
-
-const _window: WindowWithEnv = window;
-const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
-console.log('_window.__ENV', _window.__ENV)
-console.log('backendURL', backendURL)
-
-const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
 const OptionsGeneratorForm = (props: HOCProps) => {
   const navigate = useNavigate()
@@ -28,7 +20,7 @@ const OptionsGeneratorForm = (props: HOCProps) => {
   const getPollOptions = async (prompt: string) => {
     const optionsCount = props.poll.optionCount;
     console.log("get poll options ai API", `Generate ${optionsCount} choices for the question '${prompt}'`);
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
+    const options = await pollsAPI.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 
@@ -43,8 +35,15 @@ const OptionsGeneratorForm = (props: HOCProps) => {
     navigate('/payment', { state: { message: 'Home', type: 'success' } })
   }
 
+  let modOptions = options;
+  if (options.length < props.poll.optionCount) {
+    while (modOptions.length < props.poll.optionCount) {
+      modOptions.push('');
+    }
+  }
+
   console.log('props.poll', props.poll);
-  console.log('options', options);
+  console.log('modOptions', modOptions);
 
   return (
     <section>
@@ -87,9 +86,10 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                 >
                   <Form.Header>
                     <Space block justify="between">
-                      <span>
-                        Here are the options generated.
-                      </span>
+                      <p>
+                        These are AI generated options.<br/>
+                        Update as you see fit.
+                      </p>
                       <Button
                         onClick={generateOptions}
                         color='success' size='large'
@@ -99,14 +99,14 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                     </Space>
                   </Form.Header>
                   <List>
-                    {options.map((item, index) =>
+                    {modOptions.map((item, index) =>
                       <Form.Item
-                        name={item}
-                        key={item}
-                        initialValue={item}
+                        name={item ? item : `Option ${index}`}
+                        key={index}
+                        initialValue={item ? item : `Option ${index}`}
                         label={index === 0 ? props.poll.title : null}
                       >
-                        <Input onChange={console.log} placeholder={item} />
+                        <Input onChange={console.log} placeholder={item ? item : `Option ${index}`} />
                       </Form.Item>
                     )}
                   </List>
