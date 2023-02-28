@@ -20,6 +20,7 @@ import Payment from './pages/Payment';
 import PollConfig from './pages/PollConfig';
 import PollConfigDesktop from './pages/PollConfigDesktop';
 import PollEdit from './pages/PollEdit';
+import PollLinks from './pages/PollLinks';
 import PollWizard from './pages/PollWizard';
 import PriceCalculator from './pages/PriceCalculator';
 import PaymentDTO from './types/PaymentDTO';
@@ -265,6 +266,19 @@ function App() {
         path={"/dashboard/polls/:_id"}
         element={
           <PollEdit
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
+          />
+        }
+      />
+
+      <Route
+        path={"/dashboard/polls/:_id/links"}
+        element={
+          <PollLinks
             onSignIn={signIn} onSignOut={signOut} user={user}
             signingIn={signingIn}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}

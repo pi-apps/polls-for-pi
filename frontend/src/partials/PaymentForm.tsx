@@ -2,9 +2,9 @@ import {
   Button, Form, List, Modal, Space, Toast
 } from 'antd-mobile';
 import { UndoOutline } from 'antd-mobile-icons';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import pollsAPI from '../apis/pollsAPI';
 import WindowWithEnv from '../interfaces/WindowWithEnv';
 import HOCProps from '../types/HOCProps';
 import PaymentDTO from '../types/PaymentDTO';
@@ -14,12 +14,6 @@ type MyPaymentMetadata = {};
 
 import './PollStarter.css';
 
-const _window: WindowWithEnv = window;
-const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
-console.log('_window.__ENV', _window.__ENV)
-console.log('backendURL', backendURL)
-
-const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
 
 const PaymentForm = (props: HOCProps) => {
@@ -33,7 +27,7 @@ const PaymentForm = (props: HOCProps) => {
 
   const getPrice = async (product?: string) => {
     console.log("get poll options ai API", product);
-    const options = await axiosClient.get(`/v1/pricings?product=${product}`);
+    const options = await pollsAPI.get(`/v1/pricings?product=${product}`);
     return options.data.data[0];
   }
 
@@ -79,8 +73,14 @@ const PaymentForm = (props: HOCProps) => {
       onCancel,
       onError
     };
-    if (process.env.VITE_LOCALHOST === "true") {
-      navigate(`/dashboard/polls/63f9f07a1bb68f9b3c1a96f1`)
+
+    const _window: WindowWithEnv = window;
+    const isLocalhost = _window.__ENV && (_window.__ENV.viteLocalhost);
+    console.log('isLocalhost', isLocalhost);
+    console.log('typeof isLocalhost', typeof isLocalhost);
+
+    if (isLocalhost === "true") {
+      navigate(`/dashboard/polls/63f9f07a1bb68f9b3c1a96f1/links`)
     } else {
       const payment = await window.Pi.createPayment(paymentData, callbacks);
       console.log(payment);
@@ -89,25 +89,25 @@ const PaymentForm = (props: HOCProps) => {
 
   const onReadyForServerApproval = async (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
-    axiosClient.post('/payments/approve', {paymentId, user: props.user, poll: props.poll }, config);
-    const unpaidPoll = await axiosClient.post('/polls', {paymentId, user: props.user, poll: props.poll }, config);
+    pollsAPI.post('/payments/approve', {paymentId, user: props.user, poll: props.poll }, config);
+    const unpaidPoll = await pollsAPI.post('/v1/polls', {paymentId, user: props.user, poll: props.poll }, config);
     console.log('unpaidPoll', unpaidPoll)
   }
 
   const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
-    const resp = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
+    const resp = await pollsAPI.post('/payments/complete', {paymentId, txid}, config);
     console.log('resp', resp);
-    const paidPoll = await axiosClient.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
+    const paidPoll = await pollsAPI.patch(`/v1/polls/${paymentId}`, {paymentId, user: props.user, poll: props.poll }, config);
     console.log('paidPoll', paidPoll)
-    const navigateUrl = `/dashboard/polls/${paidPoll.data.data._id}`;
+    const navigateUrl = `/dashboard/polls/${paidPoll.data.data._id}/links`;
     Toast.show(`navigate to ${navigateUrl}`)
     navigate(navigateUrl);
   }
 
   const onCancel = (paymentId: string) => {
     console.log("onCancel", paymentId);
-    return axiosClient.post('/payments/cancelled_payment', {paymentId});
+    return pollsAPI.post('/payments/cancelled_payment', {paymentId});
   }
 
   const onError = (error: Error, payment?: PaymentDTO) => {
