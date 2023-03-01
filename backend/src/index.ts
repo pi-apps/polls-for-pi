@@ -165,6 +165,12 @@ const pi = new PiNetwork(apiKey, walletPrivateSeed);
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
+    const incompletePayment = await pi.getIncompleteServerPayments();
+    console.log('incompletePayment', incompletePayment);
+    if (incompletePayment && incompletePayment.length > 0) {
+
+    }
+
     // closed/expired polls
     const now = new Date();
     console.log('now ', now);
