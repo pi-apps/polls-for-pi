@@ -13,6 +13,7 @@ interface IResponse {
   endDate: Date;
   pollTitle: string;
   pollId: string;
+  txId: string;
 }
 
 const PollResponseSchema = new Schema<IResponse>({
@@ -40,6 +41,9 @@ const PollResponseSchema = new Schema<IResponse>({
     type: Number
   },
   paymentId: {
+    type: String
+  },
+  txId: {
     type: String
   },
   isPaid: {
