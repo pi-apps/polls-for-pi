@@ -168,7 +168,17 @@ pollsDB.asPromise().then(async (value) => {
 
     // incomplete payments
     const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
-    console.log('incompletePayments', response.data.incomplete_server_payments)
+    console.log('incompletePayments', response.data.incomplete_server_payments);
+    if (response.data?.incomplete_server_payments.length > 0) {
+      const incompletePayment = response.data.incomplete_server_payments[0];
+      const {pollId, responseId} = incompletePayment.metadata;
+      const pollResp = await PollResponse.findOne({ _id: responseId });
+      const paymentId = pollResp?.paymentId;
+      const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+
+      console.log('cancelResp', cancelResp)
+      console.log('cancelResp.data', cancelResp.data)
+    }
 
     // closed/expired polls
     const now = new Date();
