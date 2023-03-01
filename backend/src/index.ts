@@ -165,10 +165,16 @@ const pi = new PiNetwork(apiKey, walletPrivateSeed);
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
-    const incompletePayment = await pi.getIncompleteServerPayments();
-    console.log('incompletePayment', incompletePayment);
-    if (incompletePayment && incompletePayment.length > 0) {
+    const incompleteServerPayments = await pi.getIncompleteServerPayments();
+    console.log('incompleteServerPayments', incompleteServerPayments);
+    if (incompleteServerPayments && incompleteServerPayments.length > 0) {
+      const toProcessPayment = incompleteServerPayments[0];
+      console.log('toProcessPayment.status', toProcessPayment.status)
+      console.log('toProcessPayment.metadata', toProcessPayment.metadata)
 
+      // const { pollId, responseId } = toProcessPayment.metadata;
+      // const pollResp = await PollResponse.find({_id: responseId});
+      // await pi.completePayment(pollResp.paymentId, txid);
     }
 
     // closed/expired polls
@@ -205,13 +211,15 @@ pollsDB.asPromise().then(async (value) => {
             // so that you don't double-pay the same user, by keeping track of the payment.
             const paymentId = await pi.createPayment(paymentData);
             console.log('paymentId', paymentId)
+            pollResponse.paymentId = paymentId;
+            await pollResponse.save();
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
             const txid = await pi.submitPayment(paymentId);
             console.log('txid', txid)
-
-            pollResponse.paymentId = paymentId;
+            pollResponse.txId = txid;
             await pollResponse.save();
+
             // console.log('updated pollResponse', pollResponse)
 
             const completedPayment = await pi.completePayment(paymentId, txid);
