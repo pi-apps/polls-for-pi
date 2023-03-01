@@ -62,7 +62,7 @@ function App() {
 
   const signIn = async () => {
     setSigningIn(true);
-    const scopes = ['username', 'payments'];
+    const scopes = ['username', 'payments', 'wallet_address'];
     let authResult: AuthResult = {
       accessToken: "accessToken",
       user: {

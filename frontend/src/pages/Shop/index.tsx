@@ -53,7 +53,7 @@ export default function Shop(props: HOCProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const signIn = async () => {
-    const scopes = ['username', 'payments'];
+    const scopes = ['username', 'payments', 'wallet_address'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     signInUser(authResult);
     setUser(authResult.user);
