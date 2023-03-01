@@ -168,7 +168,7 @@ pollsDB.asPromise().then(async (value) => {
 
     // incomplete payments
     const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
-    console.log('incompletePayments', response.data)
+    console.log('incompletePayments', response.data.incomplete_server_payments)
 
     // closed/expired polls
     const now = new Date();
