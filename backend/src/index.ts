@@ -167,7 +167,8 @@ pollsDB.asPromise().then(async (value) => {
 
     const incompleteServerPayments = await pi.getIncompleteServerPayments();
     console.log('incompleteServerPayments', incompleteServerPayments);
-    if (incompleteServerPayments && incompleteServerPayments.length > 0) {
+    console.log('incompleteServerPayments.incomplete_server_payments', incompleteServerPayments.incomplete_server_payments);
+    if (incompleteServerPayments) {
       const toProcessPayment = incompleteServerPayments[0];
       console.log('toProcessPayment.status', toProcessPayment.status)
       console.log('toProcessPayment.metadata', toProcessPayment.metadata)
