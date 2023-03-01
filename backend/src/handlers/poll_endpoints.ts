@@ -159,7 +159,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
     newResp.endDate = item.endDate;
     newResp.reward = item.perResponseReward;
     newResp.pollTitle = item.title;
-    newResp.pollId = item._id;
+    newResp.responseUrl = item.responseUrl;
     await newResp.save();
     console.log('newResp', newResp)
 

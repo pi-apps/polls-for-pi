@@ -46,6 +46,9 @@ const PollResponseSchema = new Schema<IResponse>({
     type: Boolean,
     default: false,
   },
+  endDate: {
+    type: Date
+  },
   pollTitle: {
     type: String
   },
