@@ -8,7 +8,7 @@ import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
-import PiNetwork from 'pi-backend';
+// import PiNetwork from 'pi-backend';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payment_endpoints';
 import mountPollsAiEndpoints from './handlers/polls_ai';
@@ -159,7 +159,7 @@ const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
 // DO NOT expose these values to public
 const apiKey = env.pi_api_key;
 const walletPrivateSeed = env.wallet_private_seed;
-const pi = new PiNetwork(apiKey, walletPrivateSeed);
+// const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
@@ -194,12 +194,12 @@ pollsDB.asPromise().then(async (value) => {
 
           // It is critical that you store paymentId in your database
           // so that you don't double-pay the same user, by keeping track of the payment.
-          const paymentId = await pi.createPayment(paymentData);
-          console.log('paymentId', paymentId)
+          // const paymentId = await pi.createPayment(paymentData);
+          // console.log('paymentId', paymentId)
 
-          pollResponse.paymentId = paymentId;
-          await pollResponse.save();
-          console.log('updated pollResponse', pollResponse)
+          // pollResponse.paymentId = paymentId;
+          // await pollResponse.save();
+          // console.log('updated pollResponse', pollResponse)
         }
       });
 
