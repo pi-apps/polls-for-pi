@@ -167,8 +167,8 @@ pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
     // incomplete payments
-    const incompletePayments = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
-    console.log('incompletePayments', incompletePayments)
+    const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
+    console.log('incompletePayments', response.data)
 
     // closed/expired polls
     const now = new Date();
