@@ -23,6 +23,10 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     _.extend(item, req.body.poll);
     item.responseUrl = responseUrl;
+
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + poll.durationDays);
+    item.endDate = endDate;
     await item.save();
 
     console.log('post poll item', item)

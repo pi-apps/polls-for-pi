@@ -144,3 +144,34 @@ app.listen(8000, async () => {
   console.log('App platform demo app - Backend listening on port 8000!');
   console.log(`CORS config: configured to respond to a frontend hosted on ${env.frontend_url}`);
 });
+
+// IV. Create Cron JOB:
+const CronJob = require('cron').CronJob;
+
+// every minutes
+const CRON_SCHED = process.env.CRON_SCHED || "00 * * * * *";
+console.log('CRON_SCHED', CRON_SCHED)
+const AUTOSTART_GATHERINGS = process.env.AUTOSTART_GATHERINGS === "true";
+const AUTOSTART_INTERVAL = parseInt(process.env.AUTOSTART_INTERVAL || "60");
+console.log('AUTO-START CONFIG: ', `(auto-start: ${AUTOSTART_GATHERINGS} / interval: ${AUTOSTART_INTERVAL}) `)
+
+const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
+
+pollsDB.asPromise().then(async (value) => {
+  const job = new CronJob(CRON_SCHED, async function() {
+
+    // closed/expired polls
+    const now = new Date();
+    const pollsToReward = await Poll.find(
+      {
+        endDate: { $lte: now },
+        isRewardsDistributed: false,
+      });
+    if (pollsToReward.length > 0) {
+      console.log('pollsToReward ', pollsToReward);
+    }
+
+  });
+  console.log('After job instantiation');
+  job.start();
+});
