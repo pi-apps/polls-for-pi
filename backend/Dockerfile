@@ -10,7 +10,8 @@ COPY package.json ./
 COPY yarn.lock ./
 
 # When building for production, use the lockfile as-is:
-RUN yarn install --frozen-lockfile
+#RUN yarn install --frozen-lockfile
+RUN yarn install
 # RUN npm ci --only=production
 
 # Bundle app source
