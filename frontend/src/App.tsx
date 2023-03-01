@@ -32,6 +32,8 @@ import { AuthResult, User } from './types/UserType';
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
 const _window: WindowWithEnv = window;
 const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
+const testUser = _window.__ENV ? _window.__ENV.viteTestUser : '';
+const testUid = _window.__ENV ? _window.__ENV.viteTestUid : '';
 
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
@@ -63,8 +65,8 @@ function App() {
     let authResult: AuthResult = {
       accessToken: "accessToken",
       user: {
-        uid: "uid",
-        username: "eastmael"
+        uid: testUid,
+        username: testUser,
       }
     };
     if (!_window.__ENV?.sandbox) {
