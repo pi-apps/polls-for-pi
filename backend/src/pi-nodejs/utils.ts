@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { AxiosClientOptions } from "types";
+import { AxiosClientOptions } from "./types";
 
 export const getAxiosClient = (apiKey: string, options: AxiosClientOptions | null): AxiosInstance => {
   const axiosClient = axios.create({
