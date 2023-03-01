@@ -80,7 +80,10 @@ const PaymentForm = (props: HOCProps) => {
     console.log('typeof isLocalhost', typeof isLocalhost);
 
     if (isLocalhost === "true") {
-      navigate(`/dashboard/polls/63f9f07a1bb68f9b3c1a96f1/links`)
+      let paymentId = (Math.random() + 1).toString(36).substring(7);
+      const unpaidPoll = await pollsAPI.post('/v1/polls', {paymentId, user: props.user, poll: props.poll }, config);
+      console.log('unpaidPoll', unpaidPoll)
+      navigate(`/dashboard/polls/${unpaidPoll.data.data._id}/links`)
     } else {
       const payment = await window.Pi.createPayment(paymentData, callbacks);
       console.log(payment);

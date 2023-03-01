@@ -1,26 +1,67 @@
 import { Schema } from 'mongoose';
 const { ObjectId } = Schema.Types;
 
+interface IResponse {
+  responseUrl: string;
+  username: string;
+  response: string;
+  isRewarded: boolean;
+  reward: number;
+}
+
 interface IPoll {
   title: string;
   status: string;
-  distribution: string,
-  options?: string[],
+  distribution: string;
+  options?: string[];
   owner: {
-    uid: string,
-    username: string
-  },
-  optionCount: number,
-  perResponseReward: number,
-  isLimitResponse: boolean,
-  responseLimit: number,
-  durationDays: number,
-  responses: any,
-  paid: boolean,
-  paymentId: string,
-  responseUrl: string,
-  isOpen: boolean,
+    uid: string;
+    username: string;
+  };
+  optionCount: number;
+  perResponseReward: number;
+  isLimitResponse: boolean;
+  responseLimit: number;
+  durationDays: number;
+  endDate: Date;
+  responses: any;
+  paid: boolean;
+  paymentId: string;
+  responseUrl: string;
+  isOpen: boolean;
+  isRewardsDistributed: boolean;
 }
+
+const ResponseSchema = new Schema<IResponse>({
+  responseUrl: {
+    type: String,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  response: {
+    type: String,
+    required: true,
+  },
+  isRewarded: {
+    type: Boolean
+  },
+  reward: {
+    type: Number
+  }
+});
+ResponseSchema.index(
+  { responseUrl: 1, username: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      responseUrl: {$exists:true},
+      username: {$exists:true}
+    }
+  }
+)
 
 const PollSchema = new Schema<IPoll>({
   title: {
@@ -49,12 +90,19 @@ const PollSchema = new Schema<IPoll>({
   durationDays: {
     type: Number,
   },
+  endDate: {
+    type: Date,
+    required: true,
+  },
   responseUrl: {
     type: String,
     unique: true,
     required: true,
   },
   isOpen: {
+    type: Boolean,
+  },
+  isRewardsDistributed: {
     type: Boolean,
   },
   // owner: {
@@ -70,21 +118,14 @@ const PollSchema = new Schema<IPoll>({
   paymentId: {
     type: String,
   },
-  responses: [{
-    username: String,
-    response: String
-  }],
+  responses: [
+    ResponseSchema
+  ],
   owner: {
     uid: String,
     username: String,
   }
 });
-
-// var diffHistory = require("mongoose-diff-history/diffHistory").plugin;
-// const dbName = env.mongo_db_name;
-// const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
-// PricingSchema.plugin(diffHistory, {
-//   uri: mongoUri,
-// });
+//PollSchema.index({ "responses.responseUrl": 1, "responses.username": 1 }, { unique: true })
 
 export default PollSchema;

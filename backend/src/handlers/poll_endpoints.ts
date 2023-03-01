@@ -21,19 +21,28 @@ export default function mountPollEndpoints(router: Router, models: any) {
     const responseUrl = uuidv4();
     console.log('response url', responseUrl);
 
-    _.extend(item, req.body.poll, responseUrl);
+    _.extend(item, req.body.poll);
+    item.responseUrl = responseUrl;
+
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + poll.durationDays);
+    item.endDate = endDate;
     await item.save();
+
+    console.log('post poll item', item)
 
     return res.status(200).json({ data: item });
   });
 
   router.get('/', async (req, res) => {
     const { Poll } = models;
-    const { filter } = req.query;
+    const { filter, responseUrl } = req.query;
     console.log('filter', filter)
 
     let items = [];
     if (filter) {
+      items = await Poll.find({ filter });
+    } else if (responseUrl) {
       items = await Poll.find({ filter });
     } else {
       items = await Poll.find({ });
@@ -107,8 +116,23 @@ export default function mountPollEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: item });
   });
 
+  router.get('/:responseUrl/poll', async (req, res) => {
+    console.log('getting poll using responseUrl');
+
+    const { Poll } = models;
+    const { responseUrl } = req.params;
+    const item = await Poll.findOne({ responseUrl });
+
+    // poll doesn't exist
+    if (!item) {
+      return res.status(400).json({ message: "Poll not found." });
+    }
+
+    return res.status(200).json({ options: item.options, title: item.title });
+  });
+
   router.post('/:responseUrl/responses', async (req, res) => {
-    console.log('updating poll', req.body);
+    console.log('submitting response', req.body);
 
     const { Poll } = models;
     const { responseUrl } = req.params;
@@ -120,8 +144,15 @@ export default function mountPollEndpoints(router: Router, models: any) {
     }
 
     const { username, response } = req.body;
-    const pollResp = { username, response };
+    const pollResp = { username, response, responseUrl };
     console.log('poll resp', pollResp);
+    const userResp = await Poll.find({ responseUrl, 'responses.username': username})
+    console.log('existing user resp', userResp);
+
+    // If already responded
+    if (userResp && userResp.length > 0) {
+      return res.status(400).json({ message: "User already responded." });
+    }
 
     item.responses.push(pollResp);
     await item.save();
