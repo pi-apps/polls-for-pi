@@ -11,7 +11,7 @@ const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
 const apiKey = env.pi_api_key;
 const walletPrivateSeed = env.wallet_private_seed;
 const walletPublicKey = env.wallet_public_key;
-const pi = new PiNetwork(apiKey, walletPrivateSeed);
+//const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 
 // API Key of your app, available in the Pi Developer Portal

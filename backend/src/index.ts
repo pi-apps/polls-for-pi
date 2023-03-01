@@ -21,6 +21,7 @@ import PollPricingSchema from './schemas/poll_pricing';
 import PollResponseSchema from './schemas/poll_response';
 import PricingSchema from './schemas/pricing';
 import ProductSchema from './schemas/product';
+import platformAPIClient from "./services/platformAPIClient";
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
 // have no problem here)
@@ -165,17 +166,9 @@ const pi = new PiNetwork(apiKey, walletPrivateSeed);
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
-    const incompleteServerPayments = await pi.getIncompleteServerPayments();
-    console.log('incompleteServerPayments', incompleteServerPayments);
-    if (incompleteServerPayments) {
-      const toProcessPayment = incompleteServerPayments[0];
-      console.log('toProcessPayment.status', toProcessPayment.status)
-      console.log('toProcessPayment.metadata', toProcessPayment.metadata)
-
-      // const { pollId, responseId } = toProcessPayment.metadata;
-      // const pollResp = await PollResponse.find({_id: responseId});
-      // await pi.completePayment(pollResp.paymentId, txid);
-    }
+    // incomplete payments
+    const incompletePayments = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
+    console.log('incompletePayments', incompletePayments)
 
     // closed/expired polls
     const now = new Date();
