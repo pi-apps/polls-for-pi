@@ -8,6 +8,7 @@ import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
+import PiNetwork from 'pi-backend';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payment_endpoints';
 import mountPollsAiEndpoints from './handlers/polls_ai';
@@ -17,6 +18,7 @@ import mountProductsEndpoints from './handlers/products';
 import mountUserEndpoints from './handlers/users';
 import PollSchema from './schemas/poll';
 import PollPricingSchema from './schemas/poll_pricing';
+import PollResponseSchema from './schemas/poll_response';
 import PricingSchema from './schemas/pricing';
 import ProductSchema from './schemas/product';
 
@@ -24,7 +26,6 @@ import ProductSchema from './schemas/product';
 // have no problem here)
 // https://stackoverflow.com/questions/65108033/property-user-does-not-exist-on-type-session-partialsessiondata#comment125163548_65381085
 import "./types/session";
-
 
 const dbName = env.mongo_db_name;
 const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
@@ -42,8 +43,9 @@ const Product = pollsDB.model('Product', ProductSchema);
 const Pricing = pollsDB.model('Pricing', PricingSchema);
 const PollPricing = pollsDB.model('PollPricing', PollPricingSchema);
 const Poll = pollsDB.model('Poll', PollSchema);
+const PollResponse = pollsDB.model('PollResponse', PollResponseSchema);
 
-const pollModels = { Product, Pricing, PollPricing, Poll };
+const pollModels = { Product, Pricing, PollPricing, Poll, PollResponse };
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:
@@ -148,27 +150,70 @@ app.listen(8000, async () => {
 // IV. Create Cron JOB:
 const CronJob = require('cron').CronJob;
 
-// every minutes
-const CRON_SCHED = process.env.CRON_SCHED || "00 * * * * *";
+// run every minute
+const CRON_SCHED = process.env.CRON_SCHED || "* * * * *";
 console.log('CRON_SCHED', CRON_SCHED)
-const AUTOSTART_GATHERINGS = process.env.AUTOSTART_GATHERINGS === "true";
-const AUTOSTART_INTERVAL = parseInt(process.env.AUTOSTART_INTERVAL || "60");
-console.log('AUTO-START CONFIG: ', `(auto-start: ${AUTOSTART_GATHERINGS} / interval: ${AUTOSTART_INTERVAL}) `)
 
 const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
+
+// DO NOT expose these values to public
+const apiKey = env.pi_api_key;
+const walletPrivateSeed = env.wallet_private_seed;
+const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
     // closed/expired polls
     const now = new Date();
-    const pollsToReward = await Poll.find(
+    console.log('now ', now);
+    const pollResponsesToReward = await PollResponse.find(
       {
         endDate: { $lte: now },
-        isRewardsDistributed: false,
+        isRewarded: false,
       });
-    if (pollsToReward.length > 0) {
-      console.log('pollsToReward ', pollsToReward);
+
+
+    console.log('pollResponsesToReward ', pollResponsesToReward);
+    if (pollResponsesToReward.length > 0) {
+      console.log('pollResponsesToReward ', pollResponsesToReward);
+
+      const promises = pollResponsesToReward.forEach(async (pollResponse: any) => {
+        console.log('pollResponse',pollResponse);
+
+        if (pollResponse && !pollResponse.isRewarded) {
+          // do payment
+          const userUid = pollResponse.uid;
+          const paymentData = {
+            amount: pollResponse.reward ? pollResponse.reward : pollResponse.parent().perResponseReward,
+            memo: `Reward for poll: '${pollResponse.parent().title}'`, // this is just an example
+            metadata: { pollId: pollResponse.parent()._id, responseId: pollResponse._id },
+            uid: userUid
+          };
+          console.log('paymentData', paymentData);
+
+          // It is critical that you store paymentId in your database
+          // so that you don't double-pay the same user, by keeping track of the payment.
+          const paymentId = await pi.createPayment(paymentData);
+          console.log('paymentId', paymentId)
+
+          pollResponse.paymentId = paymentId;
+          await pollResponse.save();
+          console.log('updated pollResponse', pollResponse)
+        }
+      });
+
+      // Promise.all(promises)
+      // .then(responses => {
+      //   console.log('responses' , responses);
+      // }).catch(error => {
+      //   console.log('errorr', error)
+      //   if (error.name === 'MongoError' && error.code === 11000) {
+      //     // Duplicate username
+      //     console.log('errorr', error)
+      //   }
+      // });
+
     }
 
   });

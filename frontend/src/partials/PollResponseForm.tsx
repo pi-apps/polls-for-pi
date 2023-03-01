@@ -30,6 +30,7 @@ const PollResponseForm = (props: PollResponseProps) => {
     console.log("submitResponse values:", pollResponse);
     const result = await pollsAPI.post(`/v1/polls/${responseUrl}/responses`, {
       username: props.user?.username,
+      uid: props.user?.uid,
       response: pollResponse
     });
     return result.data;

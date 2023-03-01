@@ -17,6 +17,7 @@ if (result.error) {
 interface Environment {
   session_secret: string,
   pi_api_key: string,
+  wallet_private_seed: string,
   platform_api_url: string,
   mongo_host: string,
   mongo_db_name: string,
@@ -29,6 +30,7 @@ interface Environment {
 const env: Environment = {
   session_secret: process.env.SESSION_SECRET || "This is my session secret",
   pi_api_key: process.env.PI_API_KEY || '',
+  wallet_private_seed: process.env.WALLET_PRIVATE_SEED || '',
   platform_api_url: process.env.PLATFORM_API_URL || '',
   mongo_host: process.env.MONGO_HOST || 'localhost:27017',
   mongo_db_name: process.env.MONGODB_DATABASE_NAME || 'demo-app',

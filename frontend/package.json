@@ -32,7 +32,7 @@
     "build": "GENERATE_SOURCEMAP=false vite build",
     "test": "vite test",
     "eject": "vute eject",
-    "dev": "vite",
+    "dev": "vite --host",
     "vitebuild": "vite build",
     "preview": "vite preview"
   },
