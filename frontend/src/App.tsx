@@ -34,6 +34,7 @@ const _window: WindowWithEnv = window;
 const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
 const testUser = _window.__ENV ? _window.__ENV.viteTestUser : '';
 const testUid = _window.__ENV ? _window.__ENV.viteTestUid : '';
+const isLocalhost = _window.__ENV && (_window.__ENV.viteLocalhost);
 
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
@@ -69,7 +70,10 @@ function App() {
         username: testUser,
       }
     };
-    if (!_window.__ENV?.sandbox) {
+
+    if (isLocalhost === "true") {
+      // do nothing
+    } else {
       authResult= await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     }
 
