@@ -211,10 +211,16 @@ pollsDB.asPromise().then(async (value) => {
               await toCompletePollResponse.save();
             }
 
-            const { transaction } = incPayment.data;
-            const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
-            console.log('completeResp', completeResp)
-            console.log('completeResp.data', completeResp.data)
+            // const { transaction } = incPayment.data;
+            // const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
+            // console.log('completeResp', completeResp)
+            // console.log('completeResp.data', completeResp.data)
+            // if (toCompletePollResponse) {
+            //   toCompletePollResponse.isPaid = true;
+            //   await toCompletePollResponse.save();
+            // }
+            const completedPayment = await pi.completePayment(paymentId, txid);
+            console.log('completedPayment', completedPayment)
             if (toCompletePollResponse) {
               toCompletePollResponse.isPaid = true;
               await toCompletePollResponse.save();
