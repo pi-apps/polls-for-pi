@@ -217,7 +217,7 @@ pollsDB.asPromise().then(async (value) => {
               await toCompletePollResponse.save();
             }
 
-          } else {
+          } else if (status.cancelled === false) {
             const toCancelPollResponse = await PollResponse.findOne({ paymentId: paymentId });
             console.log('incPollResponse', toCancelPollResponse);
 
@@ -226,13 +226,34 @@ pollsDB.asPromise().then(async (value) => {
               console.log('cancelResp', cancelResp)
               console.log('cancelResp.data', cancelResp.data)
             } catch (err: any) {
-              console.log('cancel err', err.data);
+              console.log('cancel err', err);
               if (toCancelPollResponse) {
                 toCancelPollResponse.isPaid = true;
                 toCancelPollResponse.save();
               }
             }
 
+          } else {
+            const toCompletePollResponse = await PollResponse.findOne({ _id: metadata.responseId });
+            console.log('Else toCompletePollResponse', toCompletePollResponse);
+
+            // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
+            // const txid = await pi.submitPayment(paymentId);
+            // console.log('payment submitted')
+            // console.log('txid', txid)
+            // if (toCompletePollResponse) {
+            //   toCompletePollResponse.txId = txid;
+            //   await toCompletePollResponse.save();
+            // }
+
+            // const { transaction } = incPayment.data;
+            // const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
+            // console.log('completeResp', completeResp)
+            // console.log('completeResp.data', completeResp.data)
+            // if (toCompletePollResponse) {
+            //   toCompletePollResponse.isPaid = true;
+            //   await toCompletePollResponse.save();
+            // }
           }
 
         }
