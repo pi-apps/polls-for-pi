@@ -199,7 +199,7 @@ pollsDB.asPromise().then(async (value) => {
             && status.transaction_verified === false
             && status.cancelled === false
           ) {
-            const toCompletePollResponse = await PollResponse.findOne({ _id: metadata.responseId });
+            const toCompletePollResponse = await PollResponse.findOne({ paymentId: paymentId });
             console.log('toCompletePollResponse', toCompletePollResponse);
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
@@ -243,7 +243,7 @@ pollsDB.asPromise().then(async (value) => {
             }
 
           } else {
-            const toCompletePollResponse = await PollResponse.findOne({ _id: metadata.responseId });
+            const toCompletePollResponse = await PollResponse.findOne({ paymentId: paymentId });
             console.log('Else toCompletePollResponse', toCompletePollResponse);
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.

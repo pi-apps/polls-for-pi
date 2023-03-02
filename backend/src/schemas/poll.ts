@@ -74,6 +74,7 @@ const PollSchema = new Schema<IPoll>({
   },
   paymentId: {
     type: String,
+    unique: true,
   },
   responses: [{
     type: ObjectId,
