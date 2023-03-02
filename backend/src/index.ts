@@ -190,11 +190,14 @@ pollsDB.asPromise().then(async (value) => {
 
           const { status }  = incPayment.data;
           console.log('status', status);
-          if (status.transaction_verified === false) {
+          if (
+            status.developer_approved === true
+            && status.developer_completed === false
+            && status.transaction_verified === false
+          ) {
             const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
             console.log('cancelResp', cancelResp)
             console.log('cancelResp.data', cancelResp.data)
-
           } else {
             // const { transaction } = incPayment.data;
             // const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
