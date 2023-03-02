@@ -188,21 +188,39 @@ pollsDB.asPromise().then(async (value) => {
           const incPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
           console.log('incPayment.data', incPayment.data);
 
-          const { status }  = incPayment.data;
+          const { status, metadata }  = incPayment.data;
           console.log('status', status);
           if (
             status.developer_approved === true
             && status.developer_completed === false
             && status.transaction_verified === false
+            && status.cancelled === false
           ) {
+            const incPollResponse = await PollResponse.findOne({ _id: metadata.responseId });
+            console.log('incPollResponse', incPollResponse);
+
+            // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
+            const txid = await pi.submitPayment(paymentId);
+            console.log('payment submitted')
+            console.log('txid', txid)
+            if (incPollResponse) {
+              incPollResponse.txId = txid;
+              await incPollResponse.save();
+            }
+
+            const { transaction } = incPayment.data;
+            const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
+            console.log('completeResp', completeResp)
+            console.log('completeResp.data', completeResp.data)
+            if (incPollResponse) {
+              incPollResponse.isPaid = true;
+              await incPollResponse.save();
+            }
+
+          } else {
             const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
             console.log('cancelResp', cancelResp)
             console.log('cancelResp.data', cancelResp.data)
-          } else {
-            // const { transaction } = incPayment.data;
-            // const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
-            // console.log('completeResp', completeResp)
-            // console.log('completeResp.data', completeResp.data)
 
           }
 
@@ -256,9 +274,8 @@ pollsDB.asPromise().then(async (value) => {
 
             const completedPayment = await pi.completePayment(paymentId, txid);
             console.log('completedPayment', completedPayment)
-
-            // pollResponse.isPaid = true;
-            // await pollResponse.save();
+            pollResponse.isPaid = true;
+            await pollResponse.save();
 
           }
         //});
