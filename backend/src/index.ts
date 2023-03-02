@@ -196,25 +196,25 @@ pollsDB.asPromise().then(async (value) => {
             && status.transaction_verified === false
             && status.cancelled === false
           ) {
-            const incPollResponse = await PollResponse.findOne({ _id: metadata.responseId });
-            console.log('incPollResponse', incPollResponse);
+            const toCompletePollResponse = await PollResponse.findOne({ _id: metadata.responseId });
+            console.log('toCompletePollResponse', toCompletePollResponse);
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
             const txid = await pi.submitPayment(paymentId);
             console.log('payment submitted')
             console.log('txid', txid)
-            if (incPollResponse) {
-              incPollResponse.txId = txid;
-              await incPollResponse.save();
+            if (toCompletePollResponse) {
+              toCompletePollResponse.txId = txid;
+              await toCompletePollResponse.save();
             }
 
             const { transaction } = incPayment.data;
             const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
             console.log('completeResp', completeResp)
             console.log('completeResp.data', completeResp.data)
-            if (incPollResponse) {
-              incPollResponse.isPaid = true;
-              await incPollResponse.save();
+            if (toCompletePollResponse) {
+              toCompletePollResponse.isPaid = true;
+              await toCompletePollResponse.save();
             }
 
           } else {
@@ -225,8 +225,8 @@ pollsDB.asPromise().then(async (value) => {
               const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
               console.log('cancelResp', cancelResp)
               console.log('cancelResp.data', cancelResp.data)
-            } catch (err) {
-              console.log('cancel err', err);
+            } catch (err: any) {
+              console.log('cancel err', err.data);
               if (toCancelPollResponse) {
                 toCancelPollResponse.isPaid = true;
                 toCancelPollResponse.save();
@@ -236,76 +236,75 @@ pollsDB.asPromise().then(async (value) => {
           }
 
         }
-      }
+      } else {
+        // closed/expired polls
+        const now = new Date();
+        console.log('now ', now);
+        const pollResponsesToReward = await PollResponse.find(
+          {
+            endDate: { $lte: now },
+            isRewarded: false,
+          });
 
-      // closed/expired polls
-      const now = new Date();
-      console.log('now ', now);
-      const pollResponsesToReward = await PollResponse.find(
-        {
-          endDate: { $lte: now },
-          isRewarded: false,
-        });
+        console.log('pollResponsesToReward.length', pollResponsesToReward.length);
+        if (pollResponsesToReward.length > 0) {
+          for (let i = 0; i < pollResponsesToReward.length; i++) {
+            const pollResponse = pollResponsesToReward[i];
+            console.log('pollResponse',pollResponse);
 
+            if (pollResponse && !pollResponse.isRewarded) {
+              // do payment
+              const userUid = pollResponse.uid;
+              const paymentData = {
+                amount: pollResponse.reward,
+                memo: `Reward for poll: '${pollResponse.pollTitle}'`, // this is just an example
+                metadata: { pollId: pollResponse.pollId, responseId: pollResponse._id },
+                uid: userUid
+              };
+              console.log('paymentData', paymentData);
 
+              // It is critical that you store paymentId in your database
+              // so that you don't double-pay the same user, by keeping track of the payment.
+              const paymentId = await pi.createPayment(paymentData);
+              console.log('payment created')
+              console.log('paymentId', paymentId)
+              pollResponse.paymentId = paymentId;
+              await pollResponse.save();
 
-      console.log('pollResponsesToReward.length', pollResponsesToReward.length);
-      if (pollResponsesToReward.length > 0) {
-        for (let i = 0; i < pollResponsesToReward.length; i++) {
-          const pollResponse = pollResponsesToReward[i];
-          console.log('pollResponse',pollResponse);
+              // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
+              const txid = await pi.submitPayment(paymentId);
+              console.log('payment submitted')
+              console.log('txid', txid)
+              pollResponse.txId = txid;
+              await pollResponse.save();
 
-          if (pollResponse && !pollResponse.isRewarded) {
-            // do payment
-            const userUid = pollResponse.uid;
-            const paymentData = {
-              amount: pollResponse.reward,
-              memo: `Reward for poll: '${pollResponse.pollTitle}'`, // this is just an example
-              metadata: { pollId: pollResponse.pollId, responseId: pollResponse._id },
-              uid: userUid
-            };
-            console.log('paymentData', paymentData);
+              // console.log('updated pollResponse', pollResponse)
 
-            // It is critical that you store paymentId in your database
-            // so that you don't double-pay the same user, by keeping track of the payment.
-            const paymentId = await pi.createPayment(paymentData);
-            console.log('payment created')
-            console.log('paymentId', paymentId)
-            pollResponse.paymentId = paymentId;
-            await pollResponse.save();
+              const completedPayment = await pi.completePayment(paymentId, txid);
+              console.log('completedPayment', completedPayment)
+              pollResponse.isPaid = true;
+              await pollResponse.save();
 
-            // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
-            const txid = await pi.submitPayment(paymentId);
-            console.log('payment submitted')
-            console.log('txid', txid)
-            pollResponse.txId = txid;
-            await pollResponse.save();
+            }
+          //});
 
-            // console.log('updated pollResponse', pollResponse)
-
-            const completedPayment = await pi.completePayment(paymentId, txid);
-            console.log('completedPayment', completedPayment)
-            pollResponse.isPaid = true;
-            await pollResponse.save();
+          // Promise.all(promises)
+          // .then(responses => {
+          //   console.log('responses' , responses);
+          // }).catch(error => {
+          //   console.log('errorr', error)
+          //   if (error.name === 'MongoError' && error.code === 11000) {
+          //     // Duplicate username
+          //     console.log('errorr', error)
+          //   }
+          // });
 
           }
-        //});
-
-        // Promise.all(promises)
-        // .then(responses => {
-        //   console.log('responses' , responses);
-        // }).catch(error => {
-        //   console.log('errorr', error)
-        //   if (error.name === 'MongoError' && error.code === 11000) {
-        //     // Duplicate username
-        //     console.log('errorr', error)
-        //   }
-        // });
-
         }
       }
-    } catch (error) {
-      console.log('cron job error', error);
+
+    } catch (error: any) {
+      console.log('cron job error', error.data);
     }
 
   });
