@@ -10,6 +10,7 @@ interface IResponse {
   reward: number;
   paymentId: string;
   isPaid: boolean;
+  isCancelled: boolean;
   endDate: Date;
   pollTitle: string;
   pollId: string;
@@ -47,6 +48,10 @@ const PollResponseSchema = new Schema<IResponse>({
     type: String
   },
   isPaid: {
+    type: Boolean,
+    default: false,
+  },
+  isCancelled: {
     type: Boolean,
     default: false,
   },

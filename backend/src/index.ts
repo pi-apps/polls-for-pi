@@ -240,6 +240,7 @@ pollsDB.asPromise().then(async (value) => {
               if (toCancelPollResponse) {
                 toCancelPollResponse.isPaid = true;
                 toCancelPollResponse.isRewarded = true;
+                toCancelPollResponse.isCancelled = true;
                 toCancelPollResponse.save();
               }
             }
