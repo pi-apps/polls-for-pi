@@ -176,13 +176,16 @@ pollsDB.asPromise().then(async (value) => {
         const incompletePayment = response.data.incomplete_server_payments[0];
         console.log('incompletePayment', incompletePayment);
         console.log('incompletePayment.metadata', incompletePayment.metadata);
-        const {pollId, responseId} = incompletePayment.metadata;
 
-        const pollResp = await PollResponse.findOne({ _id: responseId });
-        console.log('pollResp', pollResp);
+        // const {pollId, responseId} = incompletePayment.metadata;
+        // const pollResp = await PollResponse.findOne({ _id: responseId });
+        // console.log('pollResp', pollResp);
 
-        const paymentId = pollResp?.paymentId;
-        console.log('incomplete payment paymentId', paymentId);
+        // const paymentId = pollResp?.paymentId;
+        // console.log('incomplete payment paymentId', paymentId);
+
+        const paymentId = incompletePayment.identifier;
+        console.log('incomplete payment identifier', paymentId);
 
         if (paymentId) {
           const incPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
