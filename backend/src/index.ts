@@ -328,7 +328,7 @@ pollsDB.asPromise().then(async (value) => {
       }
 
     } catch (error: any) {
-      console.log('cron job error', error.data);
+      console.log('cron job error', error);
     }
 
   });
