@@ -223,6 +223,7 @@ pollsDB.asPromise().then(async (value) => {
             console.log('completedPayment', completedPayment)
             if (toCompletePollResponse) {
               toCompletePollResponse.isPaid = true;
+              toCompletePollResponse.isRewarded = true;
               await toCompletePollResponse.save();
             }
 
@@ -238,6 +239,7 @@ pollsDB.asPromise().then(async (value) => {
               console.log('cancel err', err);
               if (toCancelPollResponse) {
                 toCancelPollResponse.isPaid = true;
+                toCancelPollResponse.isRewarded = true;
                 toCancelPollResponse.save();
               }
             }
@@ -313,6 +315,7 @@ pollsDB.asPromise().then(async (value) => {
               const completedPayment = await pi.completePayment(paymentId, txid);
               console.log('completedPayment', completedPayment)
               pollResponse.isPaid = true;
+              pollResponse.isRewarded = true;
               await pollResponse.save();
 
             }
@@ -333,7 +336,7 @@ pollsDB.asPromise().then(async (value) => {
         }
       }
 
-    } catch (error: any) {
+    } catch (error) {
       console.log('cron job error', error);
     }
 
