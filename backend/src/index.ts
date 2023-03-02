@@ -240,20 +240,22 @@ pollsDB.asPromise().then(async (value) => {
             // It is critical that you store paymentId in your database
             // so that you don't double-pay the same user, by keeping track of the payment.
             const paymentId = await pi.createPayment(paymentData);
+            console.log('payment created')
             console.log('paymentId', paymentId)
             pollResponse.paymentId = paymentId;
             await pollResponse.save();
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
-            // const txid = await pi.submitPayment(paymentId);
-            // console.log('txid', txid)
-            // pollResponse.txId = txid;
-            // await pollResponse.save();
+            const txid = await pi.submitPayment(paymentId);
+            console.log('payment submitted')
+            console.log('txid', txid)
+            pollResponse.txId = txid;
+            await pollResponse.save();
 
             // console.log('updated pollResponse', pollResponse)
 
-            // const completedPayment = await pi.completePayment(paymentId, txid);
-            // console.log('completedPayment', completedPayment)
+            const completedPayment = await pi.completePayment(paymentId, txid);
+            console.log('completedPayment', completedPayment)
 
             // pollResponse.isPaid = true;
             // await pollResponse.save();

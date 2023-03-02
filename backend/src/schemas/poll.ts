@@ -21,7 +21,6 @@ interface IPoll {
   paymentId: string;
   responseUrl: string;
   isOpen: boolean;
-  isRewardDistributed: boolean;
 }
 
 const PollSchema = new Schema<IPoll>({
@@ -62,10 +61,6 @@ const PollSchema = new Schema<IPoll>({
   },
   isOpen: {
     type: Boolean,
-  },
-  isRewardDistributed: {
-    type: Boolean,
-    default: false,
   },
   // owner: {
   //   type: ObjectId,
