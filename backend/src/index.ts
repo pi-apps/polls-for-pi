@@ -8,7 +8,6 @@ import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
-import PiNetwork from 'pi-backend';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payment_endpoints';
 import mountPollsAiEndpoints from './handlers/polls_ai';
@@ -161,35 +160,44 @@ const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
 const apiKey = env.pi_api_key;
 const walletPrivateSeed = env.wallet_private_seed;
 const walletPublicKey = env.wallet_public_key;
-const pi = new PiNetwork(apiKey, walletPrivateSeed);
+//const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
 
-    // incomplete payments
-    const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
-    console.log('incompletePayments', response.data.incomplete_server_payments);
-    if (response.data?.incomplete_server_payments.length > 0) {
-      const incompletePayment = response.data.incomplete_server_payments[0];
-      const {pollId, responseId} = incompletePayment.metadata;
-      const pollResp = await PollResponse.findOne({ _id: responseId });
-      const paymentId = pollResp?.paymentId;
-      const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
-
-      console.log('cancelResp', cancelResp)
-      console.log('cancelResp.data', cancelResp.data)
-    }
-
-    // closed/expired polls
-    const now = new Date();
-    console.log('now ', now);
-    const pollResponsesToReward = await PollResponse.find(
-      {
-        endDate: { $lte: now },
-        isRewarded: false,
-      });
-
     try {
+      // incomplete payments
+      const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
+      console.log('incompletePayments', response.data.incomplete_server_payments);
+
+      console.log('response.data.incomplete_server_payments.length', response.data.incomplete_server_payments.length)
+
+      if (response.data.incomplete_server_payments.length > 0) {
+        const incompletePayment = response.data.incomplete_server_payments[0];
+        console.log('incompletePayment', incompletePayment);
+        console.log('incompletePayment.metadata', incompletePayment.metadata);
+
+        const {pollId, responseId} = incompletePayment.metadata;
+        const pollResp = await PollResponse.findOne({ _id: responseId });
+        console.log('pollResp', pollResp);
+
+        const paymentId = pollResp?.paymentId;
+        const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+
+        console.log('cancelResp', cancelResp)
+        console.log('cancelResp.data', cancelResp.data)
+      }
+
+      // closed/expired polls
+      const now = new Date();
+      console.log('now ', now);
+      const pollResponsesToReward = await PollResponse.find(
+        {
+          endDate: { $lte: now },
+          isRewarded: false,
+        });
+
+
 
       console.log('pollResponsesToReward ', pollResponsesToReward);
       if (pollResponsesToReward.length > 0) {
@@ -212,24 +220,24 @@ pollsDB.asPromise().then(async (value) => {
 
             // It is critical that you store paymentId in your database
             // so that you don't double-pay the same user, by keeping track of the payment.
-            const paymentId = await pi.createPayment(paymentData);
-            console.log('paymentId', paymentId)
-            pollResponse.paymentId = paymentId;
-            await pollResponse.save();
+            //const paymentId = await pi.createPayment(paymentData);
+            // console.log('paymentId', paymentId)
+            // pollResponse.paymentId = paymentId;
+            // await pollResponse.save();
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
-            const txid = await pi.submitPayment(paymentId);
-            console.log('txid', txid)
-            pollResponse.txId = txid;
-            await pollResponse.save();
+            // const txid = await pi.submitPayment(paymentId);
+            // console.log('txid', txid)
+            // pollResponse.txId = txid;
+            // await pollResponse.save();
 
             // console.log('updated pollResponse', pollResponse)
 
-            const completedPayment = await pi.completePayment(paymentId, txid);
-            console.log('completedPayment', completedPayment)
+            // const completedPayment = await pi.completePayment(paymentId, txid);
+            // console.log('completedPayment', completedPayment)
 
-            pollResponse.isPaid = true;
-            await pollResponse.save();
+            // pollResponse.isPaid = true;
+            // await pollResponse.save();
 
           }
         //});
