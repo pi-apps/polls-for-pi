@@ -218,9 +218,20 @@ pollsDB.asPromise().then(async (value) => {
             }
 
           } else {
-            const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
-            console.log('cancelResp', cancelResp)
-            console.log('cancelResp.data', cancelResp.data)
+            const toCancelPollResponse = await PollResponse.findOne({ paymentId: paymentId });
+            console.log('incPollResponse', toCancelPollResponse);
+
+            try {
+              const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+              console.log('cancelResp', cancelResp)
+              console.log('cancelResp.data', cancelResp.data)
+            } catch (err) {
+              console.log('cancel err', err);
+              if (toCancelPollResponse) {
+                toCancelPollResponse.isPaid = true;
+                toCancelPollResponse.save();
+              }
+            }
 
           }
 
