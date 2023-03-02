@@ -8,6 +8,7 @@ import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import logger from 'morgan';
 import path from 'path';
+import PiNetwork from 'pi-backend';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payment_endpoints';
 import mountPollsAiEndpoints from './handlers/polls_ai';
@@ -151,7 +152,7 @@ app.listen(8000, async () => {
 const CronJob = require('cron').CronJob;
 
 // run every minute
-const CRON_SCHED = process.env.CRON_SCHED || "* * * * *";
+const CRON_SCHED = process.env.CRON_SCHED || "*/2 * * * *";
 console.log('CRON_SCHED', CRON_SCHED)
 
 const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
@@ -160,7 +161,7 @@ const CRON_LOGS = process.env.ENABLE_CRON_LOGS === "true" ;
 const apiKey = env.pi_api_key;
 const walletPrivateSeed = env.wallet_private_seed;
 const walletPublicKey = env.wallet_public_key;
-//const pi = new PiNetwork(apiKey, walletPrivateSeed);
+const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 pollsDB.asPromise().then(async (value) => {
   const job = new CronJob(CRON_SCHED, async function() {
@@ -169,23 +170,40 @@ pollsDB.asPromise().then(async (value) => {
       // incomplete payments
       const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
       console.log('incompletePayments', response.data.incomplete_server_payments);
-
       console.log('response.data.incomplete_server_payments.length', response.data.incomplete_server_payments.length)
 
       if (response.data.incomplete_server_payments.length > 0) {
         const incompletePayment = response.data.incomplete_server_payments[0];
         console.log('incompletePayment', incompletePayment);
         console.log('incompletePayment.metadata', incompletePayment.metadata);
-
         const {pollId, responseId} = incompletePayment.metadata;
+
         const pollResp = await PollResponse.findOne({ _id: responseId });
         console.log('pollResp', pollResp);
 
         const paymentId = pollResp?.paymentId;
-        const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+        console.log('incomplete payment paymentId', paymentId);
 
-        console.log('cancelResp', cancelResp)
-        console.log('cancelResp.data', cancelResp.data)
+        if (paymentId) {
+          const incPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+          console.log('incPayment.data', incPayment.data);
+
+          const { status }  = incPayment.data;
+          console.log('status', status);
+          if (status.transaction_verified === false) {
+            const cancelResp = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+            console.log('cancelResp', cancelResp)
+            console.log('cancelResp.data', cancelResp.data)
+
+          } else {
+            // const { transaction } = incPayment.data;
+            // const completeResp = await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid: transaction.txid });
+            // console.log('completeResp', completeResp)
+            // console.log('completeResp.data', completeResp.data)
+
+          }
+
+        }
       }
 
       // closed/expired polls
@@ -199,12 +217,10 @@ pollsDB.asPromise().then(async (value) => {
 
 
 
-      console.log('pollResponsesToReward ', pollResponsesToReward);
+      console.log('pollResponsesToReward.length', pollResponsesToReward.length);
       if (pollResponsesToReward.length > 0) {
-        console.log('pollResponsesToReward ', pollResponsesToReward);
-        const pollResponse = pollResponsesToReward[0];
-
-        //const promises = pollResponsesToReward.forEach(async (pollResponse: any) => {
+        for (let i = 0; i < pollResponsesToReward.length; i++) {
+          const pollResponse = pollResponsesToReward[i];
           console.log('pollResponse',pollResponse);
 
           if (pollResponse && !pollResponse.isRewarded) {
@@ -220,10 +236,10 @@ pollsDB.asPromise().then(async (value) => {
 
             // It is critical that you store paymentId in your database
             // so that you don't double-pay the same user, by keeping track of the payment.
-            //const paymentId = await pi.createPayment(paymentData);
-            // console.log('paymentId', paymentId)
-            // pollResponse.paymentId = paymentId;
-            // await pollResponse.save();
+            const paymentId = await pi.createPayment(paymentData);
+            console.log('paymentId', paymentId)
+            pollResponse.paymentId = paymentId;
+            await pollResponse.save();
 
             // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
             // const txid = await pi.submitPayment(paymentId);
@@ -253,6 +269,7 @@ pollsDB.asPromise().then(async (value) => {
         //   }
         // });
 
+        }
       }
     } catch (error) {
       console.log('cron job error', error);
