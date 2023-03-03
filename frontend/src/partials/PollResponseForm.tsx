@@ -1,12 +1,10 @@
 import {
-  Button, Form, Input, Modal, Selector
+  Button, Form, Input, Modal, Selector, Toast
 } from 'antd-mobile';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import pollsAPI from '../apis/pollsAPI';
 import PollResponseProps from '../types/PollResponseProps';
-
-import './PollStarter.css';
 
 const PollResponseForm = (props: PollResponseProps) => {
   const { responseUrl } = useParams();
@@ -48,12 +46,22 @@ const PollResponseForm = (props: PollResponseProps) => {
       })
       return;
     }
-    setLoading(true);
-    const result = await submitResponse(values.options[0])
-    setLoading(false);
-    console.log('onFinish result', result)
+    try {
+      setLoading(true);
+      const result = await submitResponse(values.options[0])
+      setLoading(false);
+      console.log('onFinish result', result)
 
-    navigate(`/polls/${responseUrl}/complete`);
+      navigate(`/polls/${responseUrl}/complete`);
+    } catch (err: any) {
+      const msg = err.response.data.message;
+      Toast.show({
+        icon: 'fail',
+        content: msg,
+        position: 'top',
+      })
+      navigate(`/polls/${responseUrl}/error`);
+    }
   }
 
   useEffect(() => {
@@ -77,7 +85,12 @@ const PollResponseForm = (props: PollResponseProps) => {
                 requiredMarkStyle='none'
                 onFinish={onFinish}
                 footer={
-                  <Button type='submit' color='primary' size='large' block>
+                  <Button
+                    block
+                    type='submit'
+                    color='primary'
+                    size='large'
+                  >
                     Submit
                   </Button>
                 }
@@ -97,13 +110,13 @@ const PollResponseForm = (props: PollResponseProps) => {
                   layout='vertical'
                   rules={[{ required: true, message: 'Please select one.' }]}
                 >
-                    <Selector
-                      columns={1}
-                      options={options.map((item, index) => {
-                        return { label: item, value: item }
-                      })}
-                    />
-                  </Form.Item>
+                  <Selector
+                    columns={1}
+                    options={options.map((item, index) => {
+                      return { label: item, value: item }
+                    })}
+                  />
+                </Form.Item>
               </Form>
               :
               <Button

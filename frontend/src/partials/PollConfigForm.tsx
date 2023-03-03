@@ -1,21 +1,13 @@
 import {
   Button, Form, Input, Selector, Stepper, Switch
 } from 'antd-mobile';
-import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WindowWithEnv from '../interfaces/WindowWithEnv';
+import pollsAPI from '../apis/pollsAPI';
 import HOCProps from '../types/HOCProps';
 
 import { options as distributionOptions } from './options';
 import './PollStarter.css';
-
-const _window: WindowWithEnv = window;
-const backendURL = _window.__ENV && (_window.__ENV.viteBackendURL || _window.__ENV.backendURL);
-console.log('_window.__ENV', _window.__ENV)
-console.log('backendURL', backendURL)
-
-const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
 const PollConfigForm = (props: HOCProps) => {
   const navigate = useNavigate()
@@ -48,7 +40,7 @@ const PollConfigForm = (props: HOCProps) => {
 
   const getPollOptions = async (prompt: string, optionsCount: number) => {
     console.log("get poll options ai API", { prompt, optionsCount });
-    const options = await axiosClient.post('/v1/polls_ai', { prompt, optionsCount });
+    const options = await pollsAPI.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 

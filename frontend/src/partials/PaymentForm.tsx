@@ -66,7 +66,8 @@ const PaymentForm = (props: HOCProps) => {
       return;
     }
 
-    const paymentData = { amount: grandTotal, memo: `poll:'${props.poll.title}'`, metadata: props.poll };
+    const { poll } = props;
+    const paymentData = { amount: grandTotal, memo: `poll:'${props.poll.title}'`, metadata: {...poll} };
     const callbacks = {
       onReadyForServerApproval,
       onReadyForServerCompletion,

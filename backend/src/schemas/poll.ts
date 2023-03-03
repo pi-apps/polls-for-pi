@@ -1,27 +1,6 @@
 import { Schema } from 'mongoose';
+import { IPoll } from '../types/poll';
 const { ObjectId } = Schema.Types;
-
-interface IPoll {
-  title: string;
-  status: string;
-  distribution: string;
-  options?: string[];
-  owner: {
-    uid: string;
-    username: string;
-  };
-  optionCount: number;
-  perResponseReward: number;
-  isLimitResponse: boolean;
-  responseLimit: number;
-  durationDays: number;
-  endDate: Date;
-  responses: any;
-  paid: boolean;
-  paymentId: string;
-  responseUrl: string;
-  isOpen: boolean;
-}
 
 const PollSchema = new Schema<IPoll>({
   title: {
@@ -49,6 +28,10 @@ const PollSchema = new Schema<IPoll>({
   },
   durationDays: {
     type: Number,
+  },
+  startDate: {
+    type: Date,
+    required: true,
   },
   endDate: {
     type: Date,

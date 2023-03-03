@@ -319,6 +319,17 @@ function App() {
       />
 
       <Route
+        path={"/polls/:responseUrl/error"}
+        element={
+          <PollResponseResult
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+          />
+        }
+      />
+
+      <Route
         path="/price_calc"
         element={
           <PriceCalculator

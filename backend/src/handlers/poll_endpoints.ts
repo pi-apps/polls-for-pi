@@ -2,6 +2,7 @@ import { Router } from "express";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import "../types/session";
+import { getEndDate } from "../utils/poll_utils";
 
 export default function mountPollEndpoints(router: Router, models: any) {
   router.post('/', async (req, res) => {
@@ -24,9 +25,8 @@ export default function mountPollEndpoints(router: Router, models: any) {
     _.extend(item, req.body.poll);
     item.responseUrl = responseUrl;
 
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + poll.durationDays);
-    item.endDate = endDate;
+    item.startDate = new Date();
+    item.endDate = getEndDate(poll);
     await item.save();
 
     console.log('post poll item', item)
@@ -150,13 +150,14 @@ export default function mountPollEndpoints(router: Router, models: any) {
     console.log('existing user resp', userResp);
 
     // If already responded
-    if (userResp && userResp.length > 0) {
+    if (userResp) {
+      console.log('user already responsed');
       return res.status(400).json({ message: "User already responded." });
     }
 
     const newResp = new PollResponse();
     _.extend(newResp, pollResp);
-    newResp.endDate = item.endDate;
+    newResp.endDate = getEndDate(item);
     newResp.reward = item.perResponseReward;
     newResp.pollTitle = item.title;
     newResp.pollId = item._id;
