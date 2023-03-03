@@ -1,23 +1,25 @@
 import { ConfigProvider, theme, Typography } from 'antd';
 import {
-  Button, Form, Skeleton
+  Button, ErrorBlock, Form, Skeleton, Tabs
 } from 'antd-mobile';
+import { HistogramOutline, PieOutline, UnorderedListOutline } from 'antd-mobile-icons';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useNavigate } from 'react-router-dom';
 import ListItemPollProps from '../types/ListItemPollProps';
+import ColumnChart from './charts/ColumnChart';
+import PieChart from './charts/PieChart';
+import TableList from './charts/TableList';
 const { Link } = Typography;
 
-import './PollStarter.css';
+import './ListItemLinksForm.css';
 
-const ListItemLinksForm = (props: ListItemPollProps ) => {
+const ListItemLinksForm = (props: ListItemPollProps) => {
   const { poll } = props;
   const navigate = useNavigate()
 
   const toRoot = () => {
     navigate('/', { state: { message: 'Home', type: 'success' } })
   }
-
-  console.log('poll', props.poll);
 
   return (
     <section>
@@ -32,6 +34,7 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
                 requiredMarkStyle='none'
                 style={{width: '100%'}}
               >
+                <Form.Header>POLL: {poll.title}</Form.Header>
                 <Form.Item
                   name='responseUrl'
                   label='Response URL'
@@ -60,7 +63,68 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
                 </Form.Item>
                 <>
                   <h1 className="pl-3">Responses</h1>
-                  <DemoPie />
+                  <Tabs>
+                    <Tabs.Tab title={<PieOutline />} key='pie'>
+                      {props.poll?.responses?.length > 0 ?
+                        <PieChart {...props} />
+                        :
+                        <ErrorBlock
+                          title='Nothing to see here.'
+                          status='empty'
+                          description={
+                            <span>
+                              No responses collected yet.
+                            </span>
+                          }
+                          style={{
+                            '--image-height': '150px',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
+                          }}
+                        />
+                      }
+                    </Tabs.Tab>
+                    <Tabs.Tab title={<HistogramOutline />} key='bar'>
+                      {props.poll?.responses?.length > 0 ?
+                        <ColumnChart {...props} />
+                        :
+                        <ErrorBlock
+                          title='Nothing to see here.'
+                          status='empty'
+                          description={
+                            <span>
+                              No responses collected yet.
+                            </span>
+                          }
+                          style={{
+                            '--image-height': '150px',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
+                          }}
+                        />
+                      }
+                    </Tabs.Tab>
+                    <Tabs.Tab title={<UnorderedListOutline />} key='table'>
+                      {props.poll?.responses?.length > 0 ?
+                        <TableList {...props} />
+                        :
+                        <ErrorBlock
+                          title='Nothing to see here.'
+                          status='empty'
+                          description={
+                            <span>
+                              No responses collected yet.
+                            </span>
+                          }
+                          style={{
+                            '--image-height': '150px',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
+                          }}
+                        />
+                      }
+                    </Tabs.Tab>
+                  </Tabs>
                 </>
               </Form>
               :
@@ -79,46 +143,5 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
     </section>
   );
 }
-
-import { Pie } from '@ant-design/plots';
-
-const DemoPie = () => {
-  const data = [
-    {
-      type: 'Yes',
-      value: 50,
-    },
-    {
-      type: 'No',
-      value: 25,
-    },
-    {
-      type: 'Maybe',
-      value: 25,
-    },
-  ];
-  const config = {
-    appendPadding: 10,
-    data,
-    angleField: 'value',
-    colorField: 'type',
-    radius: 0.9,
-    label: {
-      type: 'inner',
-      offset: '-30%',
-      content: (item: any) => `${(item.percent * 100).toFixed(0)}%`,
-      style: {
-        fontSize: 14,
-        textAlign: 'center',
-      },
-    },
-    interactions: [
-      {
-        type: 'element-active',
-      },
-    ],
-  };
-  return <Pie {...config} />;
-};
 
 export default ListItemLinksForm;

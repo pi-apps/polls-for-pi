@@ -144,10 +144,10 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           },
           paymentId,
           responseUrl,
+          startDate: new Date(),
+          endDate: getEndDate(pollReq),
         }
       );
-      unpaidPoll.startDate = new Date();
-      unpaidPoll.endDate = getEndDate(pollReq);
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
@@ -182,7 +182,6 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
 
     const { Poll, } = models;
-
 
     const unpaidPoll = await Poll.findOne({ paymentId });
     console.log('unpaidPoll', unpaidPoll);
