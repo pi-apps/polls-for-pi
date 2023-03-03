@@ -1,15 +1,18 @@
 import { ConfigProvider, theme, Typography } from 'antd';
 import {
-  Button, Form, Skeleton
+  Button, Form, List, Skeleton, Tabs
 } from 'antd-mobile';
+import { HistogramOutline, PieOutline, UnorderedListOutline } from 'antd-mobile-icons';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useNavigate } from 'react-router-dom';
 import ListItemPollProps from '../types/ListItemPollProps';
+import ColumnChart from './charts/ColumnChart';
+import PieChart from './charts/PieChart';
 const { Link } = Typography;
 
 import './PollStarter.css';
 
-const ListItemLinksForm = (props: ListItemPollProps ) => {
+const ListItemLinksForm = (props: ListItemPollProps) => {
   const { poll } = props;
   const navigate = useNavigate()
 
@@ -60,7 +63,21 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
                 </Form.Item>
                 <>
                   <h1 className="pl-3">Responses</h1>
-                  <DemoPie />
+                  <Tabs>
+                    <Tabs.Tab title={<PieOutline />} key='pie'>
+                      <PieChart {...props} />
+                    </Tabs.Tab>
+                    <Tabs.Tab title={<HistogramOutline />} key='bar'>
+                      <ColumnChart {...props} />
+                    </Tabs.Tab>
+                    <Tabs.Tab title={<UnorderedListOutline />} key='table'>
+                      <List header='基础用法'>
+                        <List.Item>1</List.Item>
+                        <List.Item>2</List.Item>
+                        <List.Item>3</List.Item>
+                      </List>
+                    </Tabs.Tab>
+                  </Tabs>
                 </>
               </Form>
               :
@@ -79,46 +96,5 @@ const ListItemLinksForm = (props: ListItemPollProps ) => {
     </section>
   );
 }
-
-import { Pie } from '@ant-design/plots';
-
-const DemoPie = () => {
-  const data = [
-    {
-      type: 'Yes',
-      value: 50,
-    },
-    {
-      type: 'No',
-      value: 25,
-    },
-    {
-      type: 'Maybe',
-      value: 25,
-    },
-  ];
-  const config = {
-    appendPadding: 10,
-    data,
-    angleField: 'value',
-    colorField: 'type',
-    radius: 0.9,
-    label: {
-      type: 'inner',
-      offset: '-30%',
-      content: (item: any) => `${(item.percent * 100).toFixed(0)}%`,
-      style: {
-        fontSize: 14,
-        textAlign: 'center',
-      },
-    },
-    interactions: [
-      {
-        type: 'element-active',
-      },
-    ],
-  };
-  return <Pie {...config} />;
-};
 
 export default ListItemLinksForm;
