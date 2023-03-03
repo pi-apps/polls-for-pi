@@ -1,23 +1,12 @@
 import { Schema } from 'mongoose';
+import { IPollResponse } from '../types/poll_response';
 const { ObjectId } = Schema.Types;
 
-interface IResponse {
-  responseUrl: string;
-  username: string;
-  uid: string;
-  response: string;
-  isRewarded: boolean;
-  reward: number;
-  paymentId: string;
-  isPaid: boolean;
-  isCancelled: boolean;
-  endDate: Date;
-  pollTitle: string;
-  pollId: string;
-  txId: string;
-}
-
-const PollResponseSchema = new Schema<IResponse>({
+const PollResponseSchema = new Schema<IPollResponse>({
+  // Parent Poll's Payment ID
+  pollPaymentId: {
+    type: String
+  },
   responseUrl: {
     type: String,
     required: true,

@@ -175,8 +175,6 @@ const PollWizardSteps = (props: HOCProps) => {
 
   };
 
-  console.log('thisReward', thisReward)
-
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative bg-white dark:bg-black">
