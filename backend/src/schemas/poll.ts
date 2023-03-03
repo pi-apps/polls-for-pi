@@ -1,14 +1,6 @@
 import { Schema } from 'mongoose';
 const { ObjectId } = Schema.Types;
 
-interface IResponse {
-  responseUrl: string;
-  username: string;
-  response: string;
-  isRewarded: boolean;
-  reward: number;
-}
-
 interface IPoll {
   title: string;
   status: string;
@@ -29,39 +21,7 @@ interface IPoll {
   paymentId: string;
   responseUrl: string;
   isOpen: boolean;
-  isRewardsDistributed: boolean;
 }
-
-const ResponseSchema = new Schema<IResponse>({
-  responseUrl: {
-    type: String,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  response: {
-    type: String,
-    required: true,
-  },
-  isRewarded: {
-    type: Boolean
-  },
-  reward: {
-    type: Number
-  }
-});
-ResponseSchema.index(
-  { responseUrl: 1, username: 1 },
-  {
-    unique: true,
-    partialFilterExpression: {
-      responseUrl: {$exists:true},
-      username: {$exists:true}
-    }
-  }
-)
 
 const PollSchema = new Schema<IPoll>({
   title: {
@@ -102,9 +62,6 @@ const PollSchema = new Schema<IPoll>({
   isOpen: {
     type: Boolean,
   },
-  isRewardsDistributed: {
-    type: Boolean,
-  },
   // owner: {
   //   type: ObjectId,
   //   ref: 'User',
@@ -117,10 +74,12 @@ const PollSchema = new Schema<IPoll>({
   },
   paymentId: {
     type: String,
+    unique: true,
   },
-  responses: [
-    ResponseSchema
-  ],
+  responses: [{
+    type: ObjectId,
+    ref: 'PollResponse',
+  }],
   owner: {
     uid: String,
     username: String,

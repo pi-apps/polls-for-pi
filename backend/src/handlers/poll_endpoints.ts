@@ -134,7 +134,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
   router.post('/:responseUrl/responses', async (req, res) => {
     console.log('submitting response', req.body);
 
-    const { Poll } = models;
+    const { Poll, PollResponse } = models;
     const { responseUrl } = req.params;
     const item = await Poll.findOne({ responseUrl });
 
@@ -143,10 +143,10 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
-    const { username, response } = req.body;
-    const pollResp = { username, response, responseUrl };
+    const { username, response, uid } = req.body;
+    const pollResp = { username, uid, response, responseUrl };
     console.log('poll resp', pollResp);
-    const userResp = await Poll.find({ responseUrl, 'responses.username': username})
+    const userResp = await PollResponse.findOne({ responseUrl, username});
     console.log('existing user resp', userResp);
 
     // If already responded
@@ -154,7 +154,17 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "User already responded." });
     }
 
-    item.responses.push(pollResp);
+    const newResp = new PollResponse();
+    _.extend(newResp, pollResp);
+    newResp.endDate = item.endDate;
+    newResp.reward = item.perResponseReward;
+    newResp.pollTitle = item.title;
+    newResp.pollId = item._id;
+    newResp.responseUrl = item.responseUrl;
+    await newResp.save();
+    console.log('newResp', newResp)
+
+    item.responses.push(newResp);
     await item.save();
     console.log('updated poll', item);
 

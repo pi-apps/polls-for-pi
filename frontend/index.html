@@ -40,6 +40,8 @@
         viteBackendURL: "<%= VITE_BACKEND_URL %>",
         viteSandbox: "<%= VITE_SANDBOX_SDK %>",
         viteLocalhost: "<%= VITE_LOCALHOST %>",
+        viteTestUser: "<%= VITE_TEST_USER %>",
+        viteTestUid: "<%= VITE_TEST_UID %>",
       }
     </script>
 
@@ -51,6 +53,7 @@
       // Make the decision whether Pi SDK should run in "Sandbox" mode or "Pi Browser" mode based on the
       // dedicated environment variable:
       var runSDKInSandboxMode = (window.__ENV.sandbox === "true" || window.__ENV.viteSandbox === "true"); // treat env vars as strings, not booleans
+      console.log('runSDKInSandboxMode', runSDKInSandboxMode);
 
       // Init Pi SDK:
       Pi.init({ version: "2.0", sandbox: runSDKInSandboxMode });

@@ -15,7 +15,9 @@ export default ({mode}) => {
       REACT_APP_SANDBOX_SDK: process.env.REACT_APP_SANDBOX_SDK,
       VITE_BACKEND_URL: process.env.VITE_BACKEND_URL,
       VITE_SANDBOX_SDK: process.env.VITE_SANDBOX_SDK,
-      VITE_LOCALHOST: process.env.VITE_LOCALHOST
+      VITE_LOCALHOST: process.env.VITE_LOCALHOST,
+      VITE_TEST_USER: process.env.VITE_TEST_USER,
+      VITE_TEST_UID:  process.env.VITE_TEST_UID
     },
     css: {
       postcss,
@@ -31,7 +33,9 @@ export default ({mode}) => {
             REACT_APP_SANDBOX_SDK: env.REACT_APP_SANDBOX_SDK,
             VITE_BACKEND_URL: env.VITE_BACKEND_URL,
             VITE_SANDBOX_SDK: env.VITE_SANDBOX_SDK,
-            VITE_LOCALHOST: env.VITE_LOCALHOST
+            VITE_LOCALHOST: env.VITE_LOCALHOST,
+            VITE_TEST_USER: env.VITE_TEST_USER,
+            VITE_TEST_UID:  env.VITE_TEST_UID
           }
         }
       }),

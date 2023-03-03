@@ -134,6 +134,8 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const unpaidPoll = new Poll();
       const responseUrl = uuidv4();
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + pollReq.durationDays);
       _.extend(unpaidPoll,
         {
           ...pollReq,
@@ -145,6 +147,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           responseUrl,
         }
       );
+      unpaidPoll.endDate = endDate;
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
