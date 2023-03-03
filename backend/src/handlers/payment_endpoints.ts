@@ -135,7 +135,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const unpaidPoll = new Poll();
       const responseUrl = uuidv4();
-      _.extend(unpaidPoll,
+      _.assign(unpaidPoll,
         {
           ...pollReq,
           owner: {
@@ -182,7 +182,6 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
 
     const { Poll, } = models;
-
 
     const unpaidPoll = await Poll.findOne({ paymentId });
     console.log('unpaidPoll', unpaidPoll);

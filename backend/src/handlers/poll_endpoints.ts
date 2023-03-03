@@ -24,6 +24,8 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     _.extend(item, req.body.poll);
     item.responseUrl = responseUrl;
+    if (paymentId) item.paymentId = paymentId;
+    item.owner = { ...user }
 
     item.startDate = new Date();
     item.endDate = getEndDate(poll);
@@ -36,33 +38,34 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
   router.get('/', async (req, res) => {
     const { Poll } = models;
-    const { filter, responseUrl } = req.query;
+    const { filter, responseUrl, username } = req.query;
     console.log('filter', filter)
 
     let items = [];
     if (filter) {
-      items = await Poll.find({ filter });
+      items = await Poll.find({ filter }).populate('responses');
     } else if (responseUrl) {
-      items = await Poll.find({ filter });
+      items = await Poll.find({ filter }).populate('responses');
     } else {
-      items = await Poll.find({ });
+      items = await Poll.find({ 'owner.username': username }).populate('responses');
     }
 
     // order doesn't exist
-    if (!items || items.length <= 0) {
-      return res.status(400).json({ message: "No polls found." });
-    }
+    // if (!items || items.length <= 0) {
+    //   return res.status(400).json({ message: "No polls found." });
+    // }
 
     return res.status(200).json({ data: items });
   });
 
-  router.get('/:_id', async (req, res) => {
-    const { _id } = req.params;
-    console.log('_id', _id)
-    const { Poll } = models;
-    const item = await Poll.findOne({ _id });
+  router.get('/:pollId', async (req, res) => {
+    const { pollId } = req.params;
+    console.log('pollId', pollId)
 
-    console.log('_id', _id)
+    const { Poll } = models;
+    const item = await Poll.findOne({ _id: pollId })
+      .populate('responses');
+    console.log('poll', item)
 
     // order doesn't exist
     if (!item) {
@@ -121,7 +124,8 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     const { Poll } = models;
     const { responseUrl } = req.params;
-    const item = await Poll.findOne({ responseUrl });
+    const item = await Poll.findOne({ responseUrl })
+      .populate('responses');
 
     // poll doesn't exist
     if (!item) {

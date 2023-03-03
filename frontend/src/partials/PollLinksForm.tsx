@@ -25,14 +25,12 @@ const PollLinksForm = (props: HOCProps) => {
   const getPoll = async (pollId: string | undefined) => {
     console.log("get poll id", pollId);
     const resp = await pollsAPI.get(`/v1/polls/${pollId}`);
-    console.log('resp.data.data', resp.data.data);
     setPoll(resp.data.data)
   }
 
   useEffect(() => {
     getPoll(_id);
   }, []);
-  console.log('poll', poll);
 
   const navigateToDashboard = () => {
     navigate("/dashboard/polls")
