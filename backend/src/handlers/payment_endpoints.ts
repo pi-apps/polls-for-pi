@@ -135,17 +135,17 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       const unpaidPoll = new Poll();
       const responseUrl = uuidv4();
-      _.assign(unpaidPoll,
+      _.extend(unpaidPoll,
         {
           ...pollReq,
           owner: {
             uid: user.uid,
             username: user.username
           },
-          paymentId,
-          responseUrl,
         }
       );
+      unpaidPoll.paymentId = paymentId;
+      unpaidPoll.responseUrl = responseUrl;
       unpaidPoll.startDate = new Date();
       unpaidPoll.endDate = getEndDate(pollReq);
       await unpaidPoll.save();
