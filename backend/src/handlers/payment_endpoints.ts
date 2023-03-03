@@ -142,12 +142,12 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
             uid: user.uid,
             username: user.username
           },
+          paymentId,
+          responseUrl,
+          startDate: new Date(),
+          endDate: getEndDate(pollReq),
         }
       );
-      unpaidPoll.paymentId = paymentId;
-      unpaidPoll.responseUrl = responseUrl;
-      unpaidPoll.startDate = new Date();
-      unpaidPoll.endDate = getEndDate(pollReq);
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
