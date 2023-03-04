@@ -87,14 +87,14 @@ const PollResponseHeader = (props: PollResponseProps)  => {
                     Get Started
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
                     Demo
                   </Link>
                 </li>
                 <li>
                   <Link to="/pricing" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Pricing</Link>
-                </li>
+                </li> */}
               </ul>
               }
 
@@ -103,7 +103,22 @@ const PollResponseHeader = (props: PollResponseProps)  => {
                 className="flex grow justify-end flex-wrap items-center"
               >
                 <li>
-                  <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
+                  {/* <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link> */}
+                  {props.user ?
+                    <span>@{props.user.username}</span>
+                    :
+                    <Button
+                      size='mini'
+                      color='primary' fill='none'
+                      onClick={props.onSignIn}
+                      style={{
+                        paddingLeft: '0px'
+                      }}
+                      loading={props.signingIn}
+                    >
+                      Sign in
+                    </Button>
+                  }
                 </li>
                 {/* <li>
                   <Link to="/signup" className="btn-sm text-white bg-purple-600 hover:bg-purple-700 ml-3">Sign up</Link>

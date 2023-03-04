@@ -122,14 +122,14 @@ const Header = (props: HOCProps)  => {
                     Get Started
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
                     Demo
                   </Link>
                 </li>
                 <li>
                   <Link to="/pricing" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Pricing</Link>
-                </li>
+                </li> */}
                 {/* <li>
                   <Link to="/blog" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">Blog</Link>
                 </li>
@@ -205,12 +205,12 @@ const Header = (props: HOCProps)  => {
                 <li>
                   <Link to="/get_started" className="flex text-gray-300 hover:text-gray-200 py-2">Get Started</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/demo" className="flex text-gray-300 hover:text-gray-200 py-2">Demo</Link>
                 </li>
                 <li>
                   <Link to="/pricing" className="flex text-gray-300 hover:text-gray-200 py-2">Pricing</Link>
-                </li>
+                </li> */}
                 {/* <li>
                   <Link to="/blog" className="flex text-gray-300 hover:text-gray-200 py-2">Blog</Link>
                 </li>
