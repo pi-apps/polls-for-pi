@@ -177,7 +177,18 @@ const Header = (props: HOCProps)  => {
                   </Dropdown>
                 </li>
                 <li>
-                  <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
+                  {/* <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link> */}
+                  <Button
+                    size='mini'
+                    color='primary' fill='none'
+                    onClick={props.onSignIn}
+                    style={{
+                      paddingLeft: '0px'
+                    }}
+                    loading={props.signingIn}
+                  >
+                    Sign in
+                  </Button>
                 </li>
                 {/* <li>
                   <Link to="/signup" className="btn-sm text-white bg-purple-600 hover:bg-purple-700 ml-3">Sign up</Link>

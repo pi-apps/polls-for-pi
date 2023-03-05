@@ -19,7 +19,6 @@ console.log('backendURL', backendURL)
 const axiosClient = axios.create({ baseURL: `${backendURL}`, timeout: 20000, withCredentials: true });
 
 const ListItemPollForm = (props: ListItemPollProps ) => {
-  const { poll } = props;
   const navigate = useNavigate()
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,6 +31,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
   }
 
   const patchPoll = async (poll: Poll) => {
+    console.log('patch poll', poll)
     const updatedPoll = await axiosClient.put(`/v1/polls/${poll._id}`, {
       title: poll.title,
       distribution: poll.distribution,
@@ -46,6 +46,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
   }
 
   const onFinish = async (values: any) => {
+    console.log('values', values)
     setLoading(true);
     const patchedPoll: any = await patchPoll(props.poll);
     setLoading(false);
@@ -56,8 +57,6 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
     Toast.show('Poll successfully updated!');
   }
 
-  console.log('poll', props.poll);
-
   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
@@ -65,7 +64,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
         <div className="relative pt-10 md:pt-10">
           {/* Section header */}
           <div className="max-w-3xl mx-auto">
-            {poll.title ?
+            {props.poll.title ?
               <Form
                 layout='horizontal'
                 requiredMarkStyle='none'
@@ -101,12 +100,12 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                   name='title'
                   label='Title'
                   rules={[{ required: true, message: 'Title is required' }]}
-                  initialValue={poll.title}
+                  initialValue={props.poll.title}
                   layout="vertical"
                 >
                   <Input
                     onChange={(value) => {
-                      poll.title = value;
+                      props.poll.title = value;
                     }}
                     placeholder='Poll Title'
                   />
@@ -123,13 +122,13 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                       message: 'Should have at least two options'
                     },
                   ]}
-                  initialValue={poll?.optionCount}
+                  initialValue={props.poll?.optionCount}
                   disabled={true}
                 >
                   <Stepper
                     max={10}
                     onChange={value => {
-                      poll.optionCount = value;
+                      props.poll.optionCount = value;
                     }}
                   />
                 </Form.Item>
@@ -137,14 +136,14 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                   name='isLimited'
                   label='Will it limit the number of responses?'
                   childElementPosition='right'
-                  initialValue={poll.isLimitResponse}
+                  initialValue={props.poll.isLimitResponse}
                   disabled={true}
                 >
                   <Switch
                     uncheckedText='No' checkedText='Yes'
-                    checked={poll.isLimitResponse}
+                    checked={props.poll.isLimitResponse}
                     onChange={isLimitResponse => {
-                      poll.isLimitResponse = isLimitResponse;
+                      props.poll.isLimitResponse = isLimitResponse;
                     }}
                   />
                 </Form.Item>
@@ -160,14 +159,14 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                       message: 'Should gather at least one response'
                     },
                   ]}
-                  initialValue={poll.responseLimit}
+                  initialValue={props.poll.responseLimit}
                 >
                   <Stepper
                     step={10}
                     min={0}
                     max={1000}
                     onChange={value => {
-                      poll.responseLimit = value;
+                      props.poll.responseLimit = value;
                     }}
                   />
                 </Form.Item>
@@ -175,7 +174,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                   name='perResponseReward'
                   label='How much incentive would you like each response to get?'
                   childElementPosition='right'
-                  initialValue={poll.perResponseReward}
+                  initialValue={props.poll.perResponseReward}
                   disabled={true}
                 >
                   <Stepper
@@ -192,7 +191,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                   name='duration'
                   label='For how long will you gather responses?'
                   childElementPosition='right'
-                  initialValue={poll.durationDays}
+                  initialValue={props.poll.durationDays}
                   rules={[
                     {
                       min: 1,
@@ -211,14 +210,14 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                     max={90}
                     formatter={value => `${value} days`}
                     onChange={value => {
-                      poll.durationDays = value;
+                      props.poll.durationDays = value;
                     }}
                   />
                 </Form.Item>
                 <Form.Item
                   name='distribution'
                   label='When will you distribute the incentives?'
-                  initialValue={[poll?.distribution]}
+                  initialValue={[props.poll.distribution]}
                   layout='vertical'
                   rules={[{ required: true, message: 'Distribution method is required' }]}
                   disabled={true}
@@ -227,13 +226,13 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                     columns={2}
                     options={distributionOptions}
                     onChange={(arr, extend) => {
-                      poll.distribution = arr[0];
+                      props.poll.distribution = arr[0];
                     }}
                   />
                 </Form.Item>
                 <>
                   <List header='Options'>
-                    {poll.options?.map((item, index) =>
+                    {props.poll.options?.map((item, index) =>
                       <Form.Item
                         name={item}
                         key={item}
@@ -241,8 +240,8 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                       >
                         <Input
                           onChange={(value) => {
-                            if (poll.options) {
-                              poll.options[index] = value;
+                            if (props.poll.options) {
+                              props.poll.options[index] = value;
                             }
                           }}
                           placeholder={item}

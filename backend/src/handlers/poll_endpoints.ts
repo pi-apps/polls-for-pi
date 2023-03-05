@@ -9,19 +9,13 @@ export default function mountPollEndpoints(router: Router, models: any) {
     const { Poll } = models;
     const item = new Poll();
 
-    console.log('req.body', req.body)
     const { poll, user, paymentId } = req.body;
-    console.log('poll', poll)
-    console.log('user', user)
-    console.log('paymentId', paymentId)
 
     if (!req.body.poll.title) {
       return res.status(400).json({ message: "Poll should have a name." });
     }
 
     const responseUrl = uuidv4();
-    console.log('response url', responseUrl);
-
     _.extend(item, req.body.poll);
     item.responseUrl = responseUrl;
     if (paymentId) item.paymentId = paymentId;
@@ -31,15 +25,12 @@ export default function mountPollEndpoints(router: Router, models: any) {
     item.endDate = getEndDate(poll);
     await item.save();
 
-    console.log('post poll item', item)
-
     return res.status(200).json({ data: item });
   });
 
   router.get('/', async (req, res) => {
     const { Poll } = models;
     const { filter, responseUrl, username } = req.query;
-    console.log('filter', filter)
 
     let items = [];
     if (filter) {
@@ -60,12 +51,9 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
   router.get('/:pollId', async (req, res) => {
     const { pollId } = req.params;
-    console.log('pollId', pollId)
-
     const { Poll } = models;
     const item = await Poll.findOne({ _id: pollId })
       .populate('responses');
-    console.log('poll', item)
 
     // order doesn't exist
     if (!item) {
@@ -89,7 +77,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     item.paid = true;
     await item.save();
-    console.log('patched poll', item);
 
     return res.status(200).json({ data: item });
   });
@@ -106,15 +93,15 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
-    _.assign(item, ...req.body)
-    const options: string[] = req.body.options;
+    const { title, options } = req.body;
+    item.title = title;
+
     if (!_.isEmpty(options)) {
       options.forEach((option: string, index: number) => {
         item.options[index] = option;
       })
     }
     await item.save();
-    console.log('updated poll', item);
 
     return res.status(200).json({ data: item });
   });
@@ -149,9 +136,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     const { username, response, uid } = req.body;
     const pollResp = { username, uid, response, responseUrl };
-    console.log('poll resp', pollResp);
     const userResp = await PollResponse.findOne({ responseUrl, username});
-    console.log('existing user resp', userResp);
 
     // If already responded
     if (userResp) {
@@ -167,28 +152,25 @@ export default function mountPollEndpoints(router: Router, models: any) {
     newResp.pollId = item._id;
     newResp.responseUrl = item.responseUrl;
     await newResp.save();
-    console.log('newResp', newResp)
 
     item.responses.push(newResp);
     await item.save();
-    console.log('updated poll', item);
 
     return res.status(200).json({ data: item });
   });
 
-  router.delete('/:_id', async (req, res) => {
-    const { _id } = req.params;
-    console.log('_id', _id)
+  // router.delete('/:_id', async (req, res) => {
+  //   const { _id } = req.params;
 
-    const { Product } = models;
+  //   const { Product } = models;
 
-    try {
-      const item = await Product.findOneAndDelete({ _id });
-      res.status(200).send({ data: item, message: "Product successfully deleted!" });
-    } catch (error) {
-      console.log('error', error)
-      return res.status(400).json({ message: "Error deleting product." });
-    }
-  });
+  //   try {
+  //     const item = await Product.findOneAndDelete({ _id });
+  //     res.status(200).send({ data: item, message: "Product successfully deleted!" });
+  //   } catch (error) {
+  //     console.log('error', error)
+  //     return res.status(400).json({ message: "Error deleting product." });
+  //   }
+  // });
 
 }
