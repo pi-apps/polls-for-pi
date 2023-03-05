@@ -94,8 +94,9 @@ const PaymentForm = (props: HOCProps) => {
   const onReadyForServerApproval = async (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
     pollsAPI.post('/payments/approve', {paymentId, user: props.user, poll: props.poll }, config);
-    const unpaidPoll = await pollsAPI.post('/v1/polls', {paymentId, user: props.user, poll: props.poll }, config);
-    console.log('unpaidPoll', unpaidPoll)
+    // new poll document created inside /payments/approve API
+    //const unpaidPoll = await pollsAPI.post('/v1/polls', {paymentId, user: props.user, poll: props.poll }, config);
+    //console.log('unpaidPoll', unpaidPoll)
   }
 
   const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
