@@ -5,6 +5,7 @@ import "../types/session";
 import { getEndDate } from "../utils/poll_utils";
 
 export default function mountPollEndpoints(router: Router, models: any) {
+  // endpoin for
   router.post('/', async (req, res) => {
     const { Poll } = models;
     const item = new Poll();
@@ -134,6 +135,11 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
+    // max responses reached
+    if (item.responses.length >= item.responseLimit) {
+      return res.status(400).json({ message: "Poll response limit reached." });
+    }
+
     const { username, response, uid } = req.body;
     const pollResp = { username, uid, response, responseUrl };
     const userResp = await PollResponse.findOne({ responseUrl, username});
@@ -154,6 +160,9 @@ export default function mountPollEndpoints(router: Router, models: any) {
     await newResp.save();
 
     item.responses.push(newResp);
+    if (item.responses.length >= item.responseLimit) {
+      item.isOpen = false;
+    }
     await item.save();
 
     return res.status(200).json({ data: item });

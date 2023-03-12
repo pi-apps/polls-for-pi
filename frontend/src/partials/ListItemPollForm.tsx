@@ -34,13 +34,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
     console.log('patch poll', poll)
     const updatedPoll = await axiosClient.put(`/v1/polls/${poll._id}`, {
       title: poll.title,
-      distribution: poll.distribution,
       options: poll.options,
-      optionCount: poll.optionCount,
-      perResponseReward: poll.perResponseReward,
-      isLimitResponse: poll.isLimitResponse,
-      responseLimit: poll.responseLimit,
-      durationDays: poll.durationDays,
     });
     return updatedPoll.data.data;
   }

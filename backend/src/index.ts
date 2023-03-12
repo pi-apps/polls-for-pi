@@ -291,7 +291,13 @@ pollsDB.asPromise().then(async (value) => {
               const paymentData = {
                 amount: pollResponse.reward,
                 memo: `Reward for poll: '${pollResponse.pollTitle}'`, // this is just an example
-                metadata: { pollId: pollResponse.pollId, responseId: pollResponse._id },
+                metadata: {
+                  app: "polls-for-pi/v1",
+                  pollId: pollResponse.pollId,
+                  responseId: pollResponse._id,
+                  pollTitle: pollResponse.pollTitle,
+                  response: pollResponse.response,
+                },
                 uid: userUid
               };
               console.log('paymentData', paymentData);
