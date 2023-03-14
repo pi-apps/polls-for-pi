@@ -1,8 +1,10 @@
 import { Input } from 'antd';
 import { Link } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-import './PollStarter.css';
+import './Markdown.css';
 
 const { Search } = Input;
 
@@ -14,8 +16,17 @@ const PrivacyPolicyComponent = (props: HOCProps) => {
         <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
           {/* Section header */}
           <div className="max-w-3xl mx-auto pb-12 md:pb-16">
-            <p className="text-xl mb-8" data-aos="fade-up" data-aos-delay="200">
-## POLLS FOR PI PRIVACY POLICY
+            <ReactMarkdown children={markdownContent} remarkPlugins={[remarkGfm]} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const markdownContent = `
+# POLLS FOR PI PRIVACY POLICY
+
 ## Effective date: March 6, 2023
 
 Blurtopian (@blurtopian) ("us", "we", or "our") provides and operates Polls for Pi (the "Service").
@@ -217,12 +228,6 @@ If you have questions or comments about this notice, you may contact our Data Pr
 ### HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?
 
 Based on the applicable laws of your country, you may have the right to request access to the information we collect from you, change that information, or delete it in some circumstances. To request to review, update, or delete your information, please contact us via our email at blurtopian@gmail.com .
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+`;
 
 export default PrivacyPolicyComponent;

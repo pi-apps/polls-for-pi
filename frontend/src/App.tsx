@@ -332,7 +332,7 @@ function App() {
 
 
       <Route
-        path="/price_calc"
+        path="/privacy"
         element={
           <PrivacyPolicy
             onSignIn={signIn} onSignOut={signOut} user={user}
