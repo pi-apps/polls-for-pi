@@ -122,6 +122,11 @@ const Header = (props: HOCProps)  => {
                     Get Started
                   </Link>
                 </li>
+                <li>
+                  <Link to="/privacy" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
+                    Privacy
+                  </Link>
+                </li>
                 {/* <li>
                   <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
                     Demo
@@ -215,6 +220,9 @@ const Header = (props: HOCProps)  => {
               <ul className="bg-gray-800 px-4 py-2">
                 <li>
                   <Link to="/get_started" className="flex text-gray-300 hover:text-gray-200 py-2">Get Started</Link>
+                </li>
+                <li>
+                  <Link to="/privacy" className="flex text-gray-300 hover:text-gray-200 py-2">Privacy</Link>
                 </li>
                 {/* <li>
                   <Link to="/demo" className="flex text-gray-300 hover:text-gray-200 py-2">Demo</Link>
