@@ -28,6 +28,7 @@ import PriceCalculator from './pages/PriceCalculator';
 import PaymentDTO from './types/PaymentDTO';
 import { Poll } from './types/Poll';
 import { AuthResult, User } from './types/UserType';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 // Make TS accept the existence of our window.__ENV object - defined in index.html:
 const _window: WindowWithEnv = window;
@@ -325,6 +326,20 @@ function App() {
             onSignIn={signIn} onSignOut={signOut} user={user}
             signingIn={signingIn}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+          />
+        }
+      />
+
+
+      <Route
+        path="/price_calc"
+        element={
+          <PrivacyPolicy
+            onSignIn={signIn} onSignOut={signOut} user={user}
+            signingIn={signingIn}
+            showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />

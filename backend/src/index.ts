@@ -285,7 +285,7 @@ pollsDB.asPromise().then(async (value) => {
             const pollResponse = pollResponsesToReward[i];
             console.log('pollResponse',pollResponse);
 
-            if (pollResponse && !pollResponse.isRewarded) {
+            if (pollResponse && !pollResponse.isRewarded && pollResponse.reward > 0) {
               // do payment
               const userUid = pollResponse.uid;
               const paymentData = {
