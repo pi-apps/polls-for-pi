@@ -277,6 +277,7 @@ pollsDB.asPromise().then(async (value) => {
           {
             endDate: { $lte: now },
             isRewarded: false,
+            reward: { $gt: 0 },
           });
 
         console.log('pollResponsesToReward.length', pollResponsesToReward.length);
