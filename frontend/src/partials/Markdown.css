@@ -38,9 +38,6 @@ a {
 a:hover {
   text-decoration: underline;
 }
-a:visited {
-  color: #466B6C;
-}
 ul, ol {
   padding: 0;
   margin: 0;
