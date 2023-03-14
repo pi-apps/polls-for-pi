@@ -3,9 +3,9 @@
 
 module.exports = {
   apps: [{
-    name: "demoapp-backend",
+    name: "polls-backend",
     script: "/usr/src/app/build/index.js",
     exec_mode: "cluster",
-    instances: 4,
+    instances: 1,
   }]
 }
