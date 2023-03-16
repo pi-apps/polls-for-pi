@@ -5,7 +5,7 @@ import { SetOutline } from 'antd-mobile-icons';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
-import { options as distributionOptions } from './options';
+import { options as distributionOptions } from '../constants/options';
 
 
 

@@ -21,4 +21,5 @@ export interface IPoll {
   paymentId: string;
   responseUrl: string;
   isOpen: boolean;
+  accessType: string;
 }

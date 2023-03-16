@@ -7,7 +7,7 @@ import React, { RefObject, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
-import { options as distributionOptions } from './options';
+import { options as distributionOptions } from '../constants/options';
 
 
 import type { DatePickerRef } from 'antd-mobile/es/components/date-picker';

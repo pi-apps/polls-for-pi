@@ -45,6 +45,9 @@ const PollSchema = new Schema<IPoll>({
   isOpen: {
     type: Boolean,
   },
+  accessType: {
+    type: String,
+  },
   // owner: {
   //   type: ObjectId,
   //   ref: 'User',

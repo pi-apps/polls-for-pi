@@ -8,7 +8,8 @@ import WindowWithEnv from '../interfaces/WindowWithEnv';
 import ListItemPollProps from '../types/ListItemPollProps';
 import { Poll } from '../types/Poll';
 
-import { options as distributionOptions } from './options';
+import { options as distributionOptions } from '../constants/options';
+import { accessTypes } from '../constants/accessTypes';
 import './PollStarter.css';
 
 const _window: WindowWithEnv = window;
@@ -221,6 +222,21 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                     options={distributionOptions}
                     onChange={(arr, extend) => {
                       props.poll.distribution = arr[0];
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='accessType'
+                  label='Access'
+                  initialValue={props.poll.accessType}
+                  layout='vertical'
+                  rules={[{ required: true, message: 'Access type is required' }]}
+                >
+                  <Selector
+                    columns={2}
+                    options={accessTypes}
+                    onChange={(arr, extend) => {
+                      props.poll.accessType = arr[0];
                     }}
                   />
                 </Form.Item>

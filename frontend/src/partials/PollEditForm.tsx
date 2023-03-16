@@ -28,6 +28,7 @@ const PollEditForm = (props: HOCProps) => {
     perResponseReward: 0,
     responses: [],
     responseUrl: '',
+    accessType: 'unlisted'
   });
 
   const getPoll = async (pollId: string | undefined) => {
