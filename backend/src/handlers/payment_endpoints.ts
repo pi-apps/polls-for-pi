@@ -149,6 +149,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           isOpen: true,
         }
       );
+      console.log('unpaid poll', unpaidPoll);
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
