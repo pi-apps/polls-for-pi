@@ -8,7 +8,8 @@ import WindowWithEnv from '../interfaces/WindowWithEnv';
 import ListItemPollProps from '../types/ListItemPollProps';
 import { Poll } from '../types/Poll';
 
-import { options as distributionOptions } from './options';
+import { options as distributionOptions } from '../constants/options';
+import { accessTypes } from '../constants/accessTypes';
 import './PollStarter.css';
 
 const _window: WindowWithEnv = window;
@@ -30,11 +31,12 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
     props.poll.perResponseReward = value;
   }
 
-  const patchPoll = async (poll: Poll) => {
+  const updatePoll = async (poll: Poll) => {
     console.log('patch poll', poll)
     const updatedPoll = await axiosClient.put(`/v1/polls/${poll._id}`, {
       title: poll.title,
       options: poll.options,
+      accessType: poll.accessType,
     });
     return updatedPoll.data.data;
   }
@@ -42,7 +44,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
   const onFinish = async (values: any) => {
     console.log('values', values)
     setLoading(true);
-    const patchedPoll: any = await patchPoll(props.poll);
+    const patchedPoll: any = await updatePoll(props.poll);
     setLoading(false);
     console.log('patchedPoll', patchedPoll)
 
@@ -221,6 +223,21 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
                     options={distributionOptions}
                     onChange={(arr, extend) => {
                       props.poll.distribution = arr[0];
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='accessType'
+                  label='Access'
+                  initialValue={props.poll.accessType}
+                  layout='vertical'
+                  rules={[{ required: true, message: 'Access type is required' }]}
+                >
+                  <Selector
+                    columns={2}
+                    options={accessTypes}
+                    onChange={(arr, extend) => {
+                      props.poll.accessType = arr[0];
                     }}
                   />
                 </Form.Item>

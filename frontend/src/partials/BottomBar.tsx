@@ -61,19 +61,15 @@ const BottomBar = (props: HOCProps) => {
   const [userPolls, setPolls] = useState<Poll[]>([]);
 
   const getUserPolls = async (username?: string) => {
-    console.log("get user polls ", username);
     const options = await pollsAPI.get(`/v1/polls?username=${username}`);
     return options.data;
   }
 
   useEffect(() => {
     getUserPolls(props.user?.username || 'eastmael').then(resp => {
-      console.log('polls data', resp.data)
       setPolls(resp.data);
     })
   }, []);
-
-  console.log('userPolls', userPolls);
 
   const pathname = getPathname();
   return (
@@ -118,6 +114,7 @@ export const PollsTab = (props: TabProps) => {
     perResponseReward: 0,
     responses: [],
     responseUrl: '',
+    accessType: 'unlisted',
   });
 
   return (

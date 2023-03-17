@@ -58,6 +58,7 @@ function App() {
     perResponseReward: 0,
     responses: [],
     responseUrl: '',
+    accessType: 'unlisted',
   });
   const [signingIn, setSigningIn] = useState<boolean>(false);
 
@@ -156,6 +157,7 @@ function App() {
         perResponseReward: 0,
         responses: [],
         responseUrl: '',
+        accessType: 'unlisted',
       });
     }
   }, [location.pathname]); // triggered on route change

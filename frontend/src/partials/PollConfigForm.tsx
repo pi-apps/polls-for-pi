@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import pollsAPI from '../apis/pollsAPI';
 import HOCProps from '../types/HOCProps';
 
-import { options as distributionOptions } from './options';
+import { options as distributionOptions } from '../constants/options';
+import { accessTypes } from '../constants/accessTypes';
 import './PollStarter.css';
 
 const PollConfigForm = (props: HOCProps) => {
@@ -237,6 +238,22 @@ const PollConfigForm = (props: HOCProps) => {
                     options={distributionOptions}
                     onChange={(arr, extend) => {
                       props.poll.distribution = arr[0];
+                      props.setPoll(props.poll);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name='accessType'
+                  label='Access'
+                  initialValue={[props.poll.accessType]}
+                  layout='vertical'
+                  rules={[{ required: true, message: 'Access type is required' }]}
+                >
+                  <Selector
+                    columns={2}
+                    options={accessTypes}
+                    onChange={(arr, extend) => {
+                      props.poll.accessType = arr[0];
                       props.setPoll(props.poll);
                     }}
                   />

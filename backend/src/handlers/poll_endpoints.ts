@@ -2,7 +2,7 @@ import { Router } from "express";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import "../types/session";
-import { getEndDate } from "../utils/poll_utils";
+import { getPollEndDate, getPollResponseEndDate } from "../utils/poll_utils";
 
 export default function mountPollEndpoints(router: Router, models: any) {
   // endpoin for
@@ -23,13 +23,15 @@ export default function mountPollEndpoints(router: Router, models: any) {
     item.owner = { ...user }
 
     item.startDate = new Date();
-    item.endDate = getEndDate(poll);
+    item.endDate = getPollEndDate(poll);
+    item.isOpen = true;
     await item.save();
 
     return res.status(200).json({ data: item });
   });
 
   router.get('/', async (req, res) => {
+    console.log('get polls')
     const { Poll } = models;
     const { filter, responseUrl, username } = req.query;
 
@@ -38,8 +40,14 @@ export default function mountPollEndpoints(router: Router, models: any) {
       items = await Poll.find({ filter }).populate('responses');
     } else if (responseUrl) {
       items = await Poll.find({ filter }).populate('responses');
-    } else {
+    } else if (username) {
       items = await Poll.find({ 'owner.username': username }).populate('responses');
+    } else {
+      items = await Poll.find({
+        accessType: 'public',
+        isOpen: true,
+      });
+      console.log('public polls', items)
     }
 
     // order doesn't exist
@@ -94,8 +102,13 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
-    const { title, options } = req.body;
+    const { title, options, accessType } = req.body;
     item.title = title;
+    item.accessType = accessType;
+    let now = new Date()
+    if (item.endDate > now && !item.isOpen) {
+      item.isOpen = true;
+    }
 
     if (!_.isEmpty(options)) {
       options.forEach((option: string, index: number) => {
@@ -152,7 +165,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     const newResp = new PollResponse();
     _.extend(newResp, pollResp);
-    newResp.endDate = getEndDate(item);
+    newResp.endDate = getPollResponseEndDate(item);
     newResp.reward = item.perResponseReward;
     newResp.pollTitle = item.title;
     newResp.pollId = item._id;

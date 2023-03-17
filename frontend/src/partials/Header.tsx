@@ -4,6 +4,9 @@ import HOCProps from '../types/HOCProps';
 
 import { Dropdown, MenuProps, MenuTheme } from 'antd';
 import { Button } from 'antd-mobile';
+import {
+  UnorderedListOutline, CheckShieldOutline, PlayOutline, UserOutline,
+} from 'antd-mobile-icons';
 
 const items: MenuProps['items'] = [
   {
@@ -118,15 +121,22 @@ const Header = (props: HOCProps)  => {
               {pathname === "/" &&
               <ul className="flex grow justify-end flex-wrap items-center">
                 <li>
-                  <Link to="/get_started" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                    Get Started
+                  <Link to="/get_started" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                    <PlayOutline className="mr-1"/>Get Started
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                    Privacy
+                  <Link to="/privacy" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                    <CheckShieldOutline className="mr-1"/>Privacy
                   </Link>
                 </li>
+                {props.user &&
+                  <li>
+                    <Link to="/dashboard/polls" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                      <UnorderedListOutline className="mr-1"/>My Polls
+                    </Link>
+                  </li>
+                }
                 {/* <li>
                   <Link to="/demo" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
                     Demo
@@ -183,17 +193,23 @@ const Header = (props: HOCProps)  => {
                 </li>
                 <li>
                   {/* <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link> */}
-                  <Button
-                    size='mini'
-                    color='primary' fill='none'
-                    onClick={props.onSignIn}
-                    style={{
-                      paddingLeft: '0px'
-                    }}
-                    loading={props.signingIn}
-                  >
-                    Sign in
-                  </Button>
+                  {props.user ?
+                      <Link to="/dashboard/me" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                        <UserOutline className="mr-1"/> <span>@{props.user.username}</span>
+                      </Link>
+                    :
+                    <Button
+                      size='mini'
+                      color='primary' fill='none'
+                      onClick={props.onSignIn}
+                      style={{
+                        paddingLeft: '0px'
+                      }}
+                      loading={props.signingIn}
+                    >
+                      Sign in
+                    </Button>
+                  }
                 </li>
                 {/* <li>
                   <Link to="/signup" className="btn-sm text-white bg-purple-600 hover:bg-purple-700 ml-3">Sign up</Link>
@@ -219,11 +235,22 @@ const Header = (props: HOCProps)  => {
             <nav id="mobile-nav" ref={mobileNav} className="absolute top-full z-20 left-0 w-full px-4 sm:px-6 overflow-hidden transition-all duration-300 ease-in-out" style={mobileNavOpen ? { maxHeight: mobileNav.current.scrollHeight, opacity: 1 } : { maxHeight: 0, opacity: .8 } }>
               <ul className="bg-gray-800 px-4 py-2">
                 <li>
-                  <Link to="/get_started" className="flex text-gray-300 hover:text-gray-200 py-2">Get Started</Link>
+                  <Link to="/get_started" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                    <PlayOutline className="mr-1"/> Get Started
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="flex text-gray-300 hover:text-gray-200 py-2">Privacy</Link>
+                  <Link to="/privacy" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                    <CheckShieldOutline className="mr-1"/>Privacy
+                  </Link>
                 </li>
+                {props.user &&
+                  <li>
+                    <Link to="/dashboard/polls" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                      <UnorderedListOutline className="mr-1"/>My Polls
+                    </Link>
+                  </li>
+                }
                 {/* <li>
                   <Link to="/demo" className="flex text-gray-300 hover:text-gray-200 py-2">Demo</Link>
                 </li>
@@ -251,9 +278,10 @@ const Header = (props: HOCProps)  => {
                   </ul>
                 </li> */}
                 <li>
-
                   {props.user ?
-                    <span>@{props.user.username}</span>
+                      <Link to="/dashboard/me" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                        <UserOutline className="mr-1"/> <span>@{props.user.username}</span>
+                      </Link>
                     :
                     <Button
                       size='mini'

@@ -4,7 +4,7 @@ import _ from "lodash";
 import { v4 as uuidv4 } from 'uuid';
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
-import { getEndDate } from "../utils/poll_utils";
+import { getPollEndDate } from "../utils/poll_utils";
 
 export default function mountPaymentsEndpoints(router: Router, models: any) {
   // handle the incomplete payment
@@ -145,9 +145,11 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           paymentId,
           responseUrl,
           startDate: new Date(),
-          endDate: getEndDate(pollReq),
+          endDate: getPollEndDate(pollReq),
+          isOpen: true,
         }
       );
+      console.log('unpaid poll', unpaidPoll);
       await unpaidPoll.save();
 
       // let Pi Servers know that you're ready
