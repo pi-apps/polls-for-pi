@@ -121,21 +121,19 @@ const Header = (props: HOCProps)  => {
               {pathname === "/" &&
               <ul className="flex grow justify-end flex-wrap items-center">
                 <li>
-                  <Link to="/get_started" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                    <PlayOutline />
-                    Get Started
+                  <Link to="/get_started" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                    <PlayOutline className="mr-1"/>Get Started
                   </Link>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out">
-                    Privacy
+                  <Link to="/privacy" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                    <CheckShieldOutline className="mr-1"/>Privacy
                   </Link>
                 </li>
                 {props.user &&
                   <li>
-                    <Link to="/dashboard/polls" className="flex text-gray-300 hover:text-gray-200 py-2">
-                      <UnorderedListOutline />
-                      My Polls
+                    <Link to="/dashboard/polls" className="text-gray-300 hover:text-gray-200 px-4 py-2 flex items-center transition duration-150 ease-in-out" style={{ alignItems: 'center' }}>
+                      <UnorderedListOutline className="mr-1"/>My Polls
                     </Link>
                   </li>
                 }
@@ -195,17 +193,23 @@ const Header = (props: HOCProps)  => {
                 </li>
                 <li>
                   {/* <Link to="/signin" className="font-medium text-purple-600 hover:text-gray-200 px-4 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link> */}
-                  <Button
-                    size='mini'
-                    color='primary' fill='none'
-                    onClick={props.onSignIn}
-                    style={{
-                      paddingLeft: '0px'
-                    }}
-                    loading={props.signingIn}
-                  >
-                    Sign in
-                  </Button>
+                  {props.user ?
+                      <Link to="/dashboard/me" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
+                        <UserOutline className="mr-1"/> <span>@{props.user.username}</span>
+                      </Link>
+                    :
+                    <Button
+                      size='mini'
+                      color='primary' fill='none'
+                      onClick={props.onSignIn}
+                      style={{
+                        paddingLeft: '0px'
+                      }}
+                      loading={props.signingIn}
+                    >
+                      Sign in
+                    </Button>
+                  }
                 </li>
                 {/* <li>
                   <Link to="/signup" className="btn-sm text-white bg-purple-600 hover:bg-purple-700 ml-3">Sign up</Link>
@@ -274,7 +278,6 @@ const Header = (props: HOCProps)  => {
                   </ul>
                 </li> */}
                 <li>
-
                   {props.user ?
                       <Link to="/dashboard/me" className="flex text-gray-300 hover:text-gray-200 py-2" style={{ alignItems: 'center' }}>
                         <UserOutline className="mr-1"/> <span>@{props.user.username}</span>

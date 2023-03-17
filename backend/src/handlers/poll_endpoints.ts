@@ -30,6 +30,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.get('/', async (req, res) => {
+    console.log('get polls')
     const { Poll } = models;
     const { filter, responseUrl, username } = req.query;
 
@@ -38,8 +39,14 @@ export default function mountPollEndpoints(router: Router, models: any) {
       items = await Poll.find({ filter }).populate('responses');
     } else if (responseUrl) {
       items = await Poll.find({ filter }).populate('responses');
-    } else {
+    } else if (username) {
       items = await Poll.find({ 'owner.username': username }).populate('responses');
+    } else {
+      items = await Poll.find({
+        accessType: 'public',
+        isOpen: true,
+      });
+      console.log('public polls', items)
     }
 
     // order doesn't exist

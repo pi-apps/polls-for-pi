@@ -1,6 +1,7 @@
 
 import Banner from '../partials/Banner';
 import FeaturesBlocks from '../partials/FeaturesBlocks';
+import PublicPolls from '../partials/PublicPolls';
 import Footer from '../partials/Footer';
 import Header from '../partials/Header';
 import HeroHome from '../partials/HeroHome';
@@ -23,9 +24,9 @@ const HomeV2 = (props: HOCProps) => {
         {/*  Page sections */}
         <HeroHome />
         <FeaturesBlocks />
-        {/* <FeaturesZigZag />
-        <Testimonials />
-        <Newsletter /> */}
+        {/* <FeaturesZigZag /> */}
+        <PublicPolls />
+        {/* <Newsletter /> */}
       </main>
 
       <Banner />

@@ -48,6 +48,9 @@ const PollSchema = new Schema<IPoll>({
   accessType: {
     type: String,
   },
+  color: {
+    type: String,
+  },
   // owner: {
   //   type: ObjectId,
   //   ref: 'User',

@@ -22,4 +22,5 @@ export interface IPoll {
   responseUrl: string;
   isOpen: boolean;
   accessType: string;
+  color: string;
 }
