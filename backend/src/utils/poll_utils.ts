@@ -1,6 +1,15 @@
 import { IPoll } from "../types/poll";
 
-export const getEndDate = (poll: IPoll) => {
+export const getPollEndDate = (poll: IPoll) => {
+  console.log('getPollEndDate', poll)
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() + poll.durationDays);
+  console.log('endDate', endDate)
+  return endDate;
+}
+
+export const getPollResponseEndDate = (poll: IPoll) => {
+  console.log('getPollResponseEndDate', poll)
   let retDate = null;
   if (poll.distribution === 'immediate') {
     retDate = new Date();

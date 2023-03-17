@@ -2,7 +2,7 @@ import { Router } from "express";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import "../types/session";
-import { getEndDate } from "../utils/poll_utils";
+import { getPollEndDate, getPollResponseEndDate } from "../utils/poll_utils";
 
 export default function mountPollEndpoints(router: Router, models: any) {
   // endpoin for
@@ -23,7 +23,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
     item.owner = { ...user }
 
     item.startDate = new Date();
-    item.endDate = getEndDate(poll);
+    item.endDate = getPollEndDate(poll);
     item.isOpen = true;
     await item.save();
 
@@ -165,7 +165,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     const newResp = new PollResponse();
     _.extend(newResp, pollResp);
-    newResp.endDate = getEndDate(item);
+    newResp.endDate = getPollResponseEndDate(item);
     newResp.reward = item.perResponseReward;
     newResp.pollTitle = item.title;
     newResp.pollId = item._id;
