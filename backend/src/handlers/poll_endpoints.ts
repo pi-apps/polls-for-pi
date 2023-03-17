@@ -102,8 +102,9 @@ export default function mountPollEndpoints(router: Router, models: any) {
       return res.status(400).json({ message: "Poll not found." });
     }
 
-    const { title, options } = req.body;
+    const { title, options, accessType } = req.body;
     item.title = title;
+    item.accessType = accessType;
     let now = new Date()
     if (item.endDate > now && !item.isOpen) {
       item.isOpen = true;
