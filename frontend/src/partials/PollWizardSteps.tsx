@@ -106,7 +106,7 @@ const PollWizardSteps = (props: HOCProps) => {
     },
     {
       key: 4,
-      title: 'Per Response Reward',
+      title: 'Incentive',
       content:
         <MobileForm
           layout='horizontal'
