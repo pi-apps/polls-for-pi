@@ -36,6 +36,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
     const updatedPoll = await axiosClient.put(`/v1/polls/${poll._id}`, {
       title: poll.title,
       options: poll.options,
+      accessType: poll.accessType,
     });
     return updatedPoll.data.data;
   }
