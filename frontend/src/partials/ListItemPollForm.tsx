@@ -31,7 +31,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
     props.poll.perResponseReward = value;
   }
 
-  const patchPoll = async (poll: Poll) => {
+  const updatePoll = async (poll: Poll) => {
     console.log('patch poll', poll)
     const updatedPoll = await axiosClient.put(`/v1/polls/${poll._id}`, {
       title: poll.title,
@@ -43,7 +43,7 @@ const ListItemPollForm = (props: ListItemPollProps ) => {
   const onFinish = async (values: any) => {
     console.log('values', values)
     setLoading(true);
-    const patchedPoll: any = await patchPoll(props.poll);
+    const patchedPoll: any = await updatePoll(props.poll);
     setLoading(false);
     console.log('patchedPoll', patchedPoll)
 

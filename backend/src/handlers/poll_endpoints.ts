@@ -104,6 +104,10 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     const { title, options } = req.body;
     item.title = title;
+    let now = new Date()
+    if (item.endDate > now && !item.isOpen) {
+      item.isOpen = true;
+    }
 
     if (!_.isEmpty(options)) {
       options.forEach((option: string, index: number) => {
