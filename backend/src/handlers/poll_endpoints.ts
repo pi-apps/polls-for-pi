@@ -24,6 +24,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     item.startDate = new Date();
     item.endDate = getEndDate(poll);
+    item.isOpen = true;
     await item.save();
 
     return res.status(200).json({ data: item });

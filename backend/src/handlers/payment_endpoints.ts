@@ -146,6 +146,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           responseUrl,
           startDate: new Date(),
           endDate: getEndDate(pollReq),
+          isOpen: true,
         }
       );
       await unpaidPoll.save();
