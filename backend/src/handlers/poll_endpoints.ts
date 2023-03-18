@@ -47,7 +47,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
         accessType: 'public',
         isOpen: true,
       });
-      console.log('public polls', items)
     }
 
     // order doesn't exist
