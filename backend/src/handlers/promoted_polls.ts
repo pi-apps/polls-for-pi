@@ -1,19 +1,16 @@
 import { Router } from "express";
 import "../types/session";
 
-export default function mountPublicPollsEndpoints(router: Router, models: any) {
+export default function mountPromotedPollsEndpoints(router: Router, models: any) {
 
   router.get('/', async (req, res) => {
-    console.log('get public polls')
+    console.log('get promoted polls')
     const { Poll } = models;
-    const { promoted } = req.query;
 
     const query: any = {
       accessType: 'public',
       isOpen: true,
-    }
-    if (promoted === 'true') {
-      query.promoted = true;
+      promoted: true,
     }
     let items = await Poll.aggregate([
       {

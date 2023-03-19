@@ -3,6 +3,7 @@ import Modal from '../utils/Modal';
 
 import { Link } from 'react-router-dom';
 import HeroImage from '../images/hero-image-01.jpg';
+import PromotedPolls from './PromotedPolls';
 
 function HeroHome() {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
@@ -33,8 +34,10 @@ function HeroHome() {
           </svg>
         </div>
 
+        <PromotedPolls />
+
         {/* Hero content */}
-        <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
+        <div className="relative pt-10 pb-10 md:pt-10 md:pb-16">
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h1 mb-4" data-aos="fade-up">

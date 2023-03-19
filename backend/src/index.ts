@@ -15,6 +15,7 @@ import mountPollsAiEndpoints from './handlers/polls_ai';
 import mountPollEndpoints from './handlers/poll_endpoints';
 import mountPricingEndpoints from './handlers/pricing_endpoints';
 import mountProductsEndpoints from './handlers/products';
+import mountPromotedPollsEndpoints from './handlers/promoted_polls';
 import mountPublicPollsEndpoints from './handlers/public_polls';
 import mountUserEndpoints from './handlers/users';
 import PollSchema from './schemas/poll';
@@ -123,6 +124,9 @@ const publicPollsRouter = express.Router();
 mountPublicPollsEndpoints(publicPollsRouter, pollModels);
 app.use('/v1/public_polls', publicPollsRouter);
 
+const promotedPollsRouter = express.Router();
+mountPromotedPollsEndpoints(promotedPollsRouter, pollModels);
+app.use('/v1/promoted_polls', promotedPollsRouter);
 
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {

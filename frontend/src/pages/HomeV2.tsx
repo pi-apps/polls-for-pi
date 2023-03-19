@@ -7,6 +7,7 @@ import Header from '../partials/Header';
 import HeroHome from '../partials/HeroHome';
 import PageIllustration from '../partials/PageIllustration';
 import HOCProps from '../types/HOCProps';
+import { NoticeBar, Space, Swiper } from 'antd-mobile'
 
 const HomeV2 = (props: HOCProps) => {
   return (
@@ -23,6 +24,7 @@ const HomeV2 = (props: HOCProps) => {
 
         {/*  Page sections */}
         <HeroHome />
+
         <FeaturesBlocks />
         {/* <FeaturesZigZag /> */}
         <PublicPolls />
