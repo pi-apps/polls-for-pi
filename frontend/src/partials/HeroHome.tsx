@@ -1,44 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Modal from '../utils/Modal';
 
 import { Link } from 'react-router-dom';
 import HeroImage from '../images/hero-image-01.jpg';
-import { Swiper } from 'antd-mobile';
-import pollsAPI from '../apis/pollsAPI';
-import { Poll } from '../types/Poll';
 import PromotedPolls from './PromotedPolls';
 
-const colors = ['#ace0ff', '#bcffbd', '#e4fabd', '#ffcfac']
-
-const items = colors.map((color, index) => (
-  <Swiper.Item key={index}>
-    <div
-      style={{ background: color }}
-    >
-      {index + 1}
-    </div>
-  </Swiper.Item>
-))
-
-
 function HeroHome() {
-  const [promotedPolls, setPromotedPolls] = useState<Poll[]>([]);
-
-  const getPolls = async () => {
-    console.log("get polls ");
-    const options = await pollsAPI.get(`/v1/public_polls`);
-    return options.data;
-  }
-
-  useEffect(() => {
-    getPolls().then(resp => {
-      setPromotedPolls(resp.data);
-    })
-  }, []);
-
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-
-  console.log('promotedPolls', promotedPolls)
 
   return (
     <section>
