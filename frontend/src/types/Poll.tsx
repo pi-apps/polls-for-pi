@@ -17,7 +17,7 @@ export type Poll = {
   responses: PollResponse[]
   responseUrl: string,
   accessType: string,
-  endDate?: Date,
+  endDate?: string,
 
   setTitle?: (title: string) => void;
 };

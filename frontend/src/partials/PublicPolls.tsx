@@ -16,7 +16,7 @@ const PublicPolls = () => {
 
   const getPolls = async () => {
     console.log("get polls ");
-    const options = await pollsAPI.get(`/v1/polls?accessType=public`);
+    const options = await pollsAPI.get(`/v1/public_polls`);
     return options.data;
   }
 
@@ -32,7 +32,7 @@ const PublicPolls = () => {
     const bgColor = colors[Math.floor(Math.random() * 4)];
     const textColor = getTextColor(bgColor);
     const options = { year: 'numeric', month: 'short', day: '2-digit' };
-    const formattedDate = new Date(poll.endDate).toLocaleDateString('en-US', options);
+    const formattedDate = new Date(poll.endDate)?.toLocaleDateString('en-US', options);
     return (
       <Swiper.Item key={index}>
         <div style={{ background: bgColor }}>
@@ -84,7 +84,7 @@ const PublicPolls = () => {
 
           {/* Testimonials */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-            <Swiper autoplay>{items}</Swiper>
+            <Swiper autoplay loop>{items}</Swiper>
           </div>
         </div>
       </div>
