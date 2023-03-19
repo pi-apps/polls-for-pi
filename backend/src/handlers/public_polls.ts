@@ -16,7 +16,7 @@ export default function mountPublicPollsEndpoints(router: Router, models: any) {
       },
       {
         $sample: {
-          size: 50
+          size: 10
         }
       },
       {

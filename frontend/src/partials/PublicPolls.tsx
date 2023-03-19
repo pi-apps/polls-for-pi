@@ -84,7 +84,7 @@ const PublicPolls = () => {
 
           {/* Testimonials */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-            <Swiper autoplay>{items}</Swiper>
+            <Swiper autoplay loop>{items}</Swiper>
           </div>
         </div>
       </div>
