@@ -1,11 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../utils/Modal';
 
 import { Link } from 'react-router-dom';
 import HeroImage from '../images/hero-image-01.jpg';
+import { Swiper } from 'antd-mobile';
+import pollsAPI from '../apis/pollsAPI';
+import { Poll } from '../types/Poll';
+import PromotedPolls from './PromotedPolls';
+
+const colors = ['#ace0ff', '#bcffbd', '#e4fabd', '#ffcfac']
+
+const items = colors.map((color, index) => (
+  <Swiper.Item key={index}>
+    <div
+      style={{ background: color }}
+    >
+      {index + 1}
+    </div>
+  </Swiper.Item>
+))
+
 
 function HeroHome() {
+  const [promotedPolls, setPromotedPolls] = useState<Poll[]>([]);
+
+  const getPolls = async () => {
+    console.log("get polls ");
+    const options = await pollsAPI.get(`/v1/public_polls`);
+    return options.data;
+  }
+
+  useEffect(() => {
+    getPolls().then(resp => {
+      setPromotedPolls(resp.data);
+    })
+  }, []);
+
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+
+  console.log('promotedPolls', promotedPolls)
 
   return (
     <section>
@@ -33,8 +66,10 @@ function HeroHome() {
           </svg>
         </div>
 
+        <PromotedPolls />
+
         {/* Hero content */}
-        <div className="relative pt-32 pb-10 md:pt-40 md:pb-16">
+        <div className="relative pt-10 pb-10 md:pt-10 md:pb-16">
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h1 mb-4" data-aos="fade-up">

@@ -22,7 +22,6 @@ const PublicPolls = () => {
 
   useEffect(() => {
     getPolls().then(resp => {
-      console.log('polls data', resp.data)
       setPublicPolls(resp.data);
     })
   }, []);
@@ -32,7 +31,7 @@ const PublicPolls = () => {
     const bgColor = colors[Math.floor(Math.random() * 4)];
     const textColor = getTextColor(bgColor);
     const options = { year: 'numeric', month: 'short', day: '2-digit' };
-    const formattedDate = new Date(poll.endDate)?.toLocaleDateString('en-US', options);
+    const formattedDate = new Date(poll.endDate || '')?.toLocaleDateString('en-US', options);
     return (
       <Swiper.Item key={index}>
         <div style={{ background: bgColor }}>
