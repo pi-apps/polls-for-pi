@@ -203,7 +203,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     }
     unpaidPoll.paid = true;
 
-    const wallet = await Wallet.find({ _id: unpaidPoll.wallet });
+    const wallet = await Wallet.findOne({ _id: unpaidPoll.wallet });
     console.log('wallet', wallet)
     wallet.balance = wallet.pending_balance;
     wallet.pending_balance = 0;
