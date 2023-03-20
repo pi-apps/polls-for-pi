@@ -1,12 +1,4 @@
-import PiNetwork from 'pi-backend';
-import env from '../environments';
-import WalletSchema from '../schemas/wallet';
-
-// DO NOT expose these values to public
-const apiKey = env.pi_api_key;
-const walletPrivateSeed = env.wallet_private_seed;
-const walletPublicKey = env.wallet_public_key;
-const pi = new PiNetwork(apiKey, walletPrivateSeed);
+import piBackendAPI from "../services/piBackendAPI";
 
 export const processRewards = async (models: any) => {
 
@@ -47,14 +39,14 @@ export const processRewards = async (models: any) => {
 
           // It is critical that you store paymentId in your database
           // so that you don't double-pay the same user, by keeping track of the payment.
-          const paymentId = await pi.createPayment(paymentData);
+          const paymentId = await piBackendAPI.createPayment(paymentData);
           console.log('payment created')
           console.log('paymentId', paymentId)
           pollResponse.paymentId = paymentId;
           await pollResponse.save();
 
           // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
-          const txid = await pi.submitPayment(paymentId);
+          const txid = await piBackendAPI.submitPayment(paymentId);
           console.log('payment submitted')
           console.log('txid', txid)
           pollResponse.txId = txid;
@@ -62,7 +54,7 @@ export const processRewards = async (models: any) => {
 
           // console.log('updated pollResponse', pollResponse)
 
-          const completedPayment = await pi.completePayment(paymentId, txid);
+          const completedPayment = await piBackendAPI.completePayment(paymentId, txid);
           console.log('completedPayment', completedPayment)
           pollResponse.isPaid = true;
           pollResponse.isRewarded = true;

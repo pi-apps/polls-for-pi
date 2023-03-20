@@ -1,3 +1,5 @@
+import piBackendAPI from "../services/piBackendAPI";
+
 export const processRefund = async (models: any) => {
 
   try {
@@ -11,6 +13,7 @@ export const processRefund = async (models: any) => {
     const closedPolls = await Poll.find({
       endDate: { $lte: now },
       'wallet.balance': { $gt: 0 },
+      'wallet.isRefunded': false,
     }).populate('wallet');
 
     console.log('closedPolls with balance count', closedPolls.length)
@@ -38,6 +41,27 @@ export const processRefund = async (models: any) => {
             uid: userUid
           };
           console.log('Refund paymentData', paymentData);
+
+          // It is critical that you store paymentId in your database
+          // so that you don't double-pay the same user, by keeping track of the payment.
+          const paymentId = await piBackendAPI.createPayment(paymentData);
+          console.log('Refund payment created')
+          console.log('Refund paymentId', paymentId)
+          wallet.refundPaymentId = paymentId;
+          await wallet.save();
+
+          // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
+          const txid = await piBackendAPI.submitPayment(paymentId);
+          console.log('Refund payment submitted')
+          console.log('Refund txid', txid)
+          wallet.refundTxId = txid;
+          await wallet.save();
+
+          const completedPayment = await piBackendAPI.completePayment(paymentId, txid);
+          console.log('Refund completedPayment', completedPayment)
+          wallet.isRefunded = true;
+          await wallet.save();
+
         }
       }
     }

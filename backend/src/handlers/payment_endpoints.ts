@@ -4,7 +4,6 @@ import _ from "lodash";
 import { v4 as uuidv4 } from 'uuid';
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
-import { IWallet } from "../types/wallet";
 import { getPollEndDate } from "../utils/poll_utils";
 
 export default function mountPaymentsEndpoints(router: Router, models: any) {

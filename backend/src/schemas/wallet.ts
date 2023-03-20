@@ -28,6 +28,15 @@ const WalletSchema = new Schema<IWallet>({
   refunded: {
     type: Boolean,
   },
+  pollId: {
+    type: String,
+  },
+  refundPaymentId: {
+    type: String,
+  },
+  refundTxId: {
+    type: String,
+  },
   transactions: [{
     type: String,
     amount: Number,

@@ -1,12 +1,4 @@
-import PiNetwork from 'pi-backend';
-import env from '../environments';
-
-// DO NOT expose these values to public
-const apiKey = env.pi_api_key;
-const walletPrivateSeed = env.wallet_private_seed;
-const walletPublicKey = env.wallet_public_key;
-const pi = new PiNetwork(apiKey, walletPrivateSeed);
-
+import piBackendAPI from "../services/piBackendAPI";
 import platformAPIClient from "../services/platformAPIClient";
 
 export const processIncompletePayments = async (incompletePayments: any, models: any) => {
@@ -37,7 +29,7 @@ export const processIncompletePayments = async (incompletePayments: any, models:
           console.log('toCompletePollResponse', toCompletePollResponse);
 
           // It is strongly recommended that you store the txid along with the paymentId you stored earlier for your reference.
-          const txid = await pi.submitPayment(paymentId);
+          const txid = await piBackendAPI.submitPayment(paymentId);
           console.log('payment submitted')
           console.log('txid', txid)
           if (toCompletePollResponse) {
@@ -45,7 +37,7 @@ export const processIncompletePayments = async (incompletePayments: any, models:
             await toCompletePollResponse.save();
           }
 
-          const completedPayment = await pi.completePayment(paymentId, txid);
+          const completedPayment = await piBackendAPI.completePayment(paymentId, txid);
           console.log('completedPayment', completedPayment)
           if (toCompletePollResponse) {
             toCompletePollResponse.isPaid = true;

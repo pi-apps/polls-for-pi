@@ -11,6 +11,8 @@ export interface IWallet {
   pending_balance: number;
   pending_rewards_balance: number;
   pending_admin_fees: number;
-  refunded: boolean;
+  isRefunded: boolean;
+  refundPaymentId: string,
+  refundTxId: string,
   transactions: Array<ITransaction>[];
 }
