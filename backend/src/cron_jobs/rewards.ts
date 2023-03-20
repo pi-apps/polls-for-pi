@@ -1,5 +1,6 @@
 import PiNetwork from 'pi-backend';
 import env from '../environments';
+import WalletSchema from '../schemas/wallet';
 
 // DO NOT expose these values to public
 const apiKey = env.pi_api_key;
@@ -10,7 +11,7 @@ const pi = new PiNetwork(apiKey, walletPrivateSeed);
 export const processRewards = async (models: any) => {
 
   try {
-    const { PollResponse } = models;
+    const { PollResponse, Poll, Wallet } = models;
     // closed/expired polls
     const now = new Date();
     console.log('now ', now);
@@ -65,6 +66,17 @@ export const processRewards = async (models: any) => {
           console.log('completedPayment', completedPayment)
           pollResponse.isPaid = true;
           pollResponse.isRewarded = true;
+
+          const pollItem = await Poll.findOne({ _id: pollResponse.pollId});
+          const wallet = await Wallet.findOne({ _id: pollItem.wallet });
+
+          console.log('bef wallet', wallet)
+
+          // TODO: get tx fee dynamically
+          wallet.balance = wallet.balance - (pollResponse.reward + 0.01)
+          await wallet.save();
+
+          console.log('aft wallet', wallet)
           await pollResponse.save();
 
         }
