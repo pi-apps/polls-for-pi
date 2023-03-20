@@ -194,7 +194,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
 
-    const { Poll, } = models;
+    const { Poll, Wallet } = models;
 
     const unpaidPoll = await Poll.findOne({ paymentId });
     console.log('unpaidPoll', unpaidPoll);
@@ -203,7 +203,8 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     }
     unpaidPoll.paid = true;
 
-    const wallet = unpaidPoll.wallet;
+    const wallet = await Wallet.find({ _id: unpaidPoll.wallet });
+    console.log('wallet', wallet)
     wallet.balance = wallet.pending_balance;
     wallet.pending_balance = 0;
     await wallet.save();
