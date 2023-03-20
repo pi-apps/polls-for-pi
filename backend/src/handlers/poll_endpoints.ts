@@ -7,7 +7,7 @@ import { getPollEndDate, getPollResponseEndDate } from "../utils/poll_utils";
 export default function mountPollEndpoints(router: Router, models: any) {
   // endpoin for
   router.post('/', async (req, res) => {
-    const { Poll } = models;
+    const { Poll, Wallet } = models;
     const item = new Poll();
 
     const { poll, user, paymentId } = req.body;
@@ -25,6 +25,14 @@ export default function mountPollEndpoints(router: Router, models: any) {
     item.startDate = new Date();
     item.endDate = getPollEndDate(poll);
     item.isOpen = true;
+
+    const newWallet = new Wallet();
+    newWallet.owner = { ...user };
+    newWallet.balance = 0;
+    newWallet.pending_balance = 100;
+    await newWallet.save();
+
+    item.wallet = newWallet;
     await item.save();
 
     return res.status(200).json({ data: item });

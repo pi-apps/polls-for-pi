@@ -25,6 +25,7 @@ import PollPricingSchema from './schemas/poll_pricing';
 import PollResponseSchema from './schemas/poll_response';
 import PricingSchema from './schemas/pricing';
 import ProductSchema from './schemas/product';
+import WalletSchema from './schemas/wallet';
 import platformAPIClient from "./services/platformAPIClient";
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
@@ -49,8 +50,9 @@ const Pricing = pollsDB.model('Pricing', PricingSchema);
 const PollPricing = pollsDB.model('PollPricing', PollPricingSchema);
 const Poll = pollsDB.model('Poll', PollSchema);
 const PollResponse = pollsDB.model('PollResponse', PollResponseSchema);
+const Wallet = pollsDB.model('Wallet', WalletSchema);
 
-const pollModels = { Product, Pricing, PollPricing, Poll, PollResponse };
+const pollModels = { Product, Pricing, PollPricing, Poll, PollResponse, Wallet };
 
 //
 // I. Initialize and set up the express app and various middlewares and packages:

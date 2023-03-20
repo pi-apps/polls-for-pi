@@ -72,7 +72,11 @@ const PollSchema = new Schema<IPoll>({
   owner: {
     uid: String,
     username: String,
-  }
+  },
+  wallet: {
+    type: ObjectId,
+    ref: 'Wallet',
+  },
 });
 //PollSchema.index({ "responses.responseUrl": 1, "responses.username": 1 }, { unique: true })
 

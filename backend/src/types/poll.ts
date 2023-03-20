@@ -23,4 +23,5 @@ export interface IPoll {
   isOpen: boolean;
   accessType: string;
   color: string;
+  wallet: any;
 }

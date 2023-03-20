@@ -81,7 +81,7 @@ export const processIncompletePayments = async (incompletePayments: any, models:
     }
 
   } catch (error) {
-    console.log('cron job error', error);
+    console.log('processIncompletePayments error', error);
   }
 
 };

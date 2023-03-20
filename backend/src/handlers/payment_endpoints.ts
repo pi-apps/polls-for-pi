@@ -68,7 +68,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       console.log('user', req.body.user)
       console.log('pollReq', pollReq)
 
-      const { Product, Pricing, Poll } = models;
+      const { Product, Pricing, Poll, Wallet } = models;
 
       const product = await Product.find({
         name: new RegExp("poll", 'i')
@@ -149,6 +149,17 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           isOpen: true,
         }
       );
+
+      const newWallet = new Wallet();
+      newWallet.owner = {
+        uid: user.uid,
+        username: user.username
+      };
+      newWallet.balance = 0;
+      newWallet.pending_balance = currentPayment.data.amount;
+      await newWallet.save();
+
+      unpaidPoll.wallet = newWallet;
       console.log('unpaid poll', unpaidPoll);
       await unpaidPoll.save();
 
@@ -191,6 +202,12 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       return res.status(200).json({ message: `Completed the payment ${paymentId} but no poll record found.`, pollId: unpaidPoll._id });
     }
     unpaidPoll.paid = true;
+
+    const wallet = unpaidPoll.wallet;
+    wallet.balance = wallet.pending_balance;
+    wallet.pending_balance = 0;
+    await wallet.save();
+
     await unpaidPoll.save();
 
     return res.status(200).json({ message: `Completed the payment ${paymentId}`, pollId: unpaidPoll._id });

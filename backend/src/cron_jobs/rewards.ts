@@ -68,24 +68,11 @@ export const processRewards = async (models: any) => {
           await pollResponse.save();
 
         }
-      //});
-
-      // Promise.all(promises)
-      // .then(responses => {
-      //   console.log('responses' , responses);
-      // }).catch(error => {
-      //   console.log('errorr', error)
-      //   if (error.name === 'MongoError' && error.code === 11000) {
-      //     // Duplicate username
-      //     console.log('errorr', error)
-      //   }
-      // });
-
       }
     }
 
   } catch (error) {
-    console.log('cron job error', error);
+    console.log('processRewards error', error);
   }
 
 };

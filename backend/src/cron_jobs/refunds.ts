@@ -13,7 +13,7 @@ export const processRefund = async (models: any) => {
     console.log('closedPolls count', closedPolls.length)
 
   } catch (error) {
-    console.log('cron job error', error);
+    console.log('processRefund error', error);
   }
 
 };
