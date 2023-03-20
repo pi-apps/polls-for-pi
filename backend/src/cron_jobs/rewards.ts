@@ -62,15 +62,18 @@ export const processRewards = async (models: any) => {
           const pollItem = await Poll.findOne({ _id: pollResponse.pollId});
           const wallet = await Wallet.findOne({ _id: pollItem.wallet });
 
-          console.log('bef wallet', wallet)
+          if (wallet) {
+            console.log('bef wallet', wallet)
 
-          // TODO: get tx fee dynamically
-          const toDeduct = pollResponse.reward + 0.01;
-          wallet.balance = wallet.balance - toDeduct;
-          wallet.rewards_balance = wallet.rewards_balance - toDeduct;
-          await wallet.save();
+            // TODO: get tx fee dynamically
+            const toDeduct = pollResponse.reward + 0.01;
+            wallet.balance = wallet.balance - toDeduct;
+            wallet.rewards_balance = wallet.rewards_balance - toDeduct;
+            await wallet.save();
 
-          console.log('aft wallet', wallet)
+            console.log('aft wallet', wallet)
+          }
+
           await pollResponse.save();
 
         }
