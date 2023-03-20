@@ -73,7 +73,9 @@ export const processRewards = async (models: any) => {
           console.log('bef wallet', wallet)
 
           // TODO: get tx fee dynamically
-          wallet.balance = wallet.balance - (pollResponse.reward + 0.01)
+          const toDeduct = pollResponse.reward + 0.01;
+          wallet.balance = wallet.balance - toDeduct;
+          wallet.rewards_balance = wallet.rewards_balance - toDeduct;
           await wallet.save();
 
           console.log('aft wallet', wallet)

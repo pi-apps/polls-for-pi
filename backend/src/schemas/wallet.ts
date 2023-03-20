@@ -10,8 +10,23 @@ const WalletSchema = new Schema<IWallet>({
   balance: {
     type: Number,
   },
+  rewards_balance: {
+    type: Number,
+  },
+  admin_fees: {
+    type: Number,
+  },
   pending_balance: {
     type: Number,
+  },
+  pending_rewards_balance: {
+    type: Number,
+  },
+  pending_admin_fees: {
+    type: Number,
+  },
+  refunded: {
+    type: Boolean,
   },
   transactions: [{
     type: String,

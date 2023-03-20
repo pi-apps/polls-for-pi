@@ -4,6 +4,7 @@ import _ from "lodash";
 import { v4 as uuidv4 } from 'uuid';
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
+import { IWallet } from "../types/wallet";
 import { getPollEndDate } from "../utils/poll_utils";
 
 export default function mountPaymentsEndpoints(router: Router, models: any) {
@@ -107,31 +108,40 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
       // compute total
       const priceItems = pricingItem.priceItems;
       let total = 0.0;
+      let rewards = 0.0;
+      let fees = 0.0;
       priceItems.forEach((item: any) => {
         const name = item.name.toLowerCase();
+
+        // fees
         if (name === "per option") {
-          total += (item.price * pollReq.optionCount);
-        } else if (name === "per response") {
-          total += (item.price * pollReq.responseLimit);
+          fees += (item.price * pollReq.optionCount);
         } else if (name === "per hour") {
-          total += (item.price * (pollReq.durationDays * 24));
-        } else if (name === "per transaction") {
-          total += (item.price * (pollReq.responseLimit));
+          fees += (item.price * (pollReq.durationDays * 24));
+        } else if (name === "per response") {
+          fees += (item.price * pollReq.responseLimit);
         }
+
+        // rewards
+        if (name === "per transaction") {
+          rewards += (item.price * (pollReq.responseLimit));
+       }
       })
-      total += (pollReq.responseLimit * pollReq.perResponseReward);
+      rewards += (pollReq.responseLimit * pollReq.perResponseReward);
+
+      total = fees + rewards;
       console.log('computed total: ', total);
       console.log('payment total: ', currentPayment.data.amount);
 
       // Order payment not equal to computed total
       // TODO: Disable total check
-      /*
-      if (total !== currentPayment.data.amount) {
-        const cancelledPayment = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
-        console.log('cancelledPayment', cancelledPayment);
-        return res.status(400).json({ data: cancelledPayment, message: "Order payment not equal to computed total. Payment cancelled." });
-      }
-      */
+      // /*
+      // if (total !== currentPayment.data.amount) {
+      //   const cancelledPayment = await platformAPIClient.post(`/v2/payments/${paymentId}/cancel`);
+      //   console.log('cancelledPayment', cancelledPayment);
+      //   return res.status(400).json({ data: cancelledPayment, message: "Order payment not equal to computed total. Payment cancelled." });
+      // }
+      // */
 
       const unpaidPoll = new Poll();
       const responseUrl = uuidv4();
@@ -156,7 +166,12 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
         username: user.username
       };
       newWallet.balance = 0;
+      newWallet.rewards_balance = 0;
+      newWallet.admin_fees = 0;
+
       newWallet.pending_balance = currentPayment.data.amount;
+      newWallet.pending_rewards_balance = (currentPayment.data.amount - fees);
+      newWallet.pending_admin_fees = fees;
       await newWallet.save();
 
       unpaidPoll.wallet = newWallet;
@@ -206,7 +221,12 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     const wallet = await Wallet.findOne({ _id: unpaidPoll.wallet });
     console.log('wallet', wallet)
     wallet.balance = wallet.pending_balance;
+    wallet.rewards_balance = wallet.pending_rewards_balance;
+    wallet.admin_fees = wallet.pending_admin_fees;
+
     wallet.pending_balance = 0;
+    wallet.pending_rewards_balance = 0;
+    wallet.pending_admin_fees = 0;
     await wallet.save();
 
     await unpaidPoll.save();
