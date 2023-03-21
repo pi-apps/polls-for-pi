@@ -171,13 +171,11 @@ console.log('CRON_SCHED', CRON_SCHED)
 
 pollsDB.asPromise().then(async (value) => {
 
-  const refundJob = new CronJob(CRON_SCHED, async function() {
+  const refundJob = new CronJob("*/3 * * * *", async function() {
     processRefund(pollModels)
   });
-  refundJob.start();
 
   const rewardsJob = new CronJob(CRON_SCHED, async function() {
-
     try {
       // incomplete payments
       const response = await platformAPIClient.get("/v2/payments/incomplete_server_payments");
@@ -197,5 +195,7 @@ pollsDB.asPromise().then(async (value) => {
 
   });
   console.log('After job instantiation');
+
+  refundJob.start();
   rewardsJob.start();
 });
