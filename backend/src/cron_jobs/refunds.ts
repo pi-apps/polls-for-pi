@@ -37,12 +37,12 @@ export const processRefund = async (models: any) => {
           //const toRefundBalance = computeRefund(poll, wallet);
           const paymentData = {
             amount: wallet.rewards_balance,
-            memo: `Refund for poll: '${closedPoll.pollTitle}'`,
+            memo: `Refund for poll: '${closedPoll.title}'`,
             metadata: {
               app: "polls-for-pi/v1",
               txType: 'refund',
               pollId: closedPoll.pollId,
-              pollTitle: closedPoll.pollTitle,
+              pollTitle: closedPoll.title,
             },
             uid: userUid
           };
