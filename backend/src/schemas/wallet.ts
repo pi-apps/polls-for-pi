@@ -26,6 +26,7 @@ const WalletSchema = new Schema<IWallet>({
   },
   isRefunded: {
     type: Boolean,
+    default: false,
   },
   refundPaymentId: {
     type: String,
