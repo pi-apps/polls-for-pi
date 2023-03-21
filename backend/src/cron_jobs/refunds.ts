@@ -23,13 +23,13 @@ export const processRefund = async (models: any) => {
 
         // 'wallet.balance': { $gt: 0 },
         // 'wallet.isRefunded': false,
-        const wallet = closedPoll.wallet;
+        const closedPollWallet = closedPoll.wallet;
         if (closedPoll && (
-              wallet.rewards_balance > 0
-              && wallet.isRefunded === false)
+              closedPollWallet.rewards_balance > 0
+              && closedPollWallet.isRefunded === false)
         ) {
           // do payment
-          const wallet = await Wallet.findOne({ _id: closedPoll.wallet });
+          const wallet = await Wallet.findOne({ _id: closedPollWallet._id });
           const userUid = wallet.owner.uid;
 
           //const toRefundBalance = computeRefund(poll, wallet);
