@@ -218,7 +218,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     unpaidPoll.paid = true;
 
     const wallet = await Wallet.findOne({ _id: unpaidPoll.wallet });
-    console.log('wallet', wallet)
+    console.log('payment complete wallet before', wallet)
     wallet.balance = wallet.pending_balance;
     wallet.rewards_balance = wallet.pending_rewards_balance;
     wallet.admin_fees = wallet.pending_admin_fees;
@@ -226,6 +226,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
     wallet.pending_balance = 0;
     wallet.pending_rewards_balance = 0;
     wallet.pending_admin_fees = 0;
+    console.log('payment complete wallet after', wallet)
     await wallet.save();
 
     await unpaidPoll.save();
