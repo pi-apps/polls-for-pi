@@ -19,12 +19,9 @@ export const processRefund = async (models: any) => {
     if (closedPolls.length > 0) {
       for (let i = 0; i < closedPolls.length; i++) {
         const closedPoll = closedPolls[i];
-        console.log('closedPoll', closedPoll);
-
+        const closedPollWallet = closedPoll.wallet;
         // 'wallet.balance': { $gt: 0 },
         // 'wallet.isRefunded': false,
-        const closedPollWallet = closedPoll.wallet;
-        console.log('closedPollWallet', closedPollWallet);
         if (closedPoll && closedPollWallet && (
               closedPollWallet.rewards_balance > 0
               && closedPollWallet.isRefunded === false)
