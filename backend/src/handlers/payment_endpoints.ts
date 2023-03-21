@@ -86,7 +86,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
 
       // Create payment
       const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
-      console.log('currentPayment', currentPayment)
+      console.log('currentPayment.data', currentPayment.data)
 
       const orderCollection = app.locals.orderCollection;
 

@@ -12,18 +12,22 @@ export const processRefund = async (models: any) => {
     console.log('now ', now);
     const closedPolls = await Poll.find({
       endDate: { $lte: now },
-      'wallet.balance': { $gt: 0 },
-      'wallet.isRefunded': false,
     }).populate('wallet');
 
-    console.log('closedPolls with balance count', closedPolls.length)
+    console.log('closedPolls', closedPolls.length)
 
     if (closedPolls.length > 0) {
       for (let i = 0; i < closedPolls.length; i++) {
         const closedPoll = closedPolls[i];
         console.log('closedPoll', closedPoll);
 
-        if (closedPoll && closedPoll.wallet.rewards_balance > 0) {
+        // 'wallet.balance': { $gt: 0 },
+        // 'wallet.isRefunded': false,
+        const wallet = closedPoll.wallet;
+        if (closedPoll && (
+              wallet.rewards_balance > 0
+              && wallet.isRefunded === false)
+        ) {
           // do payment
           const wallet = await Wallet.findOne({ _id: closedPoll.wallet });
           const userUid = wallet.owner.uid;
