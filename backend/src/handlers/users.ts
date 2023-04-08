@@ -12,10 +12,10 @@ export default function mountUserEndpoints(router: Router) {
     try {
       // Verify the user's access token with the /me endpoint:
       const me = await platformAPIClient.get(`/v2/me`, { headers: { 'Authorization': `Bearer ${auth.accessToken}` } });
-      console.log(me);
+      console.log(me.data);
     } catch (err) {
       console.log(err);
-      return res.status(401).json({error: "Invalid access token"}) 
+      return res.status(401).json({error: "Invalid access token"})
     }
 
     let currentUser = await userCollection.findOne({ uid: auth.user.uid });
@@ -35,7 +35,7 @@ export default function mountUserEndpoints(router: Router) {
         roles: auth.user.roles,
         accessToken: auth.accessToken
       });
-      
+
       currentUser = await userCollection.findOne(insertResult.insertedId);
     }
 
