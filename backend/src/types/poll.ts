@@ -22,6 +22,7 @@ export interface IPoll {
   responseUrl: string;
   isOpen: boolean;
   accessType: string;
+  isPromoted: boolean;
   color: string;
   wallet: any;
 }

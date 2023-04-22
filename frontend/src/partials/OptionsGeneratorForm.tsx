@@ -1,7 +1,7 @@
 import {
   Button, Form, Input, List, Space
 } from 'antd-mobile';
-import { UndoOutline } from 'antd-mobile-icons';
+import { UndoOutline, EditSOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import pollsAPI from '../apis/pollsAPI';
@@ -86,10 +86,13 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                 >
                   <Form.Header>
                     <Space block justify="between">
-                      <p>
-                        These are AI generated options.<br/>
-                        Update as you see fit.
-                      </p>
+                      <span>
+                        <h3>{props.poll.title}</h3>
+                        <p style={{fontSize: '1em'}}>
+                          These are AI generated options.<br/>
+                          Update as you see fit.
+                        </p>
+                      </span>
                       <Button
                         onClick={generateOptions}
                         color='success' size='large'
@@ -102,9 +105,14 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                     {modOptions.map((item, index) =>
                       <Form.Item
                         name={item ? item : `Option ${index}`}
+                        label={<EditSOutline />}
                         key={index}
                         initialValue={item ? item : `Option ${index}`}
-                        label={index === 0 ? props.poll.title : null}
+                        layout="horizontal"
+                        style={{
+                          '--prefix-width': '25%'
+                        }}
+                        className='generated-option'
                       >
                         <Input onChange={console.log} placeholder={item ? item : `Option ${index}`} />
                       </Form.Item>

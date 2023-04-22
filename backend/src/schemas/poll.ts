@@ -51,6 +51,9 @@ const PollSchema = new Schema<IPoll>({
   color: {
     type: String,
   },
+  isPromoted: {
+    type: Boolean,
+  },
   // owner: {
   //   type: ObjectId,
   //   ref: 'User',

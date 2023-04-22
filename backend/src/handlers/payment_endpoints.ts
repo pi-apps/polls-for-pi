@@ -156,6 +156,7 @@ export default function mountPaymentsEndpoints(router: Router, models: any) {
           startDate: new Date(),
           endDate: getPollEndDate(pollReq),
           isOpen: true,
+          isPromoted: true, // TODO: Defaul polls to promoted
         }
       );
 
