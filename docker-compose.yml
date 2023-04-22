@@ -19,7 +19,7 @@ services:
       - ${DATA_DIRECTORY}/reverse-proxy/etc-letsencrypt:/etc/letsencrypt/
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
@@ -30,7 +30,7 @@ services:
       BACKEND_URL: ${BACKEND_URL}
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
@@ -51,7 +51,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
@@ -67,7 +67,7 @@ services:
       - ${DATA_DIRECTORY}/mongo/data:/data/db
     deploy:
       restart_policy:
-        condition: any
+        condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
