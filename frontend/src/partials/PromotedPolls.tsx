@@ -51,7 +51,7 @@ const PromotedPolls = () => {
                   algorithm: theme.darkAlgorithm,
                 }}
               >
-                <a href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank">
+                <a href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank" className='poll-link'>
                   {icon} {poll.title}
                 </a>
               </ConfigProvider>
