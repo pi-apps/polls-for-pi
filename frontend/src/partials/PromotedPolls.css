@@ -9,5 +9,9 @@
 }
 
 a {
-  color: #9357ff;
+  color: #9357ff !important;
+}
+
+.poll-reward {
+  color: #9357ff !important;
 }
