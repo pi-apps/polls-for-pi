@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { query, Router } from "express";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import "../types/session";
@@ -40,7 +40,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.get('/', async (req, res) => {
-    console.log('get polls')
     const { Poll } = models;
     const { filter, responseUrl, username } = req.query;
 
@@ -48,7 +47,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
     if (filter) {
       items = await Poll.find({ filter }).populate('responses');
     } else if (responseUrl) {
-      items = await Poll.find({ filter }).populate('responses');
+      items = await Poll.find({ responseUrl }).populate('responses');
     } else if (username) {
       items = await Poll.find({ 'owner.username': username }).populate('responses');
     } else {
@@ -81,8 +80,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.patch('/:paymentId', async (req, res) => {
-    console.log('patching poll');
-
     const { Poll } = models;
     const { paymentId } = req.params;
     const item = await Poll.findOne({ paymentId });
@@ -99,8 +96,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.put('/:_id', async (req, res) => {
-    console.log('updating poll', req.body);
-
     const { Poll } = models;
     const { _id } = req.params;
     const item = await Poll.findOne({ _id });
@@ -129,8 +124,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.get('/:responseUrl/poll', async (req, res) => {
-    console.log('getting poll using responseUrl');
-
     const { Poll } = models;
     const { responseUrl } = req.params;
     const item = await Poll.findOne({ responseUrl })
@@ -145,8 +138,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
   });
 
   router.post('/:responseUrl/responses', async (req, res) => {
-    console.log('submitting response', req.body);
-
     const { Poll, PollResponse } = models;
     const { responseUrl } = req.params;
     const item = await Poll.findOne({ responseUrl });
@@ -167,7 +158,6 @@ export default function mountPollEndpoints(router: Router, models: any) {
 
     // If already responded
     if (userResp) {
-      console.log('user already responsed');
       return res.status(400).json({ message: "User already responded." });
     }
 
