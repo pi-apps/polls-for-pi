@@ -1,5 +1,5 @@
 import {
-  Button, Form, Input, Selector, Stepper, Switch
+  Button, Form, Input, Modal, Selector, Stepper, Switch
 } from 'antd-mobile';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -39,30 +39,43 @@ const PollConfigForm = (props: HOCProps) => {
     props.setPoll(props.poll);
   }
 
-  const getPollOptions = async (prompt: string, optionsCount: number) => {
-    console.log("get poll options ai API", { prompt, optionsCount });
-    const options = await pollsAPI.post('/v1/polls_ai', { prompt, optionsCount });
-    return options.data.data;
+  const generateOptionsModal = async (values: any) => {
+    Modal.confirm({
+      content: <span style={{ fontWeight: 'bold', justifyContent: 'center', display: 'flex' }}>Generate options using AI?</span>,
+      showCloseButton: true,
+      onConfirm: () => generateAiOptions(values),
+      onCancel: generateManualOptions,
+      confirmText: "Yes",
+      cancelText: "No",
+    })
   }
 
-  const onFinish = async (values: any) => {
+  const generateAiOptions = async (values: any) => {
     setLoading(true);
     const options: any = await getPollOptions(values.title, props.poll.optionCount)
     setLoading(false);
-    console.log('options', options)
 
     props.poll.options = options;
     props.setPoll(props.poll)
 
-    navigate('/options', { state: { message: 'Home', type: 'success' } })
+    navigate('/options?ai=1', { state: { message: 'Home', type: 'success' } })
   }
 
-  // useEffect(() => {
-  //   getPollOptions(props?.title);
-  // });
-  console.log('props.poll', props.poll);
+  const generateManualOptions = async () => {
+    const options = Array.from(new Array(props.poll.optionCount), (val,index) => "");
 
-  return (
+    props.poll.options = options;
+    props.setPoll(props.poll)
+
+    navigate('/options?ai=0', { state: { message: 'Home', type: 'success' } })
+  }
+
+  const getPollOptions = async (prompt: string, optionsCount: number) => {
+    const options = await pollsAPI.post('/v1/polls_ai', { prompt, optionsCount });
+    return options.data.data;
+  }
+
+   return (
     <section>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         {/* Hero content */}
@@ -93,7 +106,7 @@ const PollConfigForm = (props: HOCProps) => {
                     </Button>
                   </>
                 }
-                onFinish={onFinish}
+                onFinish={generateOptionsModal}
               >
                 <Form.Header>Poll Configuration</Form.Header>
                 <Form.Item

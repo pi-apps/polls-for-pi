@@ -25,6 +25,7 @@ export default function mountPollEndpoints(router: Router, models: any) {
     item.startDate = new Date();
     item.endDate = getPollEndDate(poll);
     item.isOpen = true;
+    item.isPromoted = true;
 
     const newWallet = new Wallet();
     newWallet.owner = { ...user };

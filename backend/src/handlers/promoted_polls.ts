@@ -10,7 +10,7 @@ export default function mountPromotedPollsEndpoints(router: Router, models: any)
     const query: any = {
       accessType: 'public',
       isOpen: true,
-      promoted: true,
+      isPromoted: true,
     }
     let items = await Poll.aggregate([
       {

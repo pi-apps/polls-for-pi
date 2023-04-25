@@ -26,3 +26,11 @@
 .adm-list-item-content-prefix {
   --prefix-width: 50%
 }
+
+.adm-list-item-content-prefix {
+  --prefix-width: 50%
+}
+
+.generated-option .adm-list-item-content-prefix {
+  --prefix-width: 15%
+}

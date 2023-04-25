@@ -8,6 +8,10 @@
   user-select: none;
 }
 
-a {
-  color: #9357ff;
+.poll-link {
+  color: #9357ff !important;
+}
+
+.poll-reward {
+  color: #9357ff !important;
 }

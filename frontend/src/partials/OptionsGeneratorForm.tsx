@@ -1,9 +1,9 @@
 import {
   Button, Form, Input, List, Space
 } from 'antd-mobile';
-import { UndoOutline } from 'antd-mobile-icons';
+import { UndoOutline, EditSOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import pollsAPI from '../apis/pollsAPI';
 import HOCProps from '../types/HOCProps';
 
@@ -19,19 +19,16 @@ const OptionsGeneratorForm = (props: HOCProps) => {
 
   const getPollOptions = async (prompt: string) => {
     const optionsCount = props.poll.optionCount;
-    console.log("get poll options ai API", `Generate ${optionsCount} choices for the question '${prompt}'`);
     const options = await pollsAPI.post('/v1/polls_ai', { prompt, optionsCount });
     return options.data.data;
   }
 
   const generateOptions = async () => {
     const options = await getPollOptions(props.poll.title)
-    console.log('options', options)
     setOptions(options)
   }
 
   const proceedToPayment = async (values: any) => {
-    console.log('values', values)
     navigate('/payment', { state: { message: 'Home', type: 'success' } })
   }
 
@@ -42,8 +39,9 @@ const OptionsGeneratorForm = (props: HOCProps) => {
     }
   }
 
-  console.log('props.poll', props.poll);
-  console.log('modOptions', modOptions);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const ai = searchParams.get("ai");
 
   return (
     <section>
@@ -86,27 +84,39 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                 >
                   <Form.Header>
                     <Space block justify="between">
-                      <p>
-                        These are AI generated options.<br/>
-                        Update as you see fit.
-                      </p>
-                      <Button
-                        onClick={generateOptions}
-                        color='success' size='large'
-                      >
-                        <UndoOutline />
-                      </Button>
+                      <span>
+                        <h3 style={{marginBottom: '10px'}}>
+                          {props.poll.title}
+                        </h3>
+                        <p style={{fontSize: '1em', marginBottom: '5px'}}>
+                          {ai === "1" && <>These are AI generated options.<br/></>}
+                          Click an option to edit.
+                        </p>
+                      </span>
+                      {ai === "1" &&
+                        <Button
+                          onClick={generateOptions}
+                          color='success' size='large'
+                        >
+                          <UndoOutline />
+                        </Button>
+                      }
                     </Space>
                   </Form.Header>
                   <List>
                     {modOptions.map((item, index) =>
                       <Form.Item
-                        name={item ? item : `Option ${index}`}
+                        name={item ? item : `Option ${index + 1}`}
+                        label={<EditSOutline />}
                         key={index}
-                        initialValue={item ? item : `Option ${index}`}
-                        label={index === 0 ? props.poll.title : null}
+                        initialValue={item ? item : `Option ${index + 1}`}
+                        layout="horizontal"
+                        style={{
+                          '--prefix-width': '25%'
+                        }}
+                        className='generated-option'
                       >
-                        <Input onChange={console.log} placeholder={item ? item : `Option ${index}`} />
+                        <Input onChange={console.log} placeholder={item ? item : `Option ${index + 1}`} />
                       </Form.Item>
                     )}
                   </List>

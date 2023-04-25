@@ -175,7 +175,10 @@ const PaymentForm = (props: HOCProps) => {
                   <Form.Header>
                     <Space block justify="between">
                       <span>
-                        Here's how much this poll will cost.
+                        <h3>{props.poll.title}</h3>
+                        <p style={{fontSize: '1em'}}>
+                          Here's how much this poll will cost.
+                        </p>
                       </span>
                       <Button
                         onClick={calculateTotal}

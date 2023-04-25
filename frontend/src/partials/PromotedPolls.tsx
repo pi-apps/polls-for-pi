@@ -41,16 +41,22 @@ const PromotedPolls = () => {
             className="font-small border-t border-gray-700 row px-2 py-2"
             style={{
               display: 'flex',
-              color: textColor,
+              color: "#000000",
               justifyContent: 'space-between',
             }}
           >
             <span>
-              <a href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank">
-                {icon} {poll.title}
-              </a>
+              <ConfigProvider
+                theme={{
+                  algorithm: theme.darkAlgorithm,
+                }}
+              >
+                <a href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank" className='poll-link'>
+                  {icon} {poll.title}
+                </a>
+              </ConfigProvider>
             </span>
-            <span className="ml-2">@{poll.owner?.username} ({poll.perResponseReward} π)</span>
+            <span className="ml-2">@{poll.owner?.username} <span className='poll-reward'>({poll.perResponseReward} π)</span></span>
           </div>
         </div>
       </Swiper.Item>
