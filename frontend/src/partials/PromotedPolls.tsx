@@ -2,7 +2,7 @@ import { Swiper } from 'antd-mobile';
 import { useEffect, useState } from 'react';
 import pollsAPI from '../apis/pollsAPI';
 import { ConfigProvider, theme, Typography } from 'antd';
-const { Link } = Typography;
+import { Link } from 'react-router-dom';
 import { CompassOutline, AntOutline, AudioOutline, ChatCheckOutline } from 'antd-mobile-icons'
 
 import './PromotedPolls.css'
@@ -51,9 +51,9 @@ const PromotedPolls = () => {
                   algorithm: theme.darkAlgorithm,
                 }}
               >
-                <a href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank" className='poll-link'>
+                <Link to={`/polls/${poll.responseUrl}/response`} className='poll-link'>
                   {icon} {poll.title}
-                </a>
+                </Link>
               </ConfigProvider>
             </span>
             <span className="ml-2">@{poll.owner?.username} <span className='poll-reward'>({poll.perResponseReward} π)</span></span>

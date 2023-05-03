@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "NODE_ENV=development ts-node-dev ./src/index.ts"
+    "start": "set NODE_ENV=development && ts-node-dev ./src/index.ts"
   },
   "dependencies": {
     "@types/connect-mongo": "^3.1.3",
