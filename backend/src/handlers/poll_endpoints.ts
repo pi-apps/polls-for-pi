@@ -65,6 +65,20 @@ export default function mountPollEndpoints(router: Router, models: any) {
     return res.status(200).json({ data: items });
   });
 
+  router.get('/user_responses', async (req, res) => {
+    const { PollResponse } = models;
+    const { username } = req.query;
+
+    if (!username) {
+      return res.status(200).json({ data: [] });
+    }
+
+    let pollResponses = await PollResponse.find({ 'username': username });
+    console.log('pollResponses', pollResponses)
+
+    return res.status(200).json({ data: pollResponses });
+  });
+
   router.get('/:pollId', async (req, res) => {
     const { pollId } = req.params;
     const { Poll } = models;

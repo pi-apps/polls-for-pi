@@ -15,6 +15,7 @@ import pollsAPI from '../apis/pollsAPI';
 import './BottomBar.css';
 import ListItemLinksForm from './ListItemLinksForm';
 import { MyPolls } from './polls_tab/MyPolls';
+import { MyResponses } from './polls_tab/MyResponses';
 
 const Bottom: FC = () => {
 
@@ -98,7 +99,7 @@ export const PollsTab = (props: HOCProps) => {
           <MyPolls {...props} />
         </Tabs.Tab>
         <Tabs.Tab title='My Responses' key='myresponses'>
-          西红柿
+          <MyResponses {...props} />
         </Tabs.Tab>
       </Tabs>
     </>
