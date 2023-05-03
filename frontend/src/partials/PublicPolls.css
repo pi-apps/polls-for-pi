@@ -7,3 +7,11 @@
   font-size: 48px;
   user-select: none;
 }
+
+.poll-link {
+  color: #9357ff !important;
+}
+
+.poll-reward {
+  color: #9357ff !important;
+}

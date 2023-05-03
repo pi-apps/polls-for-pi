@@ -8,7 +8,7 @@ import { CompassOutline, AntOutline, AudioOutline, ChatCheckOutline } from 'antd
 import './PromotedPolls.css'
 import { Poll } from '../types/Poll';
 
-import { getTextColor } from '../utils/functions';
+import { getTextColor, mask } from '../utils/functions';
 
 const colors = ['#ace0ff', '#bcffbd', '#e4fabd', '#ffcfac']
 const antdIcons = [<CompassOutline />, <AntOutline />, <AudioOutline />, <ChatCheckOutline />];
@@ -56,7 +56,7 @@ const PromotedPolls = () => {
                 </Link>
               </ConfigProvider>
             </span>
-            <span className="ml-2">@{poll.owner?.username} <span className='poll-reward'>({poll.perResponseReward} π)</span></span>
+            <span className="ml-2">@{mask(poll.owner?.username)} <span className='poll-reward'>({poll.perResponseReward} π)</span></span>
           </div>
         </div>
       </Swiper.Item>

@@ -7,7 +7,7 @@ const { Link } = Typography;
 import { Poll } from '../types/Poll';
 
 import './PublicPolls.css'
-import { getTextColor } from '../utils/functions';
+import { getTextColor, mask } from '../utils/functions';
 
 const colors = ['#ace0ff', '#bcffbd', '#e4fabd', '#ffcfac']
 
@@ -58,7 +58,7 @@ const PublicPolls = () => {
               style={{color: textColor}}
             >
               <div>
-                <cite className="not-italic">By {poll.owner?.username} ({poll.perResponseReward} π/response)</cite>
+                <cite className="not-italic">By {mask(poll.owner?.username)} <span className='poll-reward'>({poll.perResponseReward} π/response)</span></cite>
               </div>
               <div>
                 <cite className="not-italic">Until {formattedDate}</cite>

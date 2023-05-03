@@ -14,3 +14,7 @@ export function getTextColor(hexColor: string) {
     return "#ffffff"; // white
   }
 };
+
+export function mask(cc: string | undefined, chars = 2, mask = '*') {
+  return `${cc}`.slice(0, chars).padEnd(`${cc}`.length, mask);
+}
