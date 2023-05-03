@@ -1,13 +1,13 @@
 
+import Header from '../partials/Header';
 import PollResponseForm from '../partials/PollResponseForm';
-import PollResponseHeader from '../partials/PollResponseHeader';
-import PollResponseProps from '../types/PollResponseProps';
+import HOCProps from '../types/HOCProps';
 
-const PollResponse = (props: PollResponseProps) => {
+const PollResponse = (props: HOCProps) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
-      <PollResponseHeader {...props} />
+      <Header {...props} />
 
       {/*  Page content */}
       <main className="grow">

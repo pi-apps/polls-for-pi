@@ -1,11 +1,11 @@
-import { List, Popup, SwipeAction, TabBar, Toast } from 'antd-mobile';
+import { ErrorBlock, List, Popup, SwipeAction, TabBar, Toast } from 'antd-mobile';
 import {
   AppOutline, EditSOutline, EyeOutline, LinkOutline, UnorderedListOutline,
   UserOutline
 } from 'antd-mobile-icons';
 import { FC, useEffect, useState } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import HOCProps from '../types/HOCProps';
 import { Poll } from '../types/Poll';
 import TabProps from '../types/TabProps';
@@ -117,6 +117,7 @@ export const PollsTab = (props: TabProps) => {
     accessType: 'unlisted',
   });
 
+  console.log('(props.polls', props.polls);
   return (
     <>
       {/* <Collapse accordion style={{width: '100%'}}>
@@ -140,58 +141,84 @@ export const PollsTab = (props: TabProps) => {
       </Collapse> */}
 
       <List header='Polls'>
-        {props.polls.map((item, index) =>
-          <SwipeAction
-            key={index}
-            closeOnAction={false}
-            rightActions={[
-              {
-                key: 'edit',
-                text: <EditSOutline />,
-                color: 'primary',
-                onClick: (e) => {
-                  setShowEditPopup(true);
-                  setItemPoll(item);
-                }
-              },
-              {
-                key: 'show',
-                text: <EyeOutline />,
-                color: 'success',
-                onClick: (e) => {
-                  setShowLinksPopup(true);
-                  setItemPoll(item);
-                }
-              },
-              {
-                key: 'copy-lin',
-                text: <LinkOutline />,
-                color: 'light',
-                onClick: (e) => {
-                  navigator.clipboard.writeText(`${window.location.origin}/${item.responseUrl}` || '');
-                  Toast.show({
-                    content: 'Response URL copied to clipboard.',
-                  })
-                }
-              }
-            ]}
-          >
-            <List.Item
+      {props.polls.length > 0 ?
+          props.polls.map((item, index) =>
+            <SwipeAction
               key={index}
-              extra={`${item.responses.length} responses`}
-              clickable
-              onClick={() => {
-                Toast.show('Swipe left to see actions.')
-              }}
-              // onClick={() => {
-              //   setShowEditPopup(true);
-              //   setItemPoll(item);
-              // }}
+              closeOnAction={false}
+              rightActions={[
+                {
+                  key: 'edit',
+                  text: <EditSOutline />,
+                  color: 'primary',
+                  onClick: (e) => {
+                    setShowEditPopup(true);
+                    setItemPoll(item);
+                  }
+                },
+                {
+                  key: 'show',
+                  text: <EyeOutline />,
+                  color: 'success',
+                  onClick: (e) => {
+                    setShowLinksPopup(true);
+                    setItemPoll(item);
+                  }
+                },
+                {
+                  key: 'copy-lin',
+                  text: <LinkOutline />,
+                  color: 'light',
+                  onClick: (e) => {
+                    navigator.clipboard.writeText(`${window.location.origin}/${item.responseUrl}` || '');
+                    Toast.show({
+                      content: 'Response URL copied to clipboard.',
+                    })
+                  }
+                }
+              ]}
             >
-              <span key={`span-${index}`}>{item.title}</span>
-            </List.Item>
-          </SwipeAction>
-        )}
+              <List.Item
+                key={index}
+                extra={`${item.responses.length} responses`}
+                clickable
+                onClick={() => {
+                  Toast.show('Swipe left to see actions.')
+                }}
+                // onClick={() => {
+                //   setShowEditPopup(true);
+                //   setItemPoll(item);
+                // }}
+              >
+                <span key={`span-${index}`}>{item.title}</span>
+              </List.Item>
+            </SwipeAction>
+          )
+          :
+          <>
+            <ErrorBlock
+              title='Nothing to see here.'
+              status='empty'
+              description={
+                <>
+                  <div className='mb-5'>
+                    No polls created yet.
+                  </div>
+                  <Link to="/get_started" className="btn text-white bg-purple-600 hover:bg-purple-700 mb-4 sm:w-auto sm:mb-0">
+                    Create your first poll
+                  </Link>
+                </>
+              }
+              style={{
+                '--image-height': '150px',
+                justifyContent: 'center',
+                flexWrap: 'wrap'
+              }}
+              className='mb-5'
+            />
+
+          </>
+        }
       </List>
       <Popup
         position='right'

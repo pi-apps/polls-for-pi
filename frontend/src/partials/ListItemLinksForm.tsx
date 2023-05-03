@@ -2,14 +2,13 @@ import { ConfigProvider, theme, Typography } from 'antd';
 import {
   Button, ErrorBlock, Form, Skeleton, Tabs
 } from 'antd-mobile';
-import { HistogramOutline, PieOutline, UnorderedListOutline } from 'antd-mobile-icons';
+import { HistogramOutline, PieOutline, UnorderedListOutline, UploadOutline } from 'antd-mobile-icons';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ListItemPollProps from '../types/ListItemPollProps';
 import ColumnChart from './charts/ColumnChart';
 import PieChart from './charts/PieChart';
 import TableList from './charts/TableList';
-const { Link } = Typography;
 
 import './ListItemLinksForm.css';
 
@@ -47,13 +46,13 @@ const ListItemLinksForm = (props: ListItemPollProps) => {
                   >
                     {poll.responseUrl ?
                       <>
-                      <Paragraph copyable>{`${window.location.origin}/polls/${poll.responseUrl}/response`}</Paragraph>
-                      <ConfigProvider
-                        theme={{
-                          algorithm: theme.darkAlgorithm,
-                        }}
-                      >
-                        <Link href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank">Open</Link>
+                        <Paragraph copyable>{`${window.location.origin}/polls/${poll.responseUrl}/response`}</Paragraph>
+                        <ConfigProvider
+                          theme={{
+                            algorithm: theme.darkAlgorithm,
+                          }}
+                        >
+                          <Link to={`/polls/${poll.responseUrl}/response`}>Open</Link>
                         </ConfigProvider>
                       </>
                       :
@@ -72,9 +71,18 @@ const ListItemLinksForm = (props: ListItemPollProps) => {
                           title='Nothing to see here.'
                           status='empty'
                           description={
-                            <span>
-                              No responses collected yet.
-                            </span>
+                            <>
+                              <div className='mb-5'>
+                                No responses collected yet.
+                              </div>
+                              <Link
+                                to={`/polls/${poll.responseUrl}/response`}
+                                className="btn text-white bg-purple-600 hover:bg-purple-700 mb-4 sm:w-auto sm:mb-0"
+                              >
+                                <UploadOutline className='mr-2' />
+                                Gather responses
+                              </Link>
+                            </>
                           }
                           style={{
                             '--image-height': '150px',
@@ -92,9 +100,18 @@ const ListItemLinksForm = (props: ListItemPollProps) => {
                           title='Nothing to see here.'
                           status='empty'
                           description={
-                            <span>
-                              No responses collected yet.
-                            </span>
+                            <>
+                              <div className='mb-5'>
+                                No responses collected yet.
+                              </div>
+                              <Link
+                                to={`/polls/${poll.responseUrl}/response`}
+                                className="btn text-white bg-purple-600 hover:bg-purple-700 mb-4 sm:w-auto sm:mb-0"
+                              >
+                                <UploadOutline className='mr-2' />
+                                Gather responses
+                              </Link>
+                            </>
                           }
                           style={{
                             '--image-height': '150px',
@@ -112,9 +129,18 @@ const ListItemLinksForm = (props: ListItemPollProps) => {
                           title='Nothing to see here.'
                           status='empty'
                           description={
-                            <span>
-                              No responses collected yet.
-                            </span>
+                            <>
+                              <div className='mb-5'>
+                                No responses collected yet.
+                              </div>
+                              <Link
+                                to={`/polls/${poll.responseUrl}/response`}
+                                className="btn text-white bg-purple-600 hover:bg-purple-700 mb-4 sm:w-auto sm:mb-0"
+                              >
+                                <UploadOutline className='mr-2' />
+                                Gather responses
+                              </Link>
+                            </>
                           }
                           style={{
                             '--image-height': '150px',
