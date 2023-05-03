@@ -4,15 +4,19 @@ import pollsAPI from '../../apis/pollsAPI';
 import ChartProps from '../../types/ChartProps';
 import { PollResponse } from '../../types/PollResponse';
 
-const PieChart = (props: ChartProps) => {
+const PieChart = (props: ChartProps | {responseUrl: string | undefined}) => {
   const [data, setData] = useState<any>([]);
 
-  const generateData = async (pollId: string | undefined) => {
-    console.log("get poll id", pollId);
-    const resp = await pollsAPI.get(`/v1/polls/${pollId}`);
-    console.log('resp.data.data', resp.data.data);
-
-    const poll = resp.data.data;
+  const generateData = async (pollIdOrUrl: string | undefined, useResponseUrl: boolean) => {
+    let resp: any = undefined;
+    let poll = undefined;
+    if (useResponseUrl) {
+      resp = await pollsAPI.get(`/v1/polls?responseUrl=${pollIdOrUrl}`);
+      poll = resp.data.data[0];
+    } else {
+      resp = await pollsAPI.get(`/v1/polls/${pollIdOrUrl}`);
+      poll = resp.data.data;
+    }
 
     const dataMap: any = {};
     poll.responses?.forEach((pollResp: PollResponse) => {
@@ -30,11 +34,15 @@ const PieChart = (props: ChartProps) => {
     });
 
     setData(data);
-    console.log('data', data);
   }
 
   useEffect(() => {
-    generateData(props.poll._id);
+    if ("responseUrl" in props) {
+      generateData(props.responseUrl, true);
+    } else {
+      generateData(props?.poll._id, false);
+    }
+
   }, []);
 
   const config = {
@@ -51,6 +59,10 @@ const PieChart = (props: ChartProps) => {
         fontSize: 14,
         textAlign: 'center',
       },
+    },
+    legend: {
+      layout: 'horizontal',
+      position: 'bottom'
     },
     interactions: [
       {
