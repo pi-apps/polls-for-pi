@@ -1,4 +1,4 @@
-import { ErrorBlock, List, Popup, SwipeAction, TabBar, Toast } from 'antd-mobile';
+import { ErrorBlock, List, Popup, SwipeAction, TabBar, Tabs, Toast } from 'antd-mobile';
 import {
   AppOutline, EditSOutline, EyeOutline, LinkOutline, UnorderedListOutline,
   UserOutline
@@ -14,6 +14,7 @@ import ListItemPollForm from './ListItemPollForm';
 import pollsAPI from '../apis/pollsAPI';
 import './BottomBar.css';
 import ListItemLinksForm from './ListItemLinksForm';
+import { MyPolls } from './polls_tab/MyPolls';
 
 const Bottom: FC = () => {
 
@@ -58,18 +59,7 @@ const BottomBar = (props: HOCProps) => {
     return location.pathname;
   }
 
-  const [userPolls, setPolls] = useState<Poll[]>([]);
 
-  const getUserPolls = async (username?: string) => {
-    const options = await pollsAPI.get(`/v1/polls?username=${username}`);
-    return options.data;
-  }
-
-  useEffect(() => {
-    getUserPolls(props.user?.username || 'eastmael').then(resp => {
-      setPolls(resp.data);
-    })
-  }, []);
 
   const pathname = getPathname();
   return (
@@ -79,7 +69,7 @@ const BottomBar = (props: HOCProps) => {
           <Home />
         }
         {pathname === '/dashboard/polls' &&
-          <PollsTab polls={userPolls} />
+          <PollsTab {...props} />
         }
         {pathname === '/dashboard/me' &&
           <PersonalCenter />
@@ -100,164 +90,17 @@ export const Home = () => {
   )
 }
 
-export const PollsTab = (props: TabProps) => {
-  const [showEditPopup, setShowEditPopup] = useState(false);
-  const [showLinksPopup, setShowLinksPopup] = useState(false);
-
-  const [itemPoll, setItemPoll] = useState<Poll>({
-    title: '',
-    optionCount: 2,
-    distribution: '',
-    isLimitResponse: true,
-    responseLimit: 100,
-    durationDays: 30,
-    perResponseReward: 0,
-    responses: [],
-    responseUrl: '',
-    accessType: 'unlisted',
-  });
-
-  console.log('(props.polls', props.polls);
+export const PollsTab = (props: HOCProps) => {
   return (
     <>
-      {/* <Collapse accordion style={{width: '100%'}}>
-        {props.polls.map((item, index) =>
-          <Collapse.Panel
-            key={item.title} title={item.title}
-            style={{
-              justifyContent: 'flex-end'
-            }}
-          >
-            <Space justify='end'>
-              <Button color='primary' fill='solid'>
-                <EditSOutline />
-              </Button>
-              <Button color='primary' fill='solid'>
-                <EyeOutline />
-              </Button>
-            </Space>
-          </Collapse.Panel>
-        )}
-      </Collapse> */}
-
-      <List header='Polls'>
-      {props.polls.length > 0 ?
-          props.polls.map((item, index) =>
-            <SwipeAction
-              key={index}
-              closeOnAction={false}
-              rightActions={[
-                {
-                  key: 'edit',
-                  text: <EditSOutline />,
-                  color: 'primary',
-                  onClick: (e) => {
-                    setShowEditPopup(true);
-                    setItemPoll(item);
-                  }
-                },
-                {
-                  key: 'show',
-                  text: <EyeOutline />,
-                  color: 'success',
-                  onClick: (e) => {
-                    setShowLinksPopup(true);
-                    setItemPoll(item);
-                  }
-                },
-                {
-                  key: 'copy-lin',
-                  text: <LinkOutline />,
-                  color: 'light',
-                  onClick: (e) => {
-                    navigator.clipboard.writeText(`${window.location.origin}/${item.responseUrl}` || '');
-                    Toast.show({
-                      content: 'Response URL copied to clipboard.',
-                    })
-                  }
-                }
-              ]}
-            >
-              <List.Item
-                key={index}
-                extra={`${item.responses.length} responses`}
-                clickable
-                onClick={() => {
-                  Toast.show('Swipe left to see actions.')
-                }}
-                // onClick={() => {
-                //   setShowEditPopup(true);
-                //   setItemPoll(item);
-                // }}
-              >
-                <span key={`span-${index}`}>{item.title}</span>
-              </List.Item>
-            </SwipeAction>
-          )
-          :
-          <>
-            <ErrorBlock
-              title='Nothing to see here.'
-              status='empty'
-              description={
-                <>
-                  <div className='mb-5'>
-                    No polls created yet.
-                  </div>
-                  <Link to="/get_started" className="btn text-white bg-purple-600 hover:bg-purple-700 mb-4 sm:w-auto sm:mb-0">
-                    Create your first poll
-                  </Link>
-                </>
-              }
-              style={{
-                '--image-height': '150px',
-                justifyContent: 'center',
-                flexWrap: 'wrap'
-              }}
-              className='mb-5'
-            />
-
-          </>
-        }
-      </List>
-      <Popup
-        position='right'
-        visible={showEditPopup}
-        showCloseButton
-        onClose={() => {
-          setShowEditPopup(false)
-        }}
-        destroyOnClose={true}
-        bodyStyle={{ width: '100vw' }}
-      >
-        <div
-          style={{ height: '98vh', overflowY: 'scroll' }}
-        >
-          <ListItemPollForm
-            poll={itemPoll} setDisplayPopup={setShowEditPopup}
-          />
-        </div>
-      </Popup>
-      <Popup
-        position='right'
-        visible={showLinksPopup}
-        showCloseButton
-        onClose={() => {
-          setShowLinksPopup(false)
-        }}
-        destroyOnClose={true}
-        bodyStyle={{ width: '100vw' }}
-      >
-        <div
-          style={{
-            height: '98vh', overflowY: 'scroll',
-          }}
-        >
-          <ListItemLinksForm
-            poll={itemPoll} setDisplayPopup={setShowLinksPopup}
-          />
-        </div>
-      </Popup>
+      <Tabs className='w-full'>
+        <Tabs.Tab title='My Polls' key='mypolls'>
+          <MyPolls {...props} />
+        </Tabs.Tab>
+        <Tabs.Tab title='My Responses' key='myresponses'>
+          西红柿
+        </Tabs.Tab>
+      </Tabs>
     </>
   )
 }
