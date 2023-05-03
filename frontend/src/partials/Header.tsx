@@ -65,7 +65,6 @@ const Header = (props: HOCProps)  => {
     if (props) {
       props.setMode(e.key);
       setTheme(e.key === 'dark' ? 'dark' : 'light');
-      console.log('theme', theme)
     }
   };
 
@@ -96,8 +95,6 @@ const Header = (props: HOCProps)  => {
   });
 
   const pathname = props.pathname;
-  console.log('pathname', pathname)
-  console.log('theme', theme)
   return (
     <header className="absolute w-full z-30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
