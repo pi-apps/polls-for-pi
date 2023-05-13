@@ -2,12 +2,12 @@ import { Swiper } from 'antd-mobile';
 import { useEffect, useState } from 'react';
 import pollsAPI from '../apis/pollsAPI';
 import { ConfigProvider, theme, Typography } from 'antd';
-const { Link } = Typography;
 
 import { Poll } from '../types/Poll';
 
 import './PublicPolls.css'
 import { getTextColor, mask } from '../utils/functions';
+import { Link } from 'react-router-dom';
 
 const colors = ['#ace0ff', '#bcffbd', '#e4fabd', '#ffcfac']
 
@@ -49,7 +49,7 @@ const PublicPolls = () => {
                 algorithm: theme.darkAlgorithm,
               }}
             >
-              <Link href={`${window.location.origin}/polls/${poll.responseUrl}/response`} target="_blank">
+              <Link to={`/polls/${poll.responseUrl}/response`} className='poll-link'>
                 <blockquote className="text-lg grow">{poll.title}</blockquote>
               </Link>
             </ConfigProvider>
