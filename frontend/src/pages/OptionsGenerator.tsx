@@ -5,6 +5,10 @@ import OptionsGeneratorForm from '../partials/OptionsGeneratorForm';
 import HOCProps from '../types/HOCProps';
 
 const OptionsGenerator = (props: HOCProps) => {
+  useEffect(() => {
+    document.title = 'Poll Options Generator';
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}

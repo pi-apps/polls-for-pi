@@ -306,6 +306,8 @@ function App() {
             onSignIn={signIn} onSignOut={signOut} user={user}
             signingIn={signingIn}
             showModal={showModal} setShowModal={setShowModal} onModalClose={onModalClose}
+            setMode={onChangeMode} mode={mode}
+            setPoll={setPoll} poll={poll}
           />
         }
       />

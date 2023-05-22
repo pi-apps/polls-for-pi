@@ -30,6 +30,10 @@ const PollResponseResult = (props: PollResponseProps) => {
   }
 
   useEffect(() => {
+    document.title = 'Poll Response Result';
+  }, []);
+
+  useEffect(() => {
     getPoll(responseUrl);
   }, []);
 

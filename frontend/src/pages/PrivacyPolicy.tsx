@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import PollStarter from '../partials/PollStarter';
@@ -6,6 +7,9 @@ import PrivacyPolicyComponent from '../partials/PrivacyPolicyComponent';
 import HOCProps from '../types/HOCProps';
 
 const PrivacyPolicy = (props: HOCProps) => {
+  useEffect(() => {
+    document.title = 'Privacy Policy';
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">

@@ -8,8 +8,13 @@ import HeroHome from '../partials/HeroHome';
 import PageIllustration from '../partials/PageIllustration';
 import HOCProps from '../types/HOCProps';
 import { NoticeBar, Space, Swiper } from 'antd-mobile'
+import { useEffect } from 'react';
 
 const HomeV2 = (props: HOCProps) => {
+  useEffect(() => {
+    document.title = 'Home';
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden bg-white dark:bg-black">
       {/*  Site header */}
