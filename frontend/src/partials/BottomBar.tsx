@@ -60,8 +60,6 @@ const BottomBar = (props: HOCProps) => {
     return location.pathname;
   }
 
-
-
   const pathname = getPathname();
   return (
     <>
