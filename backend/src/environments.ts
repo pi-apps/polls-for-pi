@@ -25,6 +25,7 @@ interface Environment {
   mongo_user: string,
   mongo_password: string,
   frontend_url: string,
+  openai_api_url: string,
   openai_api_key: string,
 }
 
@@ -39,6 +40,7 @@ const env: Environment = {
   mongo_user: process.env.MONGODB_USERNAME || '',
   mongo_password: process.env.MONGODB_PASSWORD || '',
   frontend_url: process.env.FRONTEND_URL || 'http://localhost:5173',
+  openai_api_url: process.env.OPENAI_API_URL || '',
   openai_api_key: process.env.OPENAI_API_KEY || '',
 };
 
