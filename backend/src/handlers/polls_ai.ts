@@ -5,11 +5,12 @@ import env from '../environments';
 import "../types/session";
 
 const OPENAI_API_KEY = env.openai_api_key;
+const OPENAI_API_URL = env.openai_api_url;
 
 async function generatePollOptions(question: string, optionsCount: number): Promise<string[]> {
   const prompt = `Generate ${optionsCount} choices for the question '${question}'`
   console.log('prompt', prompt)
-  const response = await axios.post("https://api.openai.com/v1/engines/text-davinci-002/completions", {
+  const response = await axios.post(OPENAI_API_URL, {
     prompt: prompt,
     max_tokens: 50,
     n: 1,
