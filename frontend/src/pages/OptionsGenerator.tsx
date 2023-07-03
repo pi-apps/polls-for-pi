@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import BottomBar from '../partials/BottomBar';
 import Header from '../partials/Header';
 import OptionsGeneratorForm from '../partials/OptionsGeneratorForm';
