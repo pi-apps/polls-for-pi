@@ -118,8 +118,15 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                           '--prefix-width': '25%'
                         }}
                         className='generated-option'
+                        rules={[{ required: true, message: 'Please provide a value' }]}
                       >
-                        <Input onChange={console.log} placeholder={item ? item : `Option ${index + 1}`} />
+                        <Input
+                          placeholder={item ? item : `Option ${index + 1}`}
+                          onChange={value => {
+                            options[index] = value;
+                            setOptions(options);
+                          }}
+                        />
                       </Form.Item>
                     )}
                   </List>

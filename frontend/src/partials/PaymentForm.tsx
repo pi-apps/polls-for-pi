@@ -82,6 +82,10 @@ const PaymentForm = (props: HOCProps) => {
       onError
     };
 
+    const options = poll.options;
+    const modOptions = options?.forEach((option, index) => option ? option : `Options ${index + 1}`);
+    console.log('modOptions', modOptions);
+
     const _window: WindowWithEnv = window;
     const isLocalhost = _window.__ENV && (_window.__ENV.viteLocalhost);
     console.log('isLocalhost', isLocalhost);
