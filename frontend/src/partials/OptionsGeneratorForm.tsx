@@ -34,10 +34,13 @@ const OptionsGeneratorForm = (props: HOCProps) => {
 
   let modOptions = options;
   if (options.length < props.poll.optionCount) {
+    let i = 0;
     while (modOptions.length < props.poll.optionCount) {
-      modOptions.push('');
+      modOptions.push(`Edit Option ${i}`);
     }
   }
+  console.log('props.poll.options', props.poll.options)
+  console.log('modOptions', modOptions)
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);

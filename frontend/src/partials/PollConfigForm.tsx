@@ -62,7 +62,7 @@ const PollConfigForm = (props: HOCProps) => {
   }
 
   const generateManualOptions = async () => {
-    const options = Array.from(new Array(props.poll.optionCount), (val,index) => "");
+    const options = Array.from(new Array(props.poll.optionCount), (val,index) => `Option ${index + 1}`);
 
     props.poll.options = options;
     props.setPoll(props.poll)
