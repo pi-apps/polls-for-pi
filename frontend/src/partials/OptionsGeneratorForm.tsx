@@ -86,25 +86,29 @@ const OptionsGeneratorForm = (props: HOCProps) => {
                   onFinish={proceedToPayment}
                 >
                   <Form.Header>
-                    <Space block justify="between">
-                      <span>
+                    <div style={{ overflowWrap: "break-word", width: "90%", justifyContent: "space-between" }}>
+                      <span style={{width: "80%"}}>
                         <h3 style={{marginBottom: '10px'}}>
                           {props.poll.title}
                         </h3>
-                        <p style={{fontSize: '1em', marginBottom: '5px'}}>
-                          {ai === "1" && <>These are AI generated options.<br/></>}
-                          Click an option to edit.
-                        </p>
                       </span>
-                      {ai === "1" &&
-                        <Button
-                          onClick={generateOptions}
-                          color='success' size='large'
-                        >
-                          <UndoOutline />
-                        </Button>
-                      }
-                    </Space>
+                    </div>
+                    <div style={{ display: "flex", width: "90%", justifyContent: "space-between" }}>
+                      <span style={{fontSize: '1em', marginBottom: '5px' }}>
+                        {ai === "1" && <>These are AI generated options.<br/></>}
+                        Click an option to edit.
+                      </span>
+                      <span style={{fontSize: '1em', marginBottom: '5px' }}>
+                        {ai === "1" &&
+                          <Button
+                            onClick={generateOptions}
+                            color='success' size='large'
+                          >
+                            <UndoOutline />
+                          </Button>
+                        }
+                      </span>
+                    </div>
                   </Form.Header>
                   <List>
                     {modOptions.map((item, index) =>
