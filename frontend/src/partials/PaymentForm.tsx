@@ -177,20 +177,26 @@ const PaymentForm = (props: HOCProps) => {
                   onFinish={orderPoll}
                 >
                   <Form.Header>
-                    <Space block justify="between">
-                      <span>
-                        <h3>{props.poll.title}</h3>
-                        <p style={{fontSize: '1em'}}>
-                          Here's how much this poll will cost.
-                        </p>
+                    <div style={{ overflowWrap: "break-word", width: "90%", justifyContent: "space-between" }}>
+                      <span style={{width: "80%"}}>
+                        <h3 style={{marginBottom: '10px'}}>
+                          {props.poll.title}
+                        </h3>
                       </span>
-                      <Button
-                        onClick={calculateTotal}
-                        color='success' size='large'
-                      >
-                        <UndoOutline />
-                      </Button>
-                    </Space>
+                    </div>
+                    <div style={{ display: "flex", width: "90%", justifyContent: "space-between" }}>
+                      <span style={{fontSize: '1em', marginBottom: '5px' }}>
+                        Here's how much this poll will cost.
+                      </span>
+                      <span style={{fontSize: '1em', marginBottom: '5px' }}>
+                        <Button
+                          onClick={calculateTotal}
+                          color='success' size='large'
+                        >
+                          <UndoOutline />
+                        </Button>
+                      </span>
+                    </div>
                   </Form.Header>
                   <List>
                     {priceItems.map((item: any) =>

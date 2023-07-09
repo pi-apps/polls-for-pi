@@ -95,7 +95,16 @@ const PollResponseForm = (props: PollResponseProps) => {
                   </Button>
                 }
               >
-                <Form.Item
+                <Form.Header>
+                  <div style={{ overflowWrap: "break-word", width: "90%", justifyContent: "space-between" }}>
+                    <span style={{width: "80%"}}>
+                      <h3 style={{marginBottom: '10px'}}>
+                        {title}
+                      </h3>
+                    </span>
+                  </div>
+                </Form.Header>
+                {/* <Form.Item
                   name='title'
                   initialValue={title}
                   layout="vertical"
@@ -104,7 +113,7 @@ const PollResponseForm = (props: PollResponseProps) => {
                   <Input
                     placeholder='Poll Title'
                   />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                   name='options'
                   layout='vertical'
