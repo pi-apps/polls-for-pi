@@ -14,7 +14,8 @@ async function generatePollOptions(question: string, optionsCount: number): Prom
     prompt: prompt,
     max_tokens: 50,
     n: 1,
-    format: 'text'
+    format: 'text',
+    model: 'gpt-3.5-turbo'
   }, {
     headers: {
       "Content-Type": "application/json",
